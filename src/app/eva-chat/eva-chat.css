@@ -1,0 +1,14 @@
+/* Bouton Eva Chat - Position fixed uniquement, aucun style qui écrase */
+.eva-chat-button {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  border-radius: 9999px !important; /* rounded-full */
+}
+
+.eva-chat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}

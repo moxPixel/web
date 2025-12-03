@@ -1,0 +1,39 @@
+/* Business solutions section styles */
+
+/* Bouton styles - identique au hero */
+.btn {
+  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
+}
+
+.btn-lg {
+  @apply px-8 h-12 text-base;
+}
+
+/* Badge styles - réutiliser ceux du projet */
+.badge {
+  padding-inline: calc(var(--spacing) * 5);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-tagline-2);
+  line-height: var(--text-tagline-2--line-height);
+  font-weight: var(--font-weight-normal);
+  text-wrap: nowrap;
+  color: var(--color-secondary);
+  text-transform: lowercase;
+  backdrop-filter: blur(17.23px);
+  -webkit-backdrop-filter: blur(17.23px);
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badge:first-letter {
+  text-transform: uppercase;
+}
+
+.badge-green {
+  background-color: var(--color-ns-green-light);
+}
+
+html.dark .badge-green {
+  background-color: #fcfcfc1a;
+  color: var(--color-ns-yellow);
+}

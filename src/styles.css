@@ -1,0 +1,131 @@
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --font-inter-tight: "Inter Tight", sans-serif;
+  --spacing: 0.25rem; /* 4px base spacing unit */
+
+  /* Primary colors */
+  --color-primary-50: #f4f2fe;
+  --color-primary-100: #ece8ff;
+  --color-primary-200: #dcd4ff;
+  --color-primary-300: #c3b1ff;
+  --color-primary-400: #a585ff;
+  --color-primary-500: #864ffe;
+  --color-primary-600: #7c31f6;
+
+  /* Secondary and accent */
+  --color-secondary: #1a1a1c;
+  --color-accent: #fcfcfc;
+
+  /* Background colors (light mode) */
+  --color-background-1: #fcfcfd;
+  --color-background-2: #f9fafb;
+  --color-background-3: #f4f5f8;
+  --color-background-4: #f0f2f6;
+  --color-background-12: #eaeceb;
+
+  /* Stroke colors (light mode) */
+  --color-stroke-1: #dfe4eb;
+  --color-stroke-2: #e3e7ed;
+  --color-stroke-3: #d7dde5;
+  --color-stroke-4: #eceff4;
+
+  /* NS colors */
+  --color-ns-yellow: #f9eb57;
+  --color-ns-green: #c6f56f;
+  --color-ns-red: #ffb9a2;
+  --color-ns-cyan: #83e7ee;
+  --color-ns-green-light: #e8fbc6;
+  --color-ns-cyan-light: #cdf5f8;
+  --color-ns-yellow-light: #fdf7bc;
+}
+
+/* Dark mode colors */
+.dark {
+  --color-split-text: #fcfcfc;
+
+  /* Background colors (dark mode) */
+  --color-background-5: #13171e;
+  --color-background-6: #0f1217;
+  --color-background-7: #181d26;
+  --color-background-8: #070b10;
+  --color-background-9: #1f252f;
+
+  /* Stroke colors (dark mode) */
+  --color-stroke-5: #1b232f;
+  --color-stroke-6: #202731;
+  --color-stroke-7: #2a333e;
+  --color-stroke-8: #303b49;
+  --color-stroke-9: #070b10;
+}
+
+/* Base styles */
+@layer base {
+  :root {
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    background-color: #ffffff;
+    color: var(--color-secondary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100%;
+    overscroll-behavior: none;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  html.dark {
+    background-color: var(--color-background-8);
+    color: var(--color-accent);
+  }
+
+  body {
+    font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+    background-color: #ffffff;
+    color: var(--color-secondary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    overscroll-behavior: none;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Dark mode pour body - la classe dark est sur html */
+  html.dark body {
+    background-color: var(--color-background-8);
+    color: var(--color-accent);
+  }
+
+  /* S'assurer que tous les éléments héritent du dark mode */
+  html.dark * {
+    color-scheme: dark;
+  }
+}
+
+/* Main container - identique à l'exemple */
+.main-container {
+  max-width: 1290px;
+  padding-inline: calc(var(--spacing) * 5);
+  margin-inline: auto;
+}
+
+@media (max-width: 1024px) {
+  .main-container {
+    padding-inline: calc(var(--spacing) * 0);
+  }
+}
+
+/* You can add global styles to this file, and also import other style files */

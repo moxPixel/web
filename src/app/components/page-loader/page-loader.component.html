@@ -1,0 +1,33 @@
+<div
+  class="loader-container fixed inset-0 z-[9999] bg-white dark:bg-background-8 flex items-center justify-center"
+  [class.loader-container--exit]="isExiting"
+>
+  <div class="loader-content flex flex-col items-center gap-8 relative z-10">
+    <!-- Logo simple -->
+    <div class="loader-logo-wrapper">
+      <img src="/assets/images/logo/logo.png" alt="Unlock Web" class="dark:hidden h-6 md:h-8" />
+      <img src="/assets/images/logo/logo-dark.png" alt="Unlock Web" class="hidden dark:block h-6 md:h-8" />
+    </div>
+
+    <!-- Barre de progression -->
+    <div class="loader-progress-container w-64 md:w-80">
+      <div
+        class="loader-progress h-1 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-valuenow]="progress | number : '1.0-0'"
+      >
+        <div
+          class="loader-progress-bar h-full bg-secondary dark:bg-accent rounded-full"
+          [style.width.%]="progress"
+        ></div>
+      </div>
+
+      <!-- Percentage -->
+      <div class="loader-percentage text-sm md:text-base font-medium text-secondary dark:text-accent text-center mt-3">
+        <span class="loader-percentage-value">{{ progress | number : '1.0-0' }}</span>%
+      </div>
+    </div>
+  </div>
+</div>

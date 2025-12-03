@@ -1,0 +1,149 @@
+/* Programs section styles */
+
+/* Scroll horizontal - masquer la scrollbar */
+.scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Carrousel wrapper */
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-container {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  overflow: hidden;
+}
+
+/* Lignes verticales avec gradient - dark mode */
+html.dark [data-hero-line] {
+  background: linear-gradient(180deg, #2A333E 0%, rgba(42, 51, 62, 0) 100%) !important;
+}
+
+/* Bouton styles - identique au hero */
+.btn {
+  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
+}
+
+.btn-lg {
+  @apply px-8 h-12 text-base;
+}
+
+/* Glassmorphism card pour le CTA final */
+.glassmorphism-content-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 20px;
+  padding: 32px;
+  -webkit-backdrop-filter: blur(25px);
+  backdrop-filter: blur(25px);
+}
+
+/* Badge styles - réutiliser ceux du projet */
+.badge {
+  padding-inline: calc(var(--spacing) * 5);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-tagline-2);
+  line-height: var(--text-tagline-2--line-height);
+  font-weight: var(--font-weight-normal);
+  text-wrap: nowrap;
+  color: var(--color-secondary);
+  text-transform: lowercase;
+  backdrop-filter: blur(17.23px);
+  -webkit-backdrop-filter: blur(17.23px);
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badge:first-letter {
+  text-transform: uppercase;
+}
+
+.badge-green {
+  background-color: var(--color-ns-green-light);
+}
+
+html.dark .badge-green {
+  background-color: #fcfcfc1a;
+  color: var(--color-ns-yellow);
+}
+
+/* Animation fluide pour les cartes de formation - design compact vertical */
+.program-card {
+  will-change: box-shadow;
+  border: 1px solid;
+  border-color: var(--color-stroke-1);
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+  max-width: 100%;
+}
+
+html.dark .program-card {
+  border-color: var(--color-stroke-7);
+}
+
+.program-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-primary-500);
+}
+
+html.dark .program-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* Icône Material dans le bouton */
+.program-card mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.program-card:hover mat-icon {
+  transform: translateX(4px);
+}
+
+/* Transition smooth pour les images - sans décalage */
+.program-card .relative img {
+  will-change: transform;
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.program-card:hover .relative img {
+  transform: scale(1.05);
+}
+
+/* Cartes de réassurance */
+.reassurance-card {
+  will-change: transform, box-shadow, border-color;
+}
+
+.reassurance-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.12);
+}
+
+html.dark .reassurance-card:hover {
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .glassmorphism-content-card {
+    padding: 24px;
+  }
+  
+  .reassurance-card {
+    padding: 1.25rem;
+  }
+}

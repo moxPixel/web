@@ -1,0 +1,204 @@
+<header>
+  <div
+    #headerContainer
+    class="header-one rounded-full lp:!max-w-[1290px] xl:max-w-[1140px] lg:max-w-[960px] md:max-w-[720px] sm:max-w-[540px] min-[500px]:max-w-[450px] min-[425px]:max-w-[375px] max-w-[350px] mx-auto w-full fixed left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-2.5 xl:py-0 py-2.5 top-6">
+    <div>
+      <a routerLink="/">
+        <span class="sr-only">Home</span>
+        <figure class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 flex items-center justify-center">
+          <img
+            src="/assets/images/logo/logo.png"
+            alt="Odyssee"
+            class="w-full h-full object-contain dark:hidden" />
+          <img
+            src="/assets/images/logo/logo-dark.png"
+            alt="Odyssee"
+            class="w-full h-full object-contain hidden dark:block" />
+        </figure>
+      </a>
+    </div>
+    <nav class="hidden xl:flex items-center px-6 py-3">
+      <ul class="flex items-center gap-0 list-none p-0 m-0">
+        <li>
+          <a routerLink="/" routerLinkActive="active text-primary-500 dark:text-accent font-medium" [routerLinkActiveOptions]="{exact: true}" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Accueil</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/about" routerLinkActive="active text-primary-500 dark:text-accent font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>À propos</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/become-consultant" routerLinkActive="active text-primary-500 dark:text-accent font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Devenir consultant</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/contact-client" routerLinkActive="active text-primary-500 dark:text-accent font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Besoin d'expert</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/contact" routerLinkActive="active text-primary-500 dark:text-accent font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Contact</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="xl:flex hidden items-center justify-center gap-4">
+      <a href="tel:0187664184" class="flex items-center gap-2 text-tagline-1 text-secondary dark:text-accent hover:text-primary-500 dark:hover:text-accent transition-colors duration-200 font-medium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+        <span>01 87 66 41 84</span>
+      </a>
+      <div class="h-6 w-px bg-black dark:bg-white"></div>
+      <button
+        (click)="toggleDarkMode()"
+        matRipple
+        [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+        class="flex items-center justify-center w-10 h-10 rounded-full bg-background-4 dark:bg-background-6 hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200"
+        aria-label="Toggle dark mode">
+        <!-- Icône soleil (light mode) -->
+        <svg *ngIf="!isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Icône lune (dark mode) -->
+        <svg *ngIf="isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <div class="h-6 w-px bg-black dark:bg-white"></div>
+      <a routerLink="/login" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" class="btn btn-lg w-auto px-8 h-12 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all rounded-full">
+        <span>Se connecter</span>
+      </a>
+    </div>
+    <div class="xl:hidden block">
+      <button
+        (click)="toggleMobileMenu()"
+        class="nav-hamburger flex flex-col gap-[5px] size-12 bg-background-4 dark:bg-background-6 rounded-full items-center justify-center cursor-pointer">
+        <span class="sr-only">Menu</span>
+        <span class="block w-6 h-0.5 bg-stroke-9 dark:bg-stroke-1"></span>
+        <span class="block w-6 h-0.5 bg-stroke-9 dark:bg-stroke-1"></span>
+        <span class="block w-6 h-0.5 bg-stroke-9 dark:bg-stroke-1"></span>
+      </button>
+    </div>
+  </div>
+  <!-- =========================
+Mobile Menu
+===========================-->
+
+  <aside
+    [class.translate-x-full]="!isMobileMenuOpen"
+    [class.translate-x-0]="isMobileMenuOpen"
+    class="sidebar fixed top-0 right-0 w-full sm:w-1/2 transition-all duration-300 h-screen bg-white dark:bg-background-7 xl:hidden z-[999] scroll-bar">
+    <div class="lg:p-9 sm:p-8 p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <a routerLink="/" (click)="closeMobileMenu()">
+          <span class="sr-only">Home</span>
+          <figure class="w-6 h-6">
+            <img src="/assets/images/logo/logo.png" alt="Odyssee" class="w-full h-full object-contain dark:hidden block" />
+            <img
+              src="/assets/images/logo/logo-dark.png"
+              alt="Odyssee"
+              class="w-full h-full object-contain dark:block hidden" />
+          </figure>
+        </a>
+        <button
+          (click)="closeMobileMenu()"
+          class="nav-hamburger-close flex flex-col gap-1.5 size-10 bg-background-4 dark:bg-background-9 rounded-full items-center justify-center cursor-pointer relative">
+          <span class="sr-only">Close Menu</span>
+          <span class="block w-4 h-0.5 bg-stroke-9/60 dark:bg-stroke-1 rotate-45 absolute"></span>
+          <span class="block w-4 h-0.5 bg-stroke-9/60 dark:bg-stroke-1 -rotate-45 absolute"></span>
+        </button>
+      </div>
+      <div class="h-[85vh] w-full overflow-y-auto overflow-x-hidden pb-10 scroll-bar">
+        <ul>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Accueil
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/about"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              À propos
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/become-consultant"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Devenir consultant
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/contact-client"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Besoin d'expert
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/contact"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Contact
+            </a>
+          </li>
+        </ul>
+        <div class="flex flex-col gap-3 mt-6 pt-6 border-t border-stroke-4 dark:border-stroke-6">
+          <button
+            (click)="toggleDarkMode(); closeMobileMenu()"
+            class="flex items-center justify-center gap-2 w-full px-8 h-12 rounded-full bg-background-4 dark:bg-background-6 hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 text-secondary dark:text-accent font-medium">
+            <!-- Icône soleil (light mode) -->
+            <svg *ngIf="!isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <!-- Icône lune (dark mode) -->
+            <svg *ngIf="isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span>{{ isDarkMode ? 'Mode clair' : 'Mode sombre' }}</span>
+          </button>
+          <a routerLink="/login" (click)="closeMobileMenu()" class="btn btn-lg w-full px-8 h-12 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all text-center rounded-full">
+            <span>Se connecter</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+</header>
+

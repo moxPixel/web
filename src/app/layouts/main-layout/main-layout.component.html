@@ -1,0 +1,21 @@
+<!-- Loader page -->
+<app-page-loader
+  *ngIf="showLoader"
+  [progress]="(loaderProgress$ | async) ?? 0"
+  (loaderComplete)="onLoaderComplete()"
+></app-page-loader>
+
+<div class="app-shell" [class.app-shell--hidden]="showLoader">
+  <app-header></app-header>
+
+  <main class="bg-white dark:bg-background-8 text-secondary dark:text-accent transition-colors duration-300 overflow-x-hidden">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer></app-footer>
+
+  <app-notification-center></app-notification-center>
+  <app-cookie-consent></app-cookie-consent>
+  <app-eva-chat></app-eva-chat>
+</div>
+

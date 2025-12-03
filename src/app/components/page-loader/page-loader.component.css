@@ -1,0 +1,81 @@
+.loader-container {
+  backdrop-filter: blur(10px);
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+.loader-container--exit {
+  opacity: 0;
+}
+
+.loader-content {
+  opacity: 0;
+  transform: scale(0.94);
+  filter: blur(18px);
+  animation: loader-enter 0.6s ease-out forwards;
+}
+
+.loader-container--exit .loader-content {
+  transform: scale(0.97);
+  filter: blur(6px);
+  transition: transform 0.45s ease, filter 0.45s ease;
+}
+
+/* Logo simple */
+.loader-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-logo-wrapper img {
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+}
+
+html.dark .loader-logo-wrapper img {
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.1));
+}
+
+/* Progress container */
+.loader-progress-container {
+  width: 100%;
+}
+
+.loader-progress {
+  position: relative;
+}
+
+.loader-progress-bar {
+  transition: width 0.3s ease;
+  will-change: width;
+}
+
+.loader-percentage {
+  letter-spacing: 0.02em;
+}
+
+/* Réduire les animations si préféré */
+@media (prefers-reduced-motion: reduce) {
+  .loader-progress-bar {
+    transition: none;
+  }
+}
+
+@keyframes loader-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+    filter: blur(18px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}

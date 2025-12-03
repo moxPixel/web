@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UnlockWeb</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script>
+    // Appliquer le dark mode avant le chargement d'Angular pour éviter le flash blanc
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.backgroundColor = '#070b10';
+        document.body.style.backgroundColor = '#070b10';
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.backgroundColor = '#ffffff';
+        document.body.style.backgroundColor = '#ffffff';
+      }
+    })();
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      background-color: #ffffff;
+      transition: background-color 0.3s ease;
+      margin: 0;
+      padding: 0;
+    }
+    html.dark {
+      background-color: #070b10;
+    }
+    body {
+      background-color: #ffffff;
+      transition: background-color 0.3s ease;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    html.dark body {
+      background-color: #070b10;
+    }
+  </style>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

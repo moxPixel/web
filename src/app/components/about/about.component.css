@@ -1,0 +1,295 @@
+/* Styles pour glassmorphism et badge - identique à l'exemple */
+.glassmorphism-content-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 20px;
+  padding: 32px;
+  -webkit-backdrop-filter: blur(25px);
+  backdrop-filter: blur(25px);
+  /* Pas d'animations - tout visible par défaut */
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Tous les éléments internes visibles par défaut */
+.glassmorphism-content-card h2,
+.glassmorphism-content-card p,
+.glassmorphism-content-card .btn {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Image visible par défaut - pas d'animations */
+section .absolute[class*="-z-10"] {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+section .absolute[class*="-z-10"] img {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Petite image en superposition */
+section .absolute[class*="-z-5"] {
+  opacity: 1;
+  transform: rotate(5deg);
+  transition: transform 0.3s ease;
+}
+
+section .absolute[class*="-z-5"]:hover {
+  transform: rotate(0deg) scale(1.05);
+}
+
+section .absolute[class*="-z-5"] img {
+  opacity: 1;
+  filter: brightness(1.05);
+}
+
+/* Pas d'animations - contenu visible par défaut */
+
+/* S'assurer que le conteneur parent permet le débordement de l'image */
+section .main-container > div > div:first-child {
+  overflow: visible;
+}
+
+/* Débordement stylé en desktop - la carte déborde de l'image et est centrée verticalement */
+@media (min-width: 1024px) {
+  .glassmorphism-content-card {
+    top: 50%;
+    margin-left: 40px;
+    margin-top: 0;
+    position: relative;
+    transform: translateY(-50%) !important;
+  }
+
+  /* Image flottante qui déborde sur le top */
+  section .absolute[class*="-z-10"] {
+    top: -5% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* Styles pour mobile - centrer la carte */
+@media (max-width: 1023px) {
+  .glassmorphism-content-card {
+    padding: 28px 24px;
+    position: relative;
+    z-index: 10;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Espacements pour la liste Unlock en mobile */
+  .space-y-6 > div {
+    padding: 20px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Section principale - meilleurs espacements */
+  section.bg-background-4,
+  section.bg-background-5 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  section .main-container > div {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    gap: 2rem !important;
+  }
+
+  .glassmorphism-content-card {
+    padding: 28px 20px;
+    position: relative;
+    z-index: 10;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+  }
+
+  /* Espacement entre l'image et la carte */
+  section .main-container > div > div:first-child {
+    padding-bottom: 1rem;
+  }
+
+  /* Espacement des éléments dans la carte */
+  .glassmorphism-content-card .badge {
+    margin-bottom: 1rem;
+  }
+
+  .glassmorphism-content-card h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .glassmorphism-content-card p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  /* Conteneur parent pour avoir une hauteur minimale en mobile */
+  section .main-container > div > div:first-child {
+    min-height: auto;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 2rem;
+  }
+
+  /* S'assurer que le conteneur de l'image a une position visible */
+  section .main-container > div > div > div:first-child {
+    min-height: auto;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 1rem;
+  }
+
+  /* Image avec meilleur espacement */
+  section .absolute[class*="-z-10"] {
+    margin-bottom: 1rem;
+  }
+
+  /* En mobile, ajuster l'image pour qu'elle soit visible */
+  section .absolute img[src*="p1.jpg"] {
+    transform: translate(0%, 0%) scale(1) !important;
+    opacity: 1 !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Conteneur de l'image en mobile - ajuster pour la visibilité */
+  section .absolute[class*="-z-10"] {
+    width: 80% !important;
+    height: 120% !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 1 !important;
+    display: block !important;
+    position: absolute !important;
+  }
+
+  /* Forcer la visibilité de l'image en mobile avec un sélecteur plus spécifique */
+  section div.absolute.-z-10,
+  section div[class*="absolute"][class*="-z-10"] {
+    z-index: 1 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  section div.absolute.-z-10 img,
+  section div[class*="absolute"][class*="-z-10"] img {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+}
+
+.badge {
+  padding-inline: calc(var(--spacing) * 5);
+  padding-block: calc(var(--spacing) * 1.5);
+  font-size: var(--text-tagline-2);
+  line-height: var(--text-tagline-2--line-height);
+  font-weight: var(--font-weight-normal);
+  text-wrap: nowrap;
+  color: var(--color-secondary);
+  text-transform: lowercase;
+  backdrop-filter: blur(17.23px);
+  -webkit-backdrop-filter: blur(17.23px);
+  border-radius: 9999px;
+  display: inline-block;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.badge:first-letter {
+  text-transform: uppercase;
+}
+
+.badge-green {
+  background-color: var(--color-ns-green-light);
+}
+
+html.dark .badge-green {
+  background-color: #fcfcfc1a;
+  color: var(--color-ns-yellow);
+}
+
+/* Icônes ns-shape - utiliser les vraies icônes si disponibles */
+.ns-shape-13::before {
+  content: "🎓";
+  font-size: 4rem;
+  line-height: 1;
+  display: block;
+}
+
+.ns-shape-41::before {
+  content: "🔒";
+  font-size: 4rem;
+  line-height: 1;
+  display: block;
+}
+
+.ns-shape-36::before {
+  content: "📊";
+  font-size: 4rem;
+  line-height: 1;
+  display: block;
+}
+
+.ns-shape-21::before {
+  content: "🚀";
+  font-size: 4rem;
+  line-height: 1;
+  display: block;
+}
+
+/* Styles pour la liste Unlock - simple et moderne */
+ul.space-y-6 li {
+  transition: border-color 0.3s ease;
+}
+
+ul.space-y-6 li:hover {
+  border-color: var(--color-primary-600, #2563eb);
+}
+
+html.dark ul.space-y-6 li:hover {
+  border-color: var(--color-accent, #fbbf24);
+}
+
+/* Bouton styles */
+.btn {
+  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
+}
+
+.btn-md {
+  @apply px-6 py-3 text-base;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white;
+}
+
+.btn-secondary:hover {
+  @apply bg-white text-secondary;
+}
+
+html.dark .btn-secondary {
+  @apply bg-white text-secondary border-2 border-white;
+}
+
+html.dark .btn-secondary:hover {
+  @apply bg-accent text-white border-accent;
+}
+

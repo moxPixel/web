@@ -1,0 +1,58 @@
+<section
+  class="cookie-consent"
+  [class.cookie-consent--visible]="isVisible"
+  [class.cookie-consent--hiding]="isHiding"
+  aria-live="polite"
+  aria-label="Bannière de consentement aux cookies"
+>
+  <div class="cookie-consent__content">
+    <div class="cookie-consent__header">
+      <div class="cookie-consent__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 2a10 10 0 1 0 10 10c-.8 0-1.5-.3-2-.8a2.7 2.7 0 0 1-2.2-4.2c-.4-.7-.6-1.4-.6-2.2A2.7 2.7 0 0 1 12 2Z"
+          />
+          <circle cx="8.5" cy="11.5" r="1" />
+          <circle cx="13.5" cy="7.5" r="1" />
+          <circle cx="15" cy="14" r="1" />
+          <circle cx="11" cy="16.5" r="1" />
+        </svg>
+      </div>
+      <div>
+        <p class="cookie-consent__eyebrow">Expérience premium</p>
+        <h3 class="cookie-consent__title">Un cookie pour orchestrer la magie</h3>
+      </div>
+    </div>
+
+    <div class="cookie-consent__body">
+      <p class="cookie-consent__text">
+        Nous utilisons des cookies pour offrir un parcours aussi fluide qu’un produit SaaS haut de gamme :
+        animations GSAP, modèles 3D, analytics et recommandations personnalisées.
+      </p>
+      <div class="cookie-consent__links">
+        <a href="/politique-de-confidentialite" class="cookie-link">Politique de confidentialité</a>
+        <span class="cookie-separator" aria-hidden="true">•</span>
+        <a href="/mentions-legales" class="cookie-link">Mentions légales</a>
+      </div>
+    </div>
+
+    <div class="cookie-consent__actions">
+      <button
+        type="button"
+        class="btn btn-outline cookie-btn-reject"
+        (click)="reject()"
+      >
+        Refuser
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary cookie-btn-accept"
+        (click)="accept()"
+      >
+        Activer toutes les fonctionnalités
+      </button>
+    </div>
+  </div>
+</section>
+
+

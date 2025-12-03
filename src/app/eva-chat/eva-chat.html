@@ -1,0 +1,12 @@
+<!-- Bouton flottant en bas à gauche -->
+<a
+  #chatButton
+  (click)="toggleChat()"
+  matRipple
+  [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+  class="eva-chat-button btn bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary px-4 h-10 flex items-center justify-center gap-2 cursor-pointer text-sm"
+  aria-label="Ouvrir le chat Eva"
+>
+  <mat-icon class="eva-chat-icon">auto_awesome</mat-icon>
+  <span>Besoin d'aide ?</span>
+</a>

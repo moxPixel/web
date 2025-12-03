@@ -1,0 +1,110 @@
+<section id="apprenticeship" class="bg-background-4 dark:bg-background-5">
+  <div class="main-container py-14 md:py-16 lg:py-20 xl:py-24">
+    
+    <!-- Header Section -->
+    <div class="text-center mb-12 lg:mb-16">
+      <div class="space-y-4 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
+        <span class="badge badge-green mb-5 inline-block"> Alternance </span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto">
+          Formez-vous en <span class="text-primary-500 dark:text-accent">alternance</span> aux technologies de demain
+        </h2>
+        <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          Combinez <strong>formation théorique d'excellence</strong> et <strong>expérience professionnelle</strong> pour maîtriser les technologies avancées tout en développant votre carrière.
+        </p>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      
+      <!-- Content -->
+      <div class="order-1 lg:order-1 space-y-6 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
+        <div class="space-y-4">
+          <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
+            L'<span class="text-primary-500 dark:text-accent">alternance</span> chez Unlock
+          </h3>
+          <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            Nos programmes d'alternance vous permettent d'acquérir une <strong>double expertise</strong> : une formation théorique rigoureuse dispensée par nos experts et une expérience pratique en entreprise pour une <strong>montée en compétences accélérée</strong>.
+          </p>
+        </div>
+
+        <!-- Benefits List -->
+        <ul class="space-y-4 list-none">
+          <li class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1">
+              <div class="w-3 h-3 rounded-full bg-black dark:bg-white"></div>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-900 dark:text-white mb-1">Formation théorique d'excellence</h4>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                Programmes conçus par des <strong>experts reconnus</strong> dans les technologies de rupture : IA, Cybersécurité, Data et architectures modernes.
+              </p>
+            </div>
+          </li>
+
+          <li class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1">
+              <div class="w-3 h-3 rounded-full bg-black dark:bg-white"></div>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-900 dark:text-white mb-1">Expérience professionnelle</h4>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                Mise en pratique immédiate dans des entreprises partenaires pour développer des <strong>compétences opérationnelles</strong> directement applicables.
+              </p>
+            </div>
+          </li>
+
+          <li class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1">
+              <div class="w-3 h-3 rounded-full bg-black dark:bg-white"></div>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-900 dark:text-white mb-1">Rémunération et avantages</h4>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                Contrat d'alternance avec <strong>rémunération</strong> et accompagnement personnalisé pour maximiser votre <strong>développement professionnel</strong>.
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        <!-- CTA Button -->
+        <div class="pt-4">
+          <a
+            routerLink="/contact-client"
+            matRipple
+            [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+            class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+          >
+            <span>En savoir plus</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Images superposées -->
+      <div class="order-2 lg:order-2 relative">
+        <div class="relative aspect-[4/3]">
+          <!-- Image principale (en arrière, décalée à droite) -->
+          <div class="absolute top-0 right-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-xl">
+            <img
+              src="/assets/images/img/p9.jpg"
+              alt="Formation en alternance"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+          </div>
+          
+          <!-- Image secondaire (superposée à gauche) -->
+          <div class="absolute bottom-0 left-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-2xl z-10">
+            <img
+              src="/assets/images/img/p10.jpg"
+              alt="Formation en alternance"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

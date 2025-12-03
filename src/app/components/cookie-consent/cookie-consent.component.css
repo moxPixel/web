@@ -1,0 +1,220 @@
+:host {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  :host {
+    padding: 0 16px 16px;
+  }
+}
+
+.cookie-consent {
+  width: 100%;
+  padding: 12px;
+  transform: translateY(100%);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+
+.cookie-consent--visible {
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.cookie-consent--hiding {
+  transform: translateY(100%);
+}
+
+.cookie-consent__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 24px;
+  border: 1px solid var(--color-stroke-2);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 25px 60px rgba(15, 20, 40, 0.08);
+}
+
+:host-context(.dark) .cookie-consent__content {
+  border-color: var(--color-stroke-5);
+  background: rgba(15, 18, 26, 0.6);
+  color: var(--color-accent);
+}
+
+.cookie-consent__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cookie-consent__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(134, 79, 254, 0.2), rgba(134, 79, 254, 0.05));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-500);
+  flex-shrink: 0;
+}
+
+.cookie-consent__icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.cookie-consent__eyebrow {
+  font-size: var(--text-tagline-2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-500);
+  margin: 0 0 4px 0;
+}
+
+.cookie-consent__title {
+  font-size: var(--text-heading-6);
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-secondary);
+}
+
+:host-context(.dark) .cookie-consent__title {
+  color: var(--color-accent);
+}
+
+.cookie-consent__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cookie-consent__text {
+  font-size: var(--text-tagline-1);
+  line-height: 1.7;
+  margin: 0;
+  color: var(--color-secondary);
+  opacity: 0.85;
+}
+
+:host-context(.dark) .cookie-consent__text {
+  color: var(--color-accent);
+  opacity: 0.75;
+}
+
+.cookie-consent__links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cookie-link {
+  font-size: var(--text-tagline-2);
+  color: var(--color-primary-500);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.cookie-link:hover {
+  color: var(--color-primary-400);
+}
+
+:host-context(.dark) .cookie-link {
+  color: var(--color-primary-300);
+}
+
+.cookie-separator {
+  color: var(--color-secondary);
+  opacity: 0.3;
+}
+
+:host-context(.dark) .cookie-separator {
+  color: var(--color-accent);
+}
+
+.cookie-consent__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: var(--text-tagline-1);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--color-secondary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+:host-context(.dark) .btn-primary {
+  background: #ffffff;
+  color: var(--color-secondary);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(26, 26, 28, 0.25);
+  color: var(--color-secondary);
+}
+
+.btn-outline:hover {
+  background: rgba(26, 26, 28, 0.05);
+}
+
+:host-context(.dark) .btn-outline {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-accent);
+}
+
+:host-context(.dark) .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 768px) {
+  .cookie-consent__content {
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+  }
+
+  .cookie-consent__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cookie-consent__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+

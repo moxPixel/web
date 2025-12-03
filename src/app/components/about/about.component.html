@@ -1,0 +1,107 @@
+<section id="about" class="bg-background-4 dark:bg-background-5">
+  <div class="main-container">
+    <div
+      class="flex lg:flex-row flex-col items-start lg:gap-[100px] md:gap-y-20 gap-y-10 pt-14 md:pt-16 lg:pt-[88px] xl:pt-[150px] pb-8 md:pb-10 lg:pb-12 xl:pb-16"
+    >
+      <div
+        class="w-full lg:flex-1 lg:sticky lg:top-28 lg:max-w-full max-w-[520px] lg:mx-0 mx-auto relative"
+      >
+        <!-- Petite image en superposition décalée - sortie du parent -->
+        <div
+          class="absolute -z-5 z-5 top-[60%] lg:top-[70%] right-[-10%] lg:right-[-5%] w-[35%] lg:w-[40%] h-auto rounded-[15px] shadow-2xl overflow-hidden"
+        >
+          <img
+            src="/assets/images/img/g6.jpg"
+            alt=""
+            class="w-full h-full object-cover rounded-[15px]"
+          />
+        </div>
+        <!-- Image principale en arrière-plan -->
+        <div
+          class="absolute -z-10 lg:-z-10 z-0 top-1 left-1/2 -translate-x-1/2 -translate-y-[10%] w-[80%] h-[160%] md:w-[85%] md:h-[200%]"
+        >
+          <img
+            src="/assets/images/img/g4.jpg"
+            alt=""
+            class="w-full h-full object-cover rounded-[20px] scale-110"
+            style="transform: translate(5%, -5%) scale(1.1);"
+          />
+        </div>
+        <div
+          class="glassmorphism-content-card text-center lg:text-left relative z-10 scroll-reveal bg-white/60 dark:bg-[rgba(24,29,38,0.3)] backdrop-blur-[25px]"
+        >
+          <span class="badge badge-green mb-5"> Formation </span>
+          <h2 class="mb-3">
+            Unlock forme aux <span class="text-primary-500 dark:text-accent">technologies avancées</span> : <span class="text-primary-500 dark:text-accent">IA</span>, <span class="text-primary-500 dark:text-accent">cybersécurité</span> et <span class="text-primary-500 dark:text-accent">data</span>
+          </h2>
+          <p class="mb-14 lg:max-w-[620px]">
+            Unlock est bien plus qu'un centre de formation : c'est un <strong>écosystème d'excellence</strong> dédié aux professionnels et aux entreprises qui refusent la médiocrité et visent la <strong>maîtrise des technologies de demain</strong>. Nous transformons l'apprentissage en <strong>avantage concurrentiel durable</strong>.
+          </p>
+          <div>
+            <a
+              routerLink="/services"
+              matRipple
+              [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+            >
+              <span>En savoir plus</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="w-full lg:flex-1 lg:max-w-full md:max-w-[65%] max-w-[90%] lg:mx-0 mx-auto mt-8 md:mt-0"
+      >
+        <!-- Texte introductif -->
+        <div class="mb-8 lg:mb-12">
+          <h3 class="text-2xl font-bold mb-4 mt-16 md:mt-8 lg:mt-0">
+            Unlock c'est quoi ?
+          </h3>
+          <p class="leading-relaxed max-w-3xl mb-8 text-lg">
+            Unlock Formation, c'est un <strong>écosystème d'excellence</strong> dédié aux professionnels et aux entreprises qui refusent la médiocrité et visent la <strong>maîtrise des technologies de demain</strong>. Nous formons ceux qui façonnent l'avenir : les décideurs, les innovateurs, les architectes de solutions qui comprennent que la <strong>compétence technique n'est pas négociable</strong>.
+          </p>
+        </div>
+
+        <!-- Liste pertinente sur Unlock -->
+        <ul class="space-y-6 list-none">
+          <li class="border-l-4 border-primary-500 dark:border-accent pl-6 py-2">
+            <h4 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Notre Mission</h4>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              Transformer l'apprentissage en <strong>avantage concurrentiel</strong>. Nous accompagnons les professionnels et les entreprises dans l'acquisition de <strong>compétences d'excellence</strong> en technologies émergentes, parfaitement alignées sur les <strong>besoins réels du marché</strong> et les défis de demain.
+            </p>
+          </li>
+
+          <li class="border-l-4 border-primary-500 dark:border-accent pl-6 py-2">
+            <h4 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Notre Expertise</h4>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              Spécialisation exclusive dans les <strong>technologies de rupture</strong> : <strong>Intelligence Artificielle</strong>, <strong>Cybersécurité</strong>, <strong>Data Science</strong> et <strong>technologies de pointe</strong>. Notre expertise est reconnue par les leaders du secteur et constamment actualisée pour anticiper les évolutions.
+            </p>
+          </li>
+
+          <li class="border-l-4 border-primary-500 dark:border-accent pl-6 py-2">
+            <h4 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Notre Public</h4>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              Nous formons l'<strong>élite professionnelle</strong> : <strong>décideurs stratégiques</strong>, <strong>innovateurs</strong>, <strong>architectes de solutions</strong> et entreprises visionnaires qui comprennent que la <strong>compétence technique est le nouveau capital</strong>. Pour ceux qui refusent de se contenter de l'ordinaire.
+            </p>
+          </li>
+
+          <li class="border-l-4 border-primary-500 dark:border-accent pl-6 py-2">
+            <h4 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Notre Approche</h4>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              <strong>Synthèse parfaite</strong> entre théorie académique rigoureuse et pratique opérationnelle immédiate. Nos formations garantissent une <strong>montée en compétences accélérée</strong> et durable, conçues par des <strong>experts reconnus</strong> qui maîtrisent à la fois la pédagogie et l'excellence technique.
+            </p>
+          </li>
+
+          <li class="border-l-4 border-primary-500 dark:border-accent pl-6 py-2">
+            <h4 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Notre Engagement</h4>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              Un <strong>écosystème d'excellence</strong> qui refuse la médiocrité et vise la <strong>maîtrise absolue des technologies de demain</strong>. Nous ne formons pas seulement des compétences, nous façonnons des <strong>leaders technologiques</strong> capables de transformer leur environnement et de créer l'avenir.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
