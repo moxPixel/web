@@ -646,9 +646,13 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mouseY = ((event.clientY - rect.top) / rect.height) * 2 - 1;
 
       // Calculer la rotation cible basée sur la position de la souris
-      // Effet très subtil : principalement horizontal, légèrement vertical
-      this.targetRotationY = this.mouseX * 0.12; // Rotation horizontale subtile
-      this.targetRotationX = -this.mouseY * 0.06; // Rotation verticale très légère (inversée)
+      // Rotation plus prononcée pour que le modèle suive vraiment la souris
+      // Limiter l'amplitude pour éviter les rotations trop extrêmes
+      const maxRotationY = 0.4; // ~23 degrés en radians (rotation horizontale)
+      const maxRotationX = 0.25; // ~14 degrés en radians (rotation verticale)
+
+      this.targetRotationY = this.mouseX * maxRotationY; // Rotation horizontale suivante
+      this.targetRotationX = -this.mouseY * maxRotationX; // Rotation verticale (inversée)
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -995,9 +999,11 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
           // Mettre à jour la rotation automatique aléatoire
           this.updateAutoRotation();
 
-          // Interpolation douce vers la rotation cible (effet de suivi de la souris subtil)
-          this.currentRotationX += (this.targetRotationX - this.currentRotationX) * 0.08;
-          this.currentRotationY += (this.targetRotationY - this.currentRotationY) * 0.08;
+          // Interpolation fluide vers la rotation cible (effet de suivi de la souris réactif)
+          // Augmenter le facteur d'interpolation pour une réponse plus rapide
+          const lerpFactor = 0.12; // Plus réactif qu'avant (0.08)
+          this.currentRotationX += (this.targetRotationX - this.currentRotationX) * lerpFactor;
+          this.currentRotationY += (this.targetRotationY - this.currentRotationY) * lerpFactor;
 
           // Appliquer la rotation combinée : rotation auto (0) + scroll + souris
           // Rotation auto désactivée donc autoRotationTargetX/Y = 0
