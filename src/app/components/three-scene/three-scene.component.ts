@@ -61,6 +61,11 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private scrollRotationY = { value: 0 };
   private scrollRotationX = { value: 0 };
 
+  // Cache pour getBoundingClientRect() afin d'éviter les recalculs fréquents
+  private cachedRect?: DOMRect;
+  private rectCacheTime = 0;
+  private readonly RECT_CACHE_DURATION = 100; // Cache pendant 100ms
+
   private isDarkMode = false;
   private ambientLight?: THREE.AmbientLight;
   private directionalLight1?: THREE.DirectionalLight;
@@ -293,7 +298,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
                 matAny.emissiveIntensity = 0.28;
               }
             }
-
+            
             // Désactiver les textures de couleur pour forcer le monochrome
             if (material.map) {
               material.map = null;
@@ -326,7 +331,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
                 matAny.emissiveIntensity = 0.35; // Intensité emissive similaire au dark mode
               }
             }
-
+            
             // Désactiver les textures de couleur pour forcer le monochrome
             if (material.map) {
               material.map = null;
@@ -637,6 +642,9 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(width, height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Invalider le cache du rect lors du resize
+      this.cachedRect = undefined;
     };
 
     window.addEventListener('resize', handleResize);
@@ -649,7 +657,15 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.isDestroyed || !this.canvasContainer) return;
 
       const container = this.canvasContainer.nativeElement;
-      const rect = container.getBoundingClientRect();
+      const now = performance.now();
+
+      // Mettre en cache getBoundingClientRect() pour éviter les recalculs fréquents
+      if (!this.cachedRect || (now - this.rectCacheTime) > this.RECT_CACHE_DURATION) {
+        this.cachedRect = container.getBoundingClientRect();
+        this.rectCacheTime = now;
+      }
+
+      const rect = this.cachedRect;
 
       // Calculer la position de la souris relative au conteneur (de -1 à 1)
       this.mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -751,16 +767,16 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
 
           const triggerAnimation = () => {
             // Petit délai pour s'assurer que le modèle est complètement rendu et que le loader est caché
-            setTimeout(() => {
-              this.gsapAnimationService.defloutage(this.canvasContainer.nativeElement, {
-                duration: 1.4,
-                delay: 0.1,
-                blur: 25,
-                opacity: 0,
-                scale: 0.9,
-                ease: 'power3.out'
-              });
-            }, 150);
+          setTimeout(() => {
+            this.gsapAnimationService.defloutage(this.canvasContainer.nativeElement, {
+              duration: 1.4,
+              delay: 0.1,
+              blur: 25,
+              opacity: 0,
+              scale: 0.9,
+              ease: 'power3.out'
+            });
+          }, 150);
           };
 
           // Vérifier si le loader est déjà caché
@@ -948,7 +964,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private initAutoRotation(): void {
     // ROTATION INFINIE DÉSACTIVÉE - Le modèle reste fixe
     // Code commenté pour référence future si besoin de réactiver
-
+    
     // Vitesses aléatoires mais constantes pour une rotation infinie ultra fluide
     // Pas de rotation verticale automatique, seulement horizontale
     // const baseSpeedY = 0.0008 + Math.random() * 0.0004;
@@ -965,14 +981,14 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateAutoRotation(): void {
     // ROTATION INFINIE DÉSACTIVÉE - Le modèle reste à rotation fixe
     // Code commenté pour référence future si besoin de réactiver
-
+    
     // Rotation perpétuelle horizontale uniquement : on incrémente sans jamais inverser la direction
     // Pas de rotation verticale automatique
     // this.autoRotationTargetY += this.autoRotationSpeedY;
 
     // Garder les valeurs fixes pour que le modèle reste à la même rotation
     // Les valeurs restent à leur état initial (autoRotationTargetY = 5 degrés)
-
+    
     // Code commenté pour référence - garder les valeurs dans une plage raisonnable
     // const twoPI = Math.PI * 2;
     // if (this.autoRotationTargetX > twoPI || this.autoRotationTargetX < -twoPI) {

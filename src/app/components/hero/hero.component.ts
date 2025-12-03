@@ -59,8 +59,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const masterTimeline = gsap.timeline({ delay: 0.1 });
 
     if (this.logoContainer?.nativeElement) {
-      gsap.set(this.logoContainer.nativeElement, {
-        opacity: 0,
+      gsap.set(this.logoContainer.nativeElement, { 
+        opacity: 0, 
         filter: 'blur(16px)',
         scale: 0.95
       });
@@ -99,8 +99,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       if (this.heroContent) {
         const paragraphs = this.heroContent.nativeElement.querySelectorAll('p');
         paragraphs.forEach((p: HTMLElement, index: number) => {
-          gsap.set(p, {
-            opacity: 0,
+          gsap.set(p, { 
+            opacity: 0, 
             filter: 'blur(18px)',
             scale: 0.98
           });

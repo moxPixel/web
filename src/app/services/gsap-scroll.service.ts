@@ -241,18 +241,23 @@ export class GsapScrollService {
       let lastScroll = 0;
       let ticking = false;
       let isShrunk = false;
+      let lastUpdateTime = 0;
+      const THROTTLE_MS = 16; // ~60fps max
 
       const updateHeader = () => {
+        const currentTime = performance.now();
         const currentScroll = window.scrollY || document.documentElement.scrollTop;
         const scrollingDown = currentScroll > lastScroll;
         const scrollingUp = currentScroll < lastScroll;
         const scrollDelta = Math.abs(currentScroll - lastScroll);
 
-        // Ignorer les micro-mouvements pour éviter les saccades
-        if (scrollDelta < 1) {
+        // Ignorer les micro-mouvements et throttler les mises à jour
+        if (scrollDelta < 2 || (currentTime - lastUpdateTime) < THROTTLE_MS) {
           ticking = false;
           return;
         }
+
+        lastUpdateTime = currentTime;
 
         // Scroll vers le bas : rétrécir, remonter, ajouter background et blur
         if (scrollingDown && currentScroll > 50 && !isShrunk) {

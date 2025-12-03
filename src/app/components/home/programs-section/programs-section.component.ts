@@ -20,6 +20,7 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('carouselContainer', { static: false }) carouselContainer?: ElementRef<HTMLElement>;
 
   private scrollTriggerInstance?: ScrollTrigger;
+  private cachedMaxScroll = 0; // Cache pour éviter les recalculs coûteux
 
   constructor(private ngZone: NgZone) {}
 
@@ -69,10 +70,19 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
+    // Calculer maxScroll une seule fois et le mettre en cache
+    const calculateMaxScroll = () => {
+      this.cachedMaxScroll = container.scrollWidth - container.clientWidth;
+      return this.cachedMaxScroll;
+    };
+
+    // Initialiser le cache
+    calculateMaxScroll();
+
     const updateScroll = (progress: number) => {
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      if (maxScroll > 0) {
-        container.scrollLeft = progress * maxScroll;
+      // Utiliser le cache au lieu de recalculer à chaque frame
+      if (this.cachedMaxScroll > 0) {
+        container.scrollLeft = progress * this.cachedMaxScroll;
       } else {
         container.scrollLeft = 0;
       }
@@ -86,7 +96,10 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
       end: 'bottom top',
       scrub: 0.5, // Valeur réduite pour plus de fluidité
       onUpdate: (self) => updateScroll(self.progress),
-      onRefresh: (self) => updateScroll(self.progress),
+      onRefresh: () => {
+        // Recalculer le cache uniquement lors du refresh
+        calculateMaxScroll();
+      },
       invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
       refreshPriority: -1 // Priorité basse pour éviter les conflits
     });
