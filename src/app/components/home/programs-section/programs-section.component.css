@@ -51,7 +51,7 @@ html.dark .program-card {
 }
 
 html.dark .program-card:hover {
-  border-color: var(--color-accent);
+  border-color: var(--color-ns-green-light);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
 }
 

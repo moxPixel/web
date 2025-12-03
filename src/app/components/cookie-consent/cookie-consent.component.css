@@ -64,6 +64,10 @@
   flex-shrink: 0;
 }
 
+:host-context(.dark) .cookie-consent__icon {
+  color: var(--color-ns-green-light);
+}
+
 .cookie-consent__icon svg {
   width: 28px;
   height: 28px;
@@ -79,6 +83,10 @@
   letter-spacing: 0.08em;
   color: var(--color-primary-500);
   margin: 0 0 4px 0;
+}
+
+:host-context(.dark) .cookie-consent__eyebrow {
+  color: var(--color-ns-green-light);
 }
 
 .cookie-consent__title {
@@ -125,8 +133,16 @@
   transition: color 0.3s ease;
 }
 
+:host-context(.dark) .cookie-link {
+  color: var(--color-ns-green-light);
+}
+
 .cookie-link:hover {
   color: var(--color-primary-400);
+}
+
+:host-context(.dark) .cookie-link:hover {
+  color: var(--color-ns-green);
 }
 
 :host-context(.dark) .cookie-link {

@@ -19,8 +19,8 @@
   pointer-events: none;
 }
 
-html.dark .nav-item-link::after {
-  background-color: var(--color-accent);
+:host-context(html.dark) .nav-item-link::after {
+  background-color: var(--color-ns-green-light);
 }
 
 .nav-item-link:hover::after {
@@ -43,8 +43,8 @@ html.dark .nav-item-link::after {
   pointer-events: none;
 }
 
-html.dark .nav-item-link.active::before {
-  background-color: var(--color-accent);
+:host-context(html.dark) .nav-item-link.active::before {
+  background-color: var(--color-ns-green-light);
 }
 
 
@@ -60,8 +60,8 @@ html.dark .nav-item-link.active::before {
   transition: width 0.3s ease;
 }
 
-html.dark .mobile-nav-link::after {
-  background-color: var(--color-accent);
+:host-context(html.dark) .mobile-nav-link::after {
+  background-color: var(--color-ns-green-light);
 }
 
 .mobile-nav-link:hover::after,
