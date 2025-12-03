@@ -8,31 +8,7 @@
   clip: rect(0, 0, 0, 0);
 }
 
-/* Styles pour les boutons si nécessaire */
-.btn {
-  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
-}
-
-.btn-secondary {
-  @apply bg-secondary text-white hover:bg-primary-500;
-}
-
-.btn-primary {
-  @apply bg-primary-500 text-white hover:bg-primary-600;
-}
-
-.btn-lg {
-  @apply px-8 h-12 text-base;
-}
-
-/* Dark mode button styles */
-.dark .btn-secondary {
-  @apply bg-white text-secondary;
-}
-
-.dark .btn-primary {
-  @apply bg-accent text-secondary;
-}
+/* Classes globales (.btn) dans styles.css @layer components */
 
 /* Sphères lumineuses derrière la card */
 .hero-spheres {

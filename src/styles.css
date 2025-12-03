@@ -128,4 +128,281 @@
   }
 }
 
+/* ============================================
+   COMPONENTS LAYER - Classes réutilisables
+   ============================================ */
+@layer components {
+  /* ========== BOUTONS ========== */
+  /* Bouton de base */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
+    display: inline-flex !important; /* Forcer inline-flex pour éviter le block */
+    width: auto !important; /* Largeur automatique */
+    max-width: fit-content !important; /* Largeur basée sur le contenu */
+  }
+
+  /* Empêcher matRipple de forcer la largeur complète - Material Ripple peut forcer display: block */
+  .btn[matRipple],
+  a.btn[matRipple],
+  button.btn[matRipple],
+  [matRipple].btn {
+    display: inline-flex !important;
+    width: auto !important;
+    max-width: fit-content !important;
+  }
+
+  /* Largeur maximale pour éviter les boutons trop larges */
+  .btn-lg {
+    max-width: 280px; /* Largeur maximale pour les boutons larges */
+  }
+
+  .btn-md {
+    max-width: 200px; /* Largeur maximale pour les boutons moyens */
+  }
+
+  .btn-sm {
+    max-width: 150px; /* Largeur maximale pour les petits boutons */
+  }
+
+  /* Override pour les boutons qui doivent vraiment prendre toute la largeur */
+  .btn.w-full,
+  .btn[class*="w-full"] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Tailles */
+  .btn-sm {
+    @apply px-4 h-10 text-sm;
+  }
+
+  .btn-md {
+    @apply px-6 py-3 text-base;
+  }
+
+  .btn-lg {
+    @apply px-8 h-12 text-base;
+  }
+
+  /* Variantes primaires */
+  .btn-primary {
+    background: var(--color-secondary);
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  /* Variantes secondaires */
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary/90;
+  }
+
+  /* Variante outline */
+  .btn-outline {
+    background: transparent;
+    border: 1px solid rgba(26, 26, 28, 0.25);
+    color: var(--color-secondary);
+  }
+
+  .btn-outline:hover {
+    background: rgba(26, 26, 28, 0.05);
+  }
+
+  /* Dark mode - Boutons primaires */
+  .dark .btn-primary,
+  html.dark .btn-primary,
+  :host-context(.dark) .btn-primary,
+  :host-context(html.dark) .btn-primary {
+    background: #ffffff;
+    color: var(--color-secondary);
+  }
+
+  /* Dark mode - Boutons secondaires */
+  .dark .btn-secondary,
+  html.dark .btn-secondary {
+    @apply bg-white text-secondary hover:bg-white/90;
+  }
+
+  /* Dark mode - Boutons outline */
+  .dark .btn-outline,
+  html.dark .btn-outline,
+  :host-context(.dark) .btn-outline,
+  :host-context(html.dark) .btn-outline {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--color-accent);
+  }
+
+  .dark .btn-outline:hover,
+  html.dark .btn-outline:hover,
+  :host-context(.dark) .btn-outline:hover,
+  :host-context(html.dark) .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Variante avec border pour hero */
+  .btn-secondary-border {
+    @apply border-2 border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white;
+  }
+
+  .dark .btn-secondary-border {
+    @apply border-white text-white hover:bg-white hover:text-secondary;
+  }
+
+  /* ========== BADGES ========== */
+  .badge {
+    padding-inline: calc(var(--spacing) * 5);
+    padding-block: calc(var(--spacing) * 1.5);
+    font-size: var(--text-tagline-2);
+    line-height: var(--text-tagline-2--line-height);
+    font-weight: var(--font-weight-normal);
+    text-wrap: nowrap;
+    color: var(--color-secondary);
+    text-transform: lowercase;
+    backdrop-filter: blur(17.23px);
+    -webkit-backdrop-filter: blur(17.23px);
+    border-radius: 9999px;
+    display: inline-block;
+  }
+
+  .badge:first-letter {
+    text-transform: uppercase;
+  }
+
+  /* Variantes de couleurs */
+  .badge-green {
+    background-color: var(--color-ns-green-light);
+  }
+
+  .badge-yellow {
+    background-color: var(--color-ns-yellow-light);
+  }
+
+  .badge-cyan {
+    background-color: var(--color-ns-cyan-light);
+  }
+
+  /* Dark mode badges */
+  html.dark .badge-green {
+    background-color: #fcfcfc1a;
+    color: var(--color-ns-yellow);
+  }
+
+  html.dark .badge-yellow {
+    background-color: #fcfcfc1a;
+    color: var(--color-ns-yellow);
+  }
+
+  html.dark .badge-cyan {
+    background-color: #fcfcfc1a;
+    color: var(--color-ns-cyan);
+  }
+
+  /* ========== UTILITAIRES GLOBAUX ========== */
+  /* Backdrop blur utilities */
+  .backdrop-blur-sm {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .backdrop-blur-md {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+
+  .backdrop-blur-lg {
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+  }
+
+  /* Box shadow utilities */
+  .shadow-glass-sm {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  }
+
+  .shadow-glass-md {
+    box-shadow: 0 20px 55px rgba(15, 20, 40, 0.15);
+  }
+
+  .shadow-glass-lg {
+    box-shadow: 0 25px 60px rgba(15, 20, 40, 0.08);
+  }
+
+  html.dark .shadow-glass-sm {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  }
+
+  html.dark .shadow-glass-md {
+    box-shadow: 0 20px 55px rgba(15, 20, 40, 0.25);
+  }
+
+  html.dark .shadow-glass-lg {
+    box-shadow: 0 25px 60px rgba(15, 20, 40, 0.12);
+  }
+
+  /* Transition utilities */
+  .transition-transform {
+    transition: transform 0.3s ease;
+  }
+
+  .transition-color {
+    transition: color 0.3s ease;
+  }
+
+  .transition-opacity {
+    transition: opacity 0.2s ease;
+  }
+
+  .transition-all-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Transform utilities */
+  .transform-none-important {
+    transform: none !important;
+  }
+
+  .filter-none-important {
+    filter: none !important;
+  }
+
+  .opacity-full-important {
+    opacity: 1 !important;
+  }
+
+  /* ========== GLASSMORPHISM CARD ========== */
+  .glassmorphism-content-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    padding: 32px;
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--color-stroke-2);
+  }
+
+  html.dark .glassmorphism-content-card {
+    background: rgba(15, 18, 26, 0.6);
+    border-color: var(--color-stroke-5);
+    color: var(--color-accent);
+  }
+
+  /* Variante avec blur différent */
+  .glassmorphism-blur-sm {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .glassmorphism-blur-md {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+
+  .glassmorphism-blur-lg {
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+  }
+}
+
 /* You can add global styles to this file, and also import other style files */

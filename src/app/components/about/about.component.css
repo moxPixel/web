@@ -1,32 +1,11 @@
-/* Styles pour glassmorphism et badge - identique à l'exemple */
-.glassmorphism-content-card {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
-  border-radius: 20px;
-  padding: 32px;
-  -webkit-backdrop-filter: blur(25px);
-  backdrop-filter: blur(25px);
-  /* Pas d'animations - tout visible par défaut */
-  opacity: 1 !important;
-  transform: none !important;
-  filter: none !important;
-}
+/* Classes globales (.glassmorphism-content-card) dans styles.css @layer components */
+/* Overrides spécifiques pour about component - pas d'animations */
 
-/* Tous les éléments internes visibles par défaut */
+.glassmorphism-content-card,
 .glassmorphism-content-card h2,
 .glassmorphism-content-card p,
-.glassmorphism-content-card .btn {
-  opacity: 1 !important;
-  transform: none !important;
-  filter: none !important;
-}
-
-/* Image visible par défaut - pas d'animations */
-section .absolute[class*="-z-10"] {
-  opacity: 1 !important;
-  transform: none !important;
-  filter: none !important;
-}
-
+.glassmorphism-content-card .btn,
+section .absolute[class*="-z-10"],
 section .absolute[class*="-z-10"] img {
   opacity: 1 !important;
   transform: none !important;
@@ -196,34 +175,11 @@ section .main-container > div > div:first-child {
   }
 }
 
-.badge {
-  padding-inline: calc(var(--spacing) * 5);
-  padding-block: calc(var(--spacing) * 1.5);
-  font-size: var(--text-tagline-2);
-  line-height: var(--text-tagline-2--line-height);
-  font-weight: var(--font-weight-normal);
-  text-wrap: nowrap;
-  color: var(--color-secondary);
-  text-transform: lowercase;
-  backdrop-filter: blur(17.23px);
-  -webkit-backdrop-filter: blur(17.23px);
-  border-radius: 9999px;
-  display: inline-block;
+/* Classes globales (.badge) dans styles.css @layer components */
+/* Styles spécifiques pour about avec !important pour override les animations */
+.glassmorphism-content-card .badge {
   opacity: 1 !important;
   transform: none !important;
-}
-
-.badge:first-letter {
-  text-transform: uppercase;
-}
-
-.badge-green {
-  background-color: var(--color-ns-green-light);
-}
-
-html.dark .badge-green {
-  background-color: #fcfcfc1a;
-  color: var(--color-ns-yellow);
 }
 
 /* Icônes ns-shape - utiliser les vraies icônes si disponibles */
@@ -268,28 +224,5 @@ html.dark ul.space-y-6 li:hover {
   border-color: var(--color-accent, #fbbf24);
 }
 
-/* Bouton styles */
-.btn {
-  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
-}
-
-.btn-md {
-  @apply px-6 py-3 text-base;
-}
-
-.btn-secondary {
-  @apply bg-secondary text-white;
-}
-
-.btn-secondary:hover {
-  @apply bg-white text-secondary;
-}
-
-html.dark .btn-secondary {
-  @apply bg-white text-secondary border-2 border-white;
-}
-
-html.dark .btn-secondary:hover {
-  @apply bg-accent text-white border-accent;
-}
+/* Classes globales (.btn) dans styles.css @layer components */
 

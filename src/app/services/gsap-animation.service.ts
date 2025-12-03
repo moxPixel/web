@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { AnimationGateService } from './animation-gate.service';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,8 +36,7 @@ export interface TextLetterByLetterOptions {
 export class GsapAnimationService {
 
   constructor(
-    private ngZone: NgZone,
-    private animationGate: AnimationGateService
+    private ngZone: NgZone
   ) {}
 
   /**
@@ -50,15 +48,13 @@ export class GsapAnimationService {
       return;
     }
 
-    this.animationGate.run(() => {
-      this.ngZone.runOutsideAngular(() => {
-        gsap.from(element, {
-          duration: options?.duration ?? 1.0,
-          delay: options?.delay ?? 0,
-          y: options?.y ?? 60,
-          opacity: options?.opacity ?? 0,
-          ease: options?.ease ?? 'power3.out'
-        });
+    this.ngZone.runOutsideAngular(() => {
+      gsap.from(element, {
+        duration: options?.duration ?? 1.0,
+        delay: options?.delay ?? 0,
+        y: options?.y ?? 60,
+        opacity: options?.opacity ?? 0,
+        ease: options?.ease ?? 'power3.out'
       });
     });
   }
@@ -71,29 +67,23 @@ export class GsapAnimationService {
       return null;
     }
 
-    let trigger: ScrollTrigger | null = null;
+    return this.ngZone.runOutsideAngular(() => {
+      const tween = gsap.from(element, {
+        duration: options?.duration ?? 1,
+        y: options?.y ?? 80,
+        opacity: options?.opacity ?? 0,
+        ease: options?.ease ?? 'power2.out',
+        paused: true
+      });
 
-    this.animationGate.run(() => {
-      trigger = this.ngZone.runOutsideAngular(() => {
-        const tween = gsap.from(element, {
-          duration: options?.duration ?? 1,
-          y: options?.y ?? 80,
-          opacity: options?.opacity ?? 0,
-          ease: options?.ease ?? 'power2.out',
-          paused: true
-        });
-
-        return ScrollTrigger.create({
-          trigger: element,
-          start: 'top 85%',
-          onEnter: () => tween.play(),
-          onLeaveBack: () => tween.reverse(),
-          once: true
-        });
+      return ScrollTrigger.create({
+        trigger: element,
+        start: 'top 85%',
+        onEnter: () => tween.play(),
+        onLeaveBack: () => tween.reverse(),
+        once: true
       });
     });
-
-    return trigger;
   }
 
   /**
@@ -104,22 +94,16 @@ export class GsapAnimationService {
       return null;
     }
 
-    let trigger: ScrollTrigger | null = null;
-
-    this.animationGate.run(() => {
-      trigger = this.ngZone.runOutsideAngular(() => {
-        return ScrollTrigger.create({
-          trigger: section,
-          start: options?.start ?? 'top top',
-          end: options?.end ?? '+=150%',
-          pin: true,
-          pinSpacing: options?.pinSpacing ?? true,
-          scrub: true
-        });
+    return this.ngZone.runOutsideAngular(() => {
+      return ScrollTrigger.create({
+        trigger: section,
+        start: options?.start ?? 'top top',
+        end: options?.end ?? '+=150%',
+        pin: true,
+        pinSpacing: options?.pinSpacing ?? true,
+        scrub: true
       });
     });
-
-    return trigger;
   }
 
   /**
@@ -131,26 +115,24 @@ export class GsapAnimationService {
       return;
     }
 
-    this.animationGate.run(() => {
-      this.ngZone.runOutsideAngular(() => {
-        const initialBlur = options?.blur ?? 20;
-        const initialOpacity = options?.opacity ?? 0;
-        const initialScale = options?.scale ?? 0.85;
+    this.ngZone.runOutsideAngular(() => {
+      const initialBlur = options?.blur ?? 20;
+      const initialOpacity = options?.opacity ?? 0;
+      const initialScale = options?.scale ?? 0.85;
 
-        gsap.set(element, {
-          filter: `blur(${initialBlur}px)`,
-          opacity: initialOpacity,
-          scale: initialScale
-        });
+      gsap.set(element, {
+        filter: `blur(${initialBlur}px)`,
+        opacity: initialOpacity,
+        scale: initialScale
+      });
 
-        gsap.to(element, {
-          filter: 'blur(0px)',
-          opacity: 1,
-          scale: 1,
-          duration: options?.duration ?? 1.2,
-          delay: options?.delay ?? 0,
-          ease: options?.ease ?? 'power3.out'
-        });
+      gsap.to(element, {
+        filter: 'blur(0px)',
+        opacity: 1,
+        scale: 1,
+        duration: options?.duration ?? 1.2,
+        delay: options?.delay ?? 0,
+        ease: options?.ease ?? 'power3.out'
       });
     });
   }
@@ -165,76 +147,74 @@ export class GsapAnimationService {
       return;
     }
 
-    this.animationGate.run(() => {
-      this.ngZone.runOutsideAngular(() => {
-        const computedStyle = window.getComputedStyle(element);
-        const inlineOpacity = element.style.opacity;
-        const currentOpacity = inlineOpacity ? parseFloat(inlineOpacity) : parseFloat(computedStyle.opacity);
-        const shouldHide = currentOpacity > 0;
+    this.ngZone.runOutsideAngular(() => {
+      const computedStyle = window.getComputedStyle(element);
+      const inlineOpacity = element.style.opacity;
+      const currentOpacity = inlineOpacity ? parseFloat(inlineOpacity) : parseFloat(computedStyle.opacity);
+      const shouldHide = currentOpacity > 0;
+      
+      if (shouldHide) {
+        gsap.set(element, { opacity: 0 });
+      }
 
-        if (shouldHide) {
-          gsap.set(element, { opacity: 0 });
-        }
+      const letters: HTMLElement[] = [];
 
-        const letters: HTMLElement[] = [];
-
-        const processNode = (node: Node): void => {
-          if (node.nodeType === Node.TEXT_NODE) {
-            const text = node.textContent || '';
-            if (text.trim()) {
-              const fragment = document.createDocumentFragment();
-
-              text.split('').forEach((char) => {
-                if (char === ' ') {
-                  const spaceText = document.createTextNode(' ');
-                  fragment.appendChild(spaceText);
-                } else {
-                  const span = document.createElement('span');
-                  span.textContent = char;
-                  span.style.display = 'inline-block';
-                  span.style.opacity = '0';
-                  span.style.filter = `blur(${options?.blur ?? 10}px)`;
-                  fragment.appendChild(span);
-                  letters.push(span);
-                }
-              });
-
-              if (node.parentNode) {
-                node.parentNode.replaceChild(fragment, node);
+      const processNode = (node: Node): void => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent || '';
+          if (text.trim()) {
+            const fragment = document.createDocumentFragment();
+            
+            text.split('').forEach((char) => {
+              if (char === ' ') {
+                const spaceText = document.createTextNode(' ');
+                fragment.appendChild(spaceText);
+              } else {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.opacity = '0';
+                span.style.filter = `blur(${options?.blur ?? 10}px)`;
+                fragment.appendChild(span);
+                letters.push(span);
               }
+            });
+            
+            if (node.parentNode) {
+              node.parentNode.replaceChild(fragment, node);
             }
-          } else if (node.nodeType === Node.ELEMENT_NODE) {
-            const el = node as Element;
-            if (el.tagName === 'BR') {
-              return;
-            }
-            const children = Array.from(el.childNodes);
-            children.forEach(child => processNode(child));
           }
-        };
-
-        const children = Array.from(element.childNodes);
-        children.forEach(child => processNode(child));
-
-        if (letters.length > 0) {
-          gsap.to(element, {
-            opacity: 1,
-            duration: 0.01,
-            delay: options?.delay ?? 0
-          });
-
-          gsap.to(letters, {
-            opacity: 1,
-            filter: 'blur(0px)',
-            duration: options?.duration ?? 0.6,
-            stagger: options?.stagger ?? 0.03,
-            delay: options?.delay ?? 0,
-            ease: options?.ease ?? 'power3.out'
-          });
-        } else {
-          gsap.set(element, { opacity: 1 });
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const el = node as Element;
+          if (el.tagName === 'BR') {
+            return;
+          }
+          const children = Array.from(el.childNodes);
+          children.forEach(child => processNode(child));
         }
-      });
+      };
+
+      const children = Array.from(element.childNodes);
+      children.forEach(child => processNode(child));
+
+      if (letters.length > 0) {
+        gsap.to(element, {
+          opacity: 1,
+          duration: 0.01,
+          delay: options?.delay ?? 0
+        });
+
+        gsap.to(letters, {
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: options?.duration ?? 0.6,
+          stagger: options?.stagger ?? 0.03,
+          delay: options?.delay ?? 0,
+          ease: options?.ease ?? 'power3.out'
+        });
+      } else {
+        gsap.set(element, { opacity: 1 });
+      }
     });
   }
 }

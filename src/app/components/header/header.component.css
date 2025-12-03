@@ -103,8 +103,5 @@ body.overflow-hidden {
   overflow: hidden;
 }
 
-/* Button styles pour correspondre au hero */
-.btn {
-  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
-}
+/* Classes globales (.btn) dans styles.css @layer components */
 

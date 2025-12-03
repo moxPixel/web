@@ -4,8 +4,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { ThreeSceneComponent } from '../three-scene/three-scene.component';
 import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
+import { GsapHelpers } from '../../utils/gsap-helpers';
 import { gsap } from 'gsap';
-import { AnimationGateService } from '../../services/animation-gate.service';
 
 @Component({
   selector: 'app-hero',
@@ -25,12 +25,11 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private gsapAnimation: GsapAnimationService,
-    private gsapScroll: GsapScrollService,
-    private animationGate: AnimationGateService
+    private gsapScroll: GsapScrollService
   ) {}
 
   ngAfterViewInit() {
-    this.animationGate.run(() => this.startHeroAnimations());
+    this.startHeroAnimations();
   }
   private startHeroAnimations(): void {
     if (this.heroParallax) {
@@ -45,8 +44,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const masterTimeline = gsap.timeline({ delay: 0.1 });
 
     if (this.logoContainer?.nativeElement) {
-      gsap.set(this.logoContainer.nativeElement, { 
-        opacity: 0, 
+      gsap.set(this.logoContainer.nativeElement, {
+        opacity: 0,
         filter: 'blur(16px)',
         scale: 0.95
       });
@@ -85,8 +84,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       if (this.heroContent) {
         const paragraphs = this.heroContent.nativeElement.querySelectorAll('p');
         paragraphs.forEach((p: HTMLElement, index: number) => {
-          gsap.set(p, { 
-            opacity: 0, 
+          gsap.set(p, {
+            opacity: 0,
             filter: 'blur(18px)',
             scale: 0.98
           });
@@ -99,30 +98,12 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
           });
         });
 
+        // Utiliser le helper réutilisable pour les boutons
         const buttons = this.heroContent.nativeElement.querySelectorAll('.btn');
-        buttons.forEach((btn: HTMLElement, index: number) => {
-          const originalTransition = btn.style.transition;
-          btn.style.transition = 'none';
-          
-          gsap.set(btn, { 
-            opacity: 0, 
-            filter: 'blur(20px)',
-            scale: 0.96,
-            force3D: true
-          });
-          
-          gsap.to(btn, {
-            opacity: 1,
-            filter: 'blur(0px)',
-            scale: 1,
-            duration: 1.1,
-            delay: 1.0 + (index * 0.15),
-            ease: 'none',
-            force3D: true,
-            onComplete: () => {
-              btn.style.transition = originalTransition || '';
-            }
-          });
+        GsapHelpers.animateButtons(buttons, {
+          delay: 1.0,
+          stagger: 0.15,
+          duration: 1.1
         });
       }
     }, 150);

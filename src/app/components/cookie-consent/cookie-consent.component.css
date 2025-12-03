@@ -34,13 +34,10 @@
   border-radius: 24px;
   border: 1px solid var(--color-stroke-2);
   background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  box-shadow: 0 25px 60px rgba(15, 20, 40, 0.08);
 }
 
 :host-context(.dark) .cookie-consent__content {
@@ -152,48 +149,7 @@
   flex-wrap: wrap;
 }
 
-.btn {
-  border-radius: 999px;
-  padding: 12px 28px;
-  font-size: var(--text-tagline-1);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-}
-
-.btn-primary {
-  background: var(--color-secondary);
-  color: #ffffff;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-:host-context(.dark) .btn-primary {
-  background: #ffffff;
-  color: var(--color-secondary);
-}
-
-.btn-outline {
-  background: transparent;
-  border: 1px solid rgba(26, 26, 28, 0.25);
-  color: var(--color-secondary);
-}
-
-.btn-outline:hover {
-  background: rgba(26, 26, 28, 0.05);
-}
-
-:host-context(.dark) .btn-outline {
-  border-color: rgba(255, 255, 255, 0.3);
-  color: var(--color-accent);
-}
-
-:host-context(.dark) .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
+/* Classes globales (.btn, .btn-primary, .btn-outline) dans styles.css @layer components */
 
 @media (max-width: 768px) {
   .cookie-consent__content {

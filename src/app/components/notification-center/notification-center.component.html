@@ -6,7 +6,7 @@
   >
     <article
       *ngFor="let notification of notifications; trackBy: trackById"
-      class="notification-card"
+      class="notification-card backdrop-blur-md shadow-glass-md"
       [ngClass]="[
         'notification-' + notification.type,
         'notification-' + notification.state

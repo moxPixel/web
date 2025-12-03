@@ -29,52 +29,7 @@ html.dark [data-hero-line] {
   background: linear-gradient(180deg, #2A333E 0%, rgba(42, 51, 62, 0) 100%) !important;
 }
 
-/* Bouton styles - identique au hero */
-.btn {
-  @apply inline-flex items-center justify-center rounded-full font-medium transition-all duration-200;
-}
-
-.btn-lg {
-  @apply px-8 h-12 text-base;
-}
-
-/* Glassmorphism card pour le CTA final */
-.glassmorphism-content-card {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
-  border-radius: 20px;
-  padding: 32px;
-  -webkit-backdrop-filter: blur(25px);
-  backdrop-filter: blur(25px);
-}
-
-/* Badge styles - réutiliser ceux du projet */
-.badge {
-  padding-inline: calc(var(--spacing) * 5);
-  padding-block: calc(var(--spacing) * 1.5);
-  font-size: var(--text-tagline-2);
-  line-height: var(--text-tagline-2--line-height);
-  font-weight: var(--font-weight-normal);
-  text-wrap: nowrap;
-  color: var(--color-secondary);
-  text-transform: lowercase;
-  backdrop-filter: blur(17.23px);
-  -webkit-backdrop-filter: blur(17.23px);
-  border-radius: 9999px;
-  display: inline-block;
-}
-
-.badge:first-letter {
-  text-transform: uppercase;
-}
-
-.badge-green {
-  background-color: var(--color-ns-green-light);
-}
-
-html.dark .badge-green {
-  background-color: #fcfcfc1a;
-  color: var(--color-ns-yellow);
-}
+/* Classes globales (.btn, .badge, .glassmorphism-content-card) dans styles.css @layer components */
 
 /* Animation fluide pour les cartes de formation - design compact vertical */
 .program-card {
@@ -142,7 +97,7 @@ html.dark .reassurance-card:hover {
   .glassmorphism-content-card {
     padding: 24px;
   }
-  
+
   .reassurance-card {
     padding: 1.25rem;
   }

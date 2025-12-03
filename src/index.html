@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Prefetch du modèle 3D pour démarrer le téléchargement dès le début -->
+  <link rel="prefetch" href="/assets/models/robot0.glb" as="fetch" crossorigin="anonymous">
   <script>
     // Appliquer le dark mode avant le chargement d'Angular pour éviter le flash blanc
     (function() {
@@ -52,9 +54,146 @@
     html.dark body {
       background-color: #070b10;
     }
+
+    /* Page Loader - CSS inline pour chargement immédiat */
+    #page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 0.4s ease-out;
+    }
+
+    html.dark #page-loader {
+      background-color: #070b10;
+    }
+
+    #page-loader.loader-exit {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #page-loader .loader-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+      opacity: 0;
+      filter: blur(25px);
+      transform: scale(0.9);
+      animation: loader-deblur 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      will-change: opacity, filter, transform;
+    }
+
+    #page-loader.loader-exit {
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+    }
+
+    #page-loader.loader-exit .loader-content {
+      opacity: 0;
+      filter: blur(20px);
+      transform: scale(0.9);
+      transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    #page-loader .loader-logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #page-loader .loader-logo-wrapper img {
+      height: 2rem;
+      object-fit: contain;
+      animation: logo-pulse 1.5s ease-in-out infinite;
+    }
+
+    @media (min-width: 768px) {
+      #page-loader .loader-logo-wrapper img {
+        height: 2.5rem;
+      }
+    }
+
+    #page-loader .loader-logo-wrapper img.logo-light {
+      display: block;
+    }
+
+    html.dark #page-loader .loader-logo-wrapper img.logo-light {
+      display: none;
+    }
+
+    #page-loader .loader-logo-wrapper img.logo-dark {
+      display: none;
+    }
+
+    html.dark #page-loader .loader-logo-wrapper img.logo-dark {
+      display: block;
+    }
+
+    body:not(.loader-hidden) {
+      overflow: hidden;
+    }
+
+    @keyframes loader-deblur {
+      0% {
+        opacity: 0;
+        filter: blur(25px);
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes logo-pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #page-loader .loader-content {
+        animation: none !important;
+        opacity: 1;
+        filter: none !important;
+        transform: none;
+      }
+      #page-loader .loader-logo-wrapper img {
+        animation: none !important;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Page Loader - HTML statique pour affichage immédiat -->
+  <div id="page-loader">
+    <div class="loader-content">
+      <!-- Logo avec pulse -->
+      <div class="loader-logo-wrapper">
+        <img src="/assets/images/logo/logo.png" alt="Unlock Web" class="logo-light" />
+        <img src="/assets/images/logo/logo-dark.png" alt="Unlock Web" class="logo-dark" />
+      </div>
+    </div>
+  </div>
+
   <app-root></app-root>
 </body>
 </html>

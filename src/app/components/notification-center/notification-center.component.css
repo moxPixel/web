@@ -30,10 +30,7 @@
   border-radius: 16px;
   border: 1px solid var(--color-stroke-2);
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   color: var(--color-secondary);
-  box-shadow: 0 20px 55px rgba(15, 20, 40, 0.15);
   pointer-events: all;
   transform: translate3d(0, 100%, 0);
   opacity: 0;
