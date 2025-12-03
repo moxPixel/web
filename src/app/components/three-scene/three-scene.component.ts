@@ -207,8 +207,11 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.controls.autoRotateSpeed = 1.0;
       this.controls.minDistance = 1;
       this.controls.maxDistance = 10;
-      this.controls.enablePan = true;
-      this.controls.enableZoom = true;
+      // Désactiver pan et zoom pour éviter les mouvements indésirables avec la souris
+      this.controls.enablePan = false;
+      this.controls.enableZoom = false;
+      // Désactiver aussi la rotation manuelle pour laisser notre système de suivi de souris gérer
+      this.controls.enableRotate = false;
     }
 
     // Gestion du redimensionnement
@@ -645,14 +648,22 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       this.mouseY = ((event.clientY - rect.top) / rect.height) * 2 - 1;
 
-      // Calculer la rotation cible basée sur la position de la souris
-      // Rotation plus prononcée pour que le modèle suive vraiment la souris
-      // Limiter l'amplitude pour éviter les rotations trop extrêmes
-      const maxRotationY = 0.4; // ~23 degrés en radians (rotation horizontale)
-      const maxRotationX = 0.25; // ~14 degrés en radians (rotation verticale)
+      // Calculer la rotation cible basée UNIQUEMENT sur le mouvement horizontal de la souris
+      // Le mouvement vertical (Y) est complètement ignoré - AUCUN effet
+      const maxRotationY = 0.5; // ~29 degrés en radians (rotation horizontale uniquement)
 
-      this.targetRotationY = this.mouseX * maxRotationY; // Rotation horizontale suivante
-      this.targetRotationX = -this.mouseY * maxRotationX; // Rotation verticale (inversée)
+      // Appliquer une courbe d'easing pour des mouvements plus naturels
+      const easeOut = (t: number) => {
+        const absT = Math.abs(t);
+        const sign = t >= 0 ? 1 : -1;
+        return (1 - Math.pow(1 - absT, 3)) * sign; // ease-out-cubic
+      };
+
+      // Rotation horizontale basée UNIQUEMENT sur mouseX (mouvement gauche/droite)
+      this.targetRotationY = easeOut(this.mouseX) * maxRotationY;
+
+      // AUCUNE rotation verticale - le mouvement Y est complètement ignoré
+      this.targetRotationX = 0;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -999,11 +1010,24 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
           // Mettre à jour la rotation automatique aléatoire
           this.updateAutoRotation();
 
-          // Interpolation fluide vers la rotation cible (effet de suivi de la souris réactif)
-          // Augmenter le facteur d'interpolation pour une réponse plus rapide
-          const lerpFactor = 0.12; // Plus réactif qu'avant (0.08)
-          this.currentRotationX += (this.targetRotationX - this.currentRotationX) * lerpFactor;
-          this.currentRotationY += (this.targetRotationY - this.currentRotationY) * lerpFactor;
+          // Interpolation fluide UNIQUEMENT pour l'axe horizontal (Y)
+          // L'axe vertical (X) reste toujours à 0 - aucun mouvement vertical
+          const deltaY = this.targetRotationY - this.currentRotationY;
+
+          // Facteur d'interpolation adaptatif pour l'axe horizontal uniquement
+          const distanceY = Math.abs(deltaY);
+          const lerpFactorY = distanceY > 0.05 ? 0.18 : 0.12;
+
+          // Interpolation uniquement pour l'axe horizontal
+          this.currentRotationY += deltaY * lerpFactorY;
+
+          // Forcer la rotation verticale à toujours être 0
+          this.currentRotationX = 0;
+
+          // Retour progressif vers zéro si la souris est immobile horizontalement
+          if (distanceY < 0.001) {
+            this.currentRotationY *= 0.97;
+          }
 
           // Appliquer la rotation combinée : rotation auto (0) + scroll + souris
           // Rotation auto désactivée donc autoRotationTargetX/Y = 0
