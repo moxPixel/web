@@ -103,7 +103,7 @@
           <div class="form-step-actions">
             <button
               type="button"
-              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full px-8 h-12 flex items-center justify-center"
+              class="btn btn-lg btn-primary w-full lg:w-auto"
               matRipple
               [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
               (click)="nextStep()"
@@ -185,7 +185,7 @@
           <div class="form-step-actions">
             <button
               type="button"
-              class="btn btn-md w-full sm:w-auto px-6 py-3 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+              class="btn btn-lg btn-outline w-full lg:w-auto"
               matRipple
               [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
               (click)="previousStep()"
@@ -194,7 +194,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+              class="btn btn-lg btn-primary w-full lg:w-auto"
               matRipple
               [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
               (click)="nextStep()"
@@ -299,25 +299,8 @@
           </div>
 
           <div class="form-step-actions">
-            <button
-              type="button"
-              class="btn btn-md w-full sm:w-auto px-6 py-3 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
-              matRipple
-              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
-              (click)="previousStep()"
-            >
-              Précédent
-            </button>
-            <button
-              type="button"
-              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
-              matRipple
-              [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
-              (click)="nextStep()"
-              [disabled]="!canGoToNextStep()"
-            >
-              Suivant
-            </button>
+            <button type="button" class="btn btn-lg btn-outline w-full lg:w-auto" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" (click)="previousStep()">Précédent</button>
+            <button type="button" class="btn btn-lg btn-primary w-full lg:w-auto" matRipple [matRippleColor]="'rgba(255, 255, 255, 0.3)'" (click)="nextStep()" [disabled]="!canGoToNextStep()">Suivant</button>
           </div>
         </div>
 
@@ -354,7 +337,7 @@
           <div class="form-step-actions">
             <button
               type="button"
-              class="btn btn-md w-full sm:w-auto px-6 py-3 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+              class="btn btn-lg btn-outline w-full lg:w-auto"
               matRipple
               [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
               (click)="previousStep()"
@@ -363,7 +346,7 @@
             </button>
             <button
               type="submit"
-              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+              class="btn btn-lg btn-primary w-full lg:w-auto"
               matRipple
               [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
               [disabled]="!canGoToNextStep()"
