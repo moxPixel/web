@@ -39,14 +39,18 @@
     <div class="cookie-consent__actions">
       <button
         type="button"
-        class="btn btn-outline cookie-btn-reject"
+        class="btn btn-md btn-outline cookie-btn-reject"
+        matRipple
+        [matRippleColor]="rippleColor"
         (click)="reject()"
       >
         Refuser
       </button>
       <button
         type="button"
-        class="btn btn-primary cookie-btn-accept"
+        class="btn btn-md btn-primary cookie-btn-accept"
+        matRipple
+        [matRippleColor]="rippleColor"
         (click)="accept()"
       >
         Activer toutes les fonctionnalités

@@ -145,10 +145,6 @@
   color: var(--color-ns-green);
 }
 
-:host-context(.dark) .cookie-link {
-  color: var(--color-primary-300);
-}
-
 .cookie-separator {
   color: var(--color-secondary);
   opacity: 0.3;

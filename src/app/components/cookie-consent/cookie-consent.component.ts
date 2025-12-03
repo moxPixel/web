@@ -1,6 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatRippleModule } from '@angular/material/core';
 import { NotificationService } from '../../services/notification.service';
+import { getRippleColorAuto } from '../../utils/ripple.util';
 
 const CONSENT_KEY = 'cookie-consent';
 const WELCOME_KEY = 'welcome-shown';
@@ -9,7 +11,7 @@ const STORAGE_TTL_DAYS = 365;
 @Component({
   selector: 'app-cookie-consent',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatRippleModule],
   templateUrl: './cookie-consent.component.html',
   styleUrl: './cookie-consent.component.css'
 })
@@ -17,17 +19,76 @@ export class CookieConsentComponent implements OnInit {
   isVisible = false;
   isHiding = false;
 
-  constructor(private notificationService: NotificationService) {}
+  get rippleColor(): string {
+    return getRippleColorAuto();
+  }
+
+  constructor(
+    private notificationService: NotificationService,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
     const consent = this.getStoredValue(CONSENT_KEY);
     if (!consent) {
-      setTimeout(() => {
-        this.isVisible = true;
-      }, 600);
+      // Attendre que le loader soit complètement disparu avant d'afficher le cookie consent
+      this.waitForLoaderToHide().then(() => {
+        setTimeout(() => {
+          this.isVisible = true;
+        }, 600);
+      });
     } else {
       this.showWelcomeNotification();
     }
+  }
+
+  /**
+   * Attendre que le page loader soit complètement caché
+   */
+  private waitForLoaderToHide(): Promise<void> {
+    return new Promise((resolve) => {
+      // Vérifier si le loader est déjà caché
+      const checkLoader = () => {
+        const loader = this.document.getElementById('page-loader');
+        const isLoaderHidden = this.document.body.classList.contains('loader-hidden');
+
+        if (!loader || isLoaderHidden) {
+          resolve();
+          return;
+        }
+
+        // Observer les changements sur le body pour détecter l'ajout de la classe loader-hidden
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+              const target = mutation.target as HTMLElement;
+              if (target.classList.contains('loader-hidden')) {
+                observer.disconnect();
+                resolve();
+              }
+            }
+          });
+        });
+
+        observer.observe(this.document.body, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+
+        // Timeout de sécurité au cas où le loader ne disparaîtrait pas
+        setTimeout(() => {
+          observer.disconnect();
+          resolve();
+        }, 5000);
+      };
+
+      // Attendre que le DOM soit prêt
+      if (this.document.readyState === 'loading') {
+        this.document.addEventListener('DOMContentLoaded', checkLoader, { once: true });
+      } else {
+        checkLoader();
+      }
+    });
   }
 
   accept(): void {
