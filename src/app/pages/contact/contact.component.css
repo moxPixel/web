@@ -486,6 +486,62 @@ html.dark .form-label {
   color: var(--color-ns-green);
 }
 
+/* Dark mode - Boutons (Safari fix) */
+:host-context(.dark) .btn-primary,
+:host-context(html.dark) .btn-primary,
+html.dark .btn-primary,
+.dark .btn-primary,
+:host-context(.dark) .contact-form .btn-primary,
+:host-context(html.dark) .contact-form .btn-primary,
+html.dark .contact-form .btn-primary,
+.dark .contact-form .btn-primary,
+:host-context(.dark) .form-step-actions .btn-primary,
+:host-context(html.dark) .form-step-actions .btn-primary,
+html.dark .form-step-actions .btn-primary,
+.dark .form-step-actions .btn-primary,
+:host-context(.dark) button.btn-primary,
+:host-context(html.dark) button.btn-primary,
+html.dark button.btn-primary,
+.dark button.btn-primary {
+  background: var(--color-accent) !important;
+  color: var(--color-secondary) !important;
+}
+
+:host-context(.dark) .btn-outline,
+:host-context(html.dark) .btn-outline,
+html.dark .btn-outline,
+.dark .btn-outline,
+:host-context(.dark) .contact-form .btn-outline,
+:host-context(html.dark) .contact-form .btn-outline,
+html.dark .contact-form .btn-outline,
+.dark .contact-form .btn-outline,
+:host-context(.dark) .form-step-actions .btn-outline,
+:host-context(html.dark) .form-step-actions .btn-outline,
+html.dark .form-step-actions .btn-outline,
+.dark .form-step-actions .btn-outline,
+:host-context(.dark) button.btn-outline,
+:host-context(html.dark) button.btn-outline,
+html.dark button.btn-outline,
+.dark button.btn-outline {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--color-accent) !important;
+}
+
+:host-context(.dark) .btn-outline:hover,
+:host-context(html.dark) .btn-outline:hover,
+html.dark .btn-outline:hover,
+.dark .btn-outline:hover,
+:host-context(.dark) .contact-form .btn-outline:hover,
+:host-context(html.dark) .contact-form .btn-outline:hover,
+html.dark .contact-form .btn-outline:hover,
+.dark .contact-form .btn-outline:hover,
+:host-context(.dark) .form-step-actions .btn-outline:hover,
+:host-context(html.dark) .form-step-actions .btn-outline:hover,
+html.dark .form-step-actions .btn-outline:hover,
+.dark .form-step-actions .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .contact-page {

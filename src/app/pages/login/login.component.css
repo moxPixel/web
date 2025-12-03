@@ -210,6 +210,50 @@ button.login-submit,
   margin-top: 8px;
 }
 
+/* Dark mode - Boutons (Safari fix) */
+:host-context(.dark) .btn-primary,
+:host-context(html.dark) .btn-primary,
+html.dark .btn-primary,
+.dark .btn-primary,
+:host-context(.dark) .login-form .btn-primary,
+:host-context(html.dark) .login-form .btn-primary,
+html.dark .login-form .btn-primary,
+.dark .login-form .btn-primary,
+:host-context(.dark) button.btn-primary,
+:host-context(html.dark) button.btn-primary,
+html.dark button.btn-primary,
+.dark button.btn-primary {
+  background: var(--color-accent) !important;
+  color: var(--color-secondary) !important;
+}
+
+:host-context(.dark) .btn-outline,
+:host-context(html.dark) .btn-outline,
+html.dark .btn-outline,
+.dark .btn-outline,
+:host-context(.dark) .login-form .btn-outline,
+:host-context(html.dark) .login-form .btn-outline,
+html.dark .login-form .btn-outline,
+.dark .login-form .btn-outline,
+:host-context(.dark) button.btn-outline,
+:host-context(html.dark) button.btn-outline,
+html.dark button.btn-outline,
+.dark button.btn-outline {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--color-accent) !important;
+}
+
+:host-context(.dark) .btn-outline:hover,
+:host-context(html.dark) .btn-outline:hover,
+html.dark .btn-outline:hover,
+.dark .btn-outline:hover,
+:host-context(.dark) .login-form .btn-outline:hover,
+:host-context(html.dark) .login-form .btn-outline:hover,
+html.dark .login-form .btn-outline:hover,
+.dark .login-form .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
 .login-footer {
   text-align: center;
   padding-top: 8px;
