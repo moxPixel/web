@@ -35,7 +35,17 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       const initScroll = () => {
         this.gsapScrollService.initSimpleSmoothScroll();
-        requestAnimationFrame(() => this.gsapScrollService.refresh());
+        // Attendre que tous les composants soient initialisés avant de rafraîchir
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            // Double RAF pour s'assurer que tous les composants sont prêts
+            this.gsapScrollService.refresh();
+            // Forcer un refresh supplémentaire après un court délai pour capturer tous les ScrollTriggers
+            setTimeout(() => {
+              this.gsapScrollService.refresh();
+            }, 100);
+          });
+        });
       };
 
       if (document.readyState === 'loading') {

@@ -1,8 +1,11 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatRippleModule } from '@angular/material/core';
 import { NotificationService } from '../../services/notification.service';
+import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
 import { getRippleColorAuto } from '../../utils/ripple.util';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 const CONSENT_KEY = 'cookie-consent';
 const WELCOME_KEY = 'welcome-shown';
@@ -15,9 +18,10 @@ const STORAGE_TTL_DAYS = 365;
   templateUrl: './cookie-consent.component.html',
   styleUrl: './cookie-consent.component.css'
 })
-export class CookieConsentComponent implements OnInit {
+export class CookieConsentComponent implements OnInit, OnDestroy {
   isVisible = false;
   isHiding = false;
+  private destroy$ = new Subject<void>();
 
   get rippleColor(): string {
     return getRippleColorAuto();
@@ -25,6 +29,7 @@ export class CookieConsentComponent implements OnInit {
 
   constructor(
     private notificationService: NotificationService,
+    private pageLoaderInline: PageLoaderInlineService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -32,63 +37,25 @@ export class CookieConsentComponent implements OnInit {
     const consent = this.getStoredValue(CONSENT_KEY);
     if (!consent) {
       // Attendre que le loader soit complètement disparu avant d'afficher le cookie consent
-      this.waitForLoaderToHide().then(() => {
-        setTimeout(() => {
-          this.isVisible = true;
-        }, 600);
+      // Utiliser le service centralisé pour une détection fiable à 100%
+      this.pageLoaderInline.loaderHidden$.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((isHidden) => {
+        if (isHidden) {
+          // Attendre un délai supplémentaire après la disparition du loader pour une transition fluide
+          setTimeout(() => {
+            this.isVisible = true;
+          }, 600);
+        }
       });
     } else {
       this.showWelcomeNotification();
     }
   }
 
-  /**
-   * Attendre que le page loader soit complètement caché
-   */
-  private waitForLoaderToHide(): Promise<void> {
-    return new Promise((resolve) => {
-      // Vérifier si le loader est déjà caché
-      const checkLoader = () => {
-        const loader = this.document.getElementById('page-loader');
-        const isLoaderHidden = this.document.body.classList.contains('loader-hidden');
-
-        if (!loader || isLoaderHidden) {
-          resolve();
-          return;
-        }
-
-        // Observer les changements sur le body pour détecter l'ajout de la classe loader-hidden
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-              const target = mutation.target as HTMLElement;
-              if (target.classList.contains('loader-hidden')) {
-                observer.disconnect();
-                resolve();
-              }
-            }
-          });
-        });
-
-        observer.observe(this.document.body, {
-          attributes: true,
-          attributeFilter: ['class']
-        });
-
-        // Timeout de sécurité au cas où le loader ne disparaîtrait pas
-        setTimeout(() => {
-          observer.disconnect();
-          resolve();
-        }, 5000);
-      };
-
-      // Attendre que le DOM soit prêt
-      if (this.document.readyState === 'loading') {
-        this.document.addEventListener('DOMContentLoaded', checkLoader, { once: true });
-      } else {
-        checkLoader();
-      }
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   accept(): void {

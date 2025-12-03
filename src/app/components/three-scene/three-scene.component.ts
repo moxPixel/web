@@ -298,7 +298,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
                 matAny.emissiveIntensity = 0.28;
               }
             }
-            
+
             // Désactiver les textures de couleur pour forcer le monochrome
             if (material.map) {
               material.map = null;
@@ -331,7 +331,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
                 matAny.emissiveIntensity = 0.35; // Intensité emissive similaire au dark mode
               }
             }
-            
+
             // Désactiver les textures de couleur pour forcer le monochrome
             if (material.map) {
               material.map = null;
@@ -769,14 +769,14 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
             // Petit délai pour s'assurer que le modèle est complètement rendu et que le loader est caché
           setTimeout(() => {
             this.gsapAnimationService.defloutage(this.canvasContainer.nativeElement, {
-              duration: 1.4,
-              delay: 0.1,
+              duration: 0.8, // Réduit de 1.4 à 0.8 pour une apparition plus rapide
+              delay: 0.05, // Réduit de 0.1 à 0.05
               blur: 25,
               opacity: 0,
               scale: 0.9,
-              ease: 'power3.out'
+              ease: 'power2.out' // Changé de power3.out à power2.out pour plus de rapidité
             });
-          }, 150);
+          }, 50); // Réduit de 150ms à 50ms pour démarrer plus rapidement
           };
 
           // Vérifier si le loader est déjà caché
@@ -937,6 +937,8 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
             scrub: 0.5, // Valeur réduite pour plus de fluidité et moins de saccades
             invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
             refreshPriority: -1, // Priorité basse pour éviter les conflits
+            // Pré-calculer immédiatement pour éviter les saccades au premier scroll
+            immediateRender: true
           }
         });
 
@@ -964,7 +966,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private initAutoRotation(): void {
     // ROTATION INFINIE DÉSACTIVÉE - Le modèle reste fixe
     // Code commenté pour référence future si besoin de réactiver
-    
+
     // Vitesses aléatoires mais constantes pour une rotation infinie ultra fluide
     // Pas de rotation verticale automatique, seulement horizontale
     // const baseSpeedY = 0.0008 + Math.random() * 0.0004;
@@ -981,14 +983,14 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateAutoRotation(): void {
     // ROTATION INFINIE DÉSACTIVÉE - Le modèle reste à rotation fixe
     // Code commenté pour référence future si besoin de réactiver
-    
+
     // Rotation perpétuelle horizontale uniquement : on incrémente sans jamais inverser la direction
     // Pas de rotation verticale automatique
     // this.autoRotationTargetY += this.autoRotationSpeedY;
 
     // Garder les valeurs fixes pour que le modèle reste à la même rotation
     // Les valeurs restent à leur état initial (autoRotationTargetY = 5 degrés)
-    
+
     // Code commenté pour référence - garder les valeurs dans une plage raisonnable
     // const twoPI = Math.PI * 2;
     // if (this.autoRotationTargetX > twoPI || this.autoRotationTargetX < -twoPI) {

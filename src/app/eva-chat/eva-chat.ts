@@ -47,6 +47,8 @@ export class EvaChat implements AfterViewInit, OnDestroy {
       this.scrollTrigger = ScrollTrigger.create({
         trigger: 'body',
         start: 'top -100',
+        // Pré-calculer immédiatement pour éviter les saccades au premier scroll
+        immediateRender: true,
         onEnter: () => {
           gsap.to(this.chatButton.nativeElement, {
             opacity: 1,

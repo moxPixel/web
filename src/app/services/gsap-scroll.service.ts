@@ -94,7 +94,7 @@ export class GsapScrollService {
    */
   createParallax(element: HTMLElement, speed: number = 0.5, start?: string, end?: string): gsap.core.Tween {
     return this.ngZone.runOutsideAngular(() => {
-      return gsap.to(element, {
+      const tween = gsap.to(element, {
         y: () => window.innerHeight * speed,
         ease: 'none',
         scrollTrigger: {
@@ -104,8 +104,12 @@ export class GsapScrollService {
           scrub: 0.5, // Valeur réduite pour plus de fluidité
           invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
           refreshPriority: -1, // Priorité basse pour éviter les conflits
+          // Pré-calculer immédiatement pour éviter les saccades au premier scroll
+          immediateRender: true
         }
       });
+
+      return tween;
     });
   }
 
@@ -133,7 +137,7 @@ export class GsapScrollService {
         end = 'bottom top'
       } = options;
 
-      return gsap.to(element, {
+      const tween = gsap.to(element, {
         y: () => window.innerHeight * speed,
         rotationX: rotationX,
         rotationY: rotationY,
@@ -146,17 +150,35 @@ export class GsapScrollService {
           scrub: 0.5, // Valeur réduite pour plus de fluidité
           invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
           refreshPriority: -1, // Priorité basse pour éviter les conflits
+          // Pré-calculer immédiatement pour éviter les saccades au premier scroll
+          immediateRender: true
         }
       });
+
+      return tween;
     });
   }
 
+  private refreshTimeout?: ReturnType<typeof setTimeout>;
+  private refreshScheduled = false;
+
   /**
-   * Rafraîchit tous les ScrollTriggers
+   * Rafraîchit tous les ScrollTriggers avec debouncing pour éviter les conflits
    */
   refresh(): void {
     this.ngZone.runOutsideAngular(() => {
-      ScrollTrigger.refresh();
+      // Debounce les refreshs pour éviter les conflits quand plusieurs composants se refresh en même temps
+      if (this.refreshTimeout) {
+        clearTimeout(this.refreshTimeout);
+      }
+
+      if (!this.refreshScheduled) {
+        this.refreshScheduled = true;
+        this.refreshTimeout = setTimeout(() => {
+          ScrollTrigger.refresh();
+          this.refreshScheduled = false;
+        }, 16); // ~60fps, regroupe les refreshs dans une même frame
+      }
     });
   }
 
@@ -166,6 +188,12 @@ export class GsapScrollService {
    */
   cleanup(): void {
     this.ngZone.runOutsideAngular(() => {
+      if (this.refreshTimeout) {
+        clearTimeout(this.refreshTimeout);
+        this.refreshTimeout = undefined;
+      }
+      this.refreshScheduled = false;
+
       this.observer?.kill();
       this.observer = undefined;
       this.scrollTween?.kill();

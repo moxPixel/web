@@ -95,6 +95,8 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
       start: 'top bottom',
       end: 'bottom top',
       scrub: 0.5, // Valeur réduite pour plus de fluidité
+      // Pré-calculer immédiatement pour éviter les saccades au premier scroll
+      immediateRender: true,
       onUpdate: (self) => updateScroll(self.progress),
       onRefresh: () => {
         // Recalculer le cache uniquement lors du refresh
