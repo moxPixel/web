@@ -918,8 +918,9 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
             trigger: container,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 1.2, // Valeur optimisée pour fluidité
-            invalidateOnRefresh: true,
+            scrub: 0.5, // Valeur réduite pour plus de fluidité et moins de saccades
+            invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
+            refreshPriority: -1, // Priorité basse pour éviter les conflits
           }
         });
 

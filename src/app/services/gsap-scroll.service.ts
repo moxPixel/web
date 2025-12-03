@@ -55,10 +55,13 @@ export class GsapScrollService {
         this.scrollTween?.kill();
         this.scrollTween = gsap.to(window, {
           scrollTo: this.targetScroll,
-        duration: 0.45,
-        ease: 'power2.out',
+        duration: 0.6, // Durée augmentée pour plus de fluidité
+        ease: 'power1.out', // Easing plus doux
         overwrite: 'auto',
-        onUpdate: () => ScrollTrigger.update()
+        onUpdate: () => {
+          // Mettre à jour ScrollTrigger de manière optimisée
+          ScrollTrigger.update();
+        }
         });
       };
 
@@ -98,8 +101,9 @@ export class GsapScrollService {
           trigger: element,
           start: start || 'top bottom',
           end: end || 'bottom top',
-          scrub: true,
-          invalidateOnRefresh: true,
+          scrub: 0.5, // Valeur réduite pour plus de fluidité
+          invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
+          refreshPriority: -1, // Priorité basse pour éviter les conflits
         }
       });
     });
@@ -139,8 +143,9 @@ export class GsapScrollService {
           trigger: element,
           start: start,
           end: end,
-          scrub: true,
-          invalidateOnRefresh: true,
+          scrub: 0.5, // Valeur réduite pour plus de fluidité
+          invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
+          refreshPriority: -1, // Priorité basse pour éviter les conflits
         }
       });
     });
@@ -241,6 +246,13 @@ export class GsapScrollService {
         const currentScroll = window.scrollY || document.documentElement.scrollTop;
         const scrollingDown = currentScroll > lastScroll;
         const scrollingUp = currentScroll < lastScroll;
+        const scrollDelta = Math.abs(currentScroll - lastScroll);
+
+        // Ignorer les micro-mouvements pour éviter les saccades
+        if (scrollDelta < 1) {
+          ticking = false;
+          return;
+        }
 
         // Scroll vers le bas : rétrécir, remonter, ajouter background et blur
         if (scrollingDown && currentScroll > 50 && !isShrunk) {
@@ -256,9 +268,10 @@ export class GsapScrollService {
             background: bgColor,
             backdropFilter: 'blur(25px)',
             WebkitBackdropFilter: 'blur(25px)',
-            duration: 0.6,
-            ease: 'power1.out',
+            duration: 0.4, // Durée réduite pour plus de réactivité
+            ease: 'power2.out', // Easing plus doux
             force3D: true,
+            overwrite: true, // Écraser les animations précédentes
           });
         }
         // Scroll vers le haut : agrandir, revenir en bas, retirer background et blur
@@ -270,9 +283,10 @@ export class GsapScrollService {
             background: 'transparent',
             backdropFilter: 'none',
             WebkitBackdropFilter: 'none',
-            duration: 0.6,
-            ease: 'power1.out',
+            duration: 0.4, // Durée réduite pour plus de réactivité
+            ease: 'power2.out', // Easing plus doux
             force3D: true,
+            overwrite: true, // Écraser les animations précédentes
           });
         }
         // En haut de la page : toujours taille normale
@@ -284,9 +298,10 @@ export class GsapScrollService {
             background: 'transparent',
             backdropFilter: 'none',
             WebkitBackdropFilter: 'none',
-            duration: 0.6,
-            ease: 'power1.out',
+            duration: 0.4, // Durée réduite pour plus de réactivité
+            ease: 'power2.out', // Easing plus doux
             force3D: true,
+            overwrite: true, // Écraser les animations précédentes
           });
         }
 

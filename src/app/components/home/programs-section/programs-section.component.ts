@@ -84,10 +84,11 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
       trigger: wrapper,
       start: 'top bottom',
       end: 'bottom top',
-      scrub: true,
+      scrub: 0.5, // Valeur réduite pour plus de fluidité
       onUpdate: (self) => updateScroll(self.progress),
       onRefresh: (self) => updateScroll(self.progress),
-      invalidateOnRefresh: true
+      invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
+      refreshPriority: -1 // Priorité basse pour éviter les conflits
     });
   }
 
