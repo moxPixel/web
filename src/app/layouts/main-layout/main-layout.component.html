@@ -1,7 +1,9 @@
 <app-header></app-header>
 
 <main class="bg-white dark:bg-background-8 text-secondary dark:text-accent transition-colors duration-300 overflow-x-hidden">
-  <router-outlet></router-outlet>
+  <div class="router-wrapper" [@pageTransition]="routeAnimationState">
+    <router-outlet></router-outlet>
+  </div>
 </main>
 
 <app-footer></app-footer>

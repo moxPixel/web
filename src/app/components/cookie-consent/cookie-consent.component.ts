@@ -45,6 +45,7 @@ export class CookieConsentComponent implements OnInit, OnDestroy {
           // Attendre un délai supplémentaire après la disparition du loader pour une transition fluide
           setTimeout(() => {
             this.isVisible = true;
+            this.blockInteractions();
           }, 600);
         }
       });
@@ -54,6 +55,7 @@ export class CookieConsentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.unblockInteractions();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -74,10 +76,27 @@ export class CookieConsentComponent implements OnInit, OnDestroy {
 
   private hidePopup(): void {
     this.isHiding = true;
+    this.unblockInteractions();
     setTimeout(() => {
       this.isVisible = false;
       this.isHiding = false;
     }, 500);
+  }
+
+  private blockInteractions(): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('cookie-consent-active');
+  }
+
+  private unblockInteractions(): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+    document.body.style.overflow = '';
+    document.body.classList.remove('cookie-consent-active');
   }
 
   private showWelcomeNotification(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -7,6 +7,8 @@ import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { CookieConsentComponent } from '../../components/cookie-consent/cookie-consent.component';
 import { NotificationCenterComponent } from '../../components/notification-center/notification-center.component';
 import { EvaChat } from '../../eva-chat/eva-chat';
+import { pageTransition } from '../../animations/page-transition.animation';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
@@ -21,17 +23,52 @@ import { EvaChat } from '../../eva-chat/eva-chat';
     EvaChat
   ],
   templateUrl: './main-layout.component.html',
-  styleUrl: './main-layout.component.css'
+  styleUrl: './main-layout.component.css',
+  animations: [pageTransition]
 })
 export class MainLayoutComponent implements OnInit, OnDestroy {
   private domContentReadyHandler?: () => void;
+  routeAnimationState = '';
 
   constructor(
     private gsapScrollService: GsapScrollService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Écouter les changements de route pour l'animation
+    // Cette transition s'applique automatiquement à toutes les pages
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        // Forcer un changement d'état pour déclencher l'animation
+        // Utiliser un timestamp pour garantir que l'état change toujours
+        const url = event.urlAfterRedirects || this.router.url || '/';
+        this.routeAnimationState = `${url}-${Date.now()}`;
+        
+        // Gérer le scroll pendant la transition
+        this.ngZone.runOutsideAngular(() => {
+          // Bloquer le scroll pendant la transition
+          document.body.style.overflow = 'hidden';
+          
+          // Restaurer le scroll et rafraîchir GSAP après la transition
+          setTimeout(() => {
+            document.body.style.overflow = '';
+            requestAnimationFrame(() => {
+              this.gsapScrollService.refresh();
+              requestAnimationFrame(() => {
+                this.gsapScrollService.refresh();
+              });
+            });
+          }, 450); // Après la fin de l'animation (400ms + marge)
+        });
+      });
+
+    // Initialiser l'état avec l'URL actuelle
+    const initialUrl = this.router.url || '/';
+    this.routeAnimationState = `${initialUrl}-${Date.now()}`;
+
     this.ngZone.runOutsideAngular(() => {
       const initScroll = () => {
         this.gsapScrollService.initSimpleSmoothScroll();

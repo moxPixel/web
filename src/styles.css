@@ -113,6 +113,20 @@
   html.dark * {
     color-scheme: dark;
   }
+
+  /* Blocage des interactions quand cookie consent est actif */
+  body.cookie-consent-active main,
+  body.cookie-consent-active header,
+  body.cookie-consent-active footer {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  body.cookie-consent-active main *,
+  body.cookie-consent-active header *,
+  body.cookie-consent-active footer * {
+    pointer-events: none;
+  }
 }
 
 /* Main container - identique à l'exemple */
@@ -215,8 +229,15 @@
   html.dark .btn-primary,
   :host-context(.dark) .btn-primary,
   :host-context(html.dark) .btn-primary {
-    background: #ffffff;
-    color: var(--color-secondary);
+    background: var(--color-accent) !important;
+    color: var(--color-secondary) !important;
+  }
+
+  .dark .btn-primary:hover,
+  html.dark .btn-primary:hover,
+  :host-context(.dark) .btn-primary:hover,
+  :host-context(html.dark) .btn-primary:hover {
+    opacity: 0.9;
   }
 
   /* Dark mode - Boutons secondaires */
@@ -230,15 +251,15 @@
   html.dark .btn-outline,
   :host-context(.dark) .btn-outline,
   :host-context(html.dark) .btn-outline {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: var(--color-accent);
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--color-accent) !important;
   }
 
   .dark .btn-outline:hover,
   html.dark .btn-outline:hover,
   :host-context(.dark) .btn-outline:hover,
   :host-context(html.dark) .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05) !important;
   }
 
   /* Variante avec border pour hero */

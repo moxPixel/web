@@ -3,10 +3,29 @@ main {
   background-color: #ffffff;
   color: var(--color-secondary);
   transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
 }
 
 html.dark main {
   background-color: var(--color-background-8);
   color: var(--color-accent);
+}
+
+.router-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.router-wrapper > * {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+/* S'assurer que la page entrante est invisible au départ */
+.router-wrapper > *:enter {
+  opacity: 0;
 }
 

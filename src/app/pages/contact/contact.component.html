@@ -1,0 +1,378 @@
+<section class="contact-page">
+  <div class="main-container">
+    <div class="contact-container">
+      <!-- En-tête -->
+      <div class="contact-header">
+        <h1 class="contact-title">Contactez-nous</h1>
+        <p class="contact-subtitle">
+          Une question ? Un projet ? Nous sommes là pour vous accompagner.
+        </p>
+      </div>
+
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="stepper-steps">
+          <div class="stepper-step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+            <div class="stepper-step-circle">
+              <div class="stepper-step-number" *ngIf="currentStep <= 1">1</div>
+              <svg *ngIf="currentStep > 1" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stepper-step-label">Profil</div>
+          </div>
+          <div class="stepper-line-wrapper">
+            <div class="stepper-line" [class.completed]="currentStep > 1"></div>
+          </div>
+          <div class="stepper-step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+            <div class="stepper-step-circle">
+              <div class="stepper-step-number" *ngIf="currentStep <= 2">2</div>
+              <svg *ngIf="currentStep > 2" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stepper-step-label">Coordonnées</div>
+          </div>
+          <div class="stepper-line-wrapper">
+            <div class="stepper-line" [class.completed]="currentStep > 2"></div>
+          </div>
+          <div class="stepper-step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+            <div class="stepper-step-circle">
+              <div class="stepper-step-number" *ngIf="currentStep <= 3">3</div>
+              <svg *ngIf="currentStep > 3" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stepper-step-label">Besoin</div>
+          </div>
+          <div class="stepper-line-wrapper">
+            <div class="stepper-line" [class.completed]="currentStep > 3"></div>
+          </div>
+          <div class="stepper-step" [class.active]="currentStep >= 4" [class.completed]="currentStep > 4">
+            <div class="stepper-step-circle">
+              <div class="stepper-step-number" *ngIf="currentStep <= 4">4</div>
+              <svg *ngIf="currentStep > 4" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stepper-step-label">Message</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulaire avec stepper -->
+      <form (ngSubmit)="onSubmit()" class="contact-form">
+        <!-- Étape 1: Type de contact -->
+        <div class="form-step" *ngIf="currentStep === 1">
+          <div class="form-group">
+            <label class="form-label">Je suis</label>
+            <div class="contact-type-selector">
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="contactType"
+                  value="particulier"
+                  [(ngModel)]="contactType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Un particulier</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="contactType"
+                  value="entreprise"
+                  [(ngModel)]="contactType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Une entreprise</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="contactType"
+                  value="autre"
+                  [(ngModel)]="contactType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Autre</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-step-actions">
+            <button
+              type="button"
+              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full px-8 h-12 flex items-center justify-center"
+              matRipple
+              [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+              (click)="nextStep()"
+              [disabled]="!contactType"
+            >
+              Suivant
+            </button>
+          </div>
+        </div>
+
+        <!-- Étape 2: Informations -->
+        <div class="form-step" *ngIf="currentStep === 2">
+          <div class="form-row" *ngIf="contactType === 'particulier' || contactType === 'autre'">
+            <div class="form-group">
+              <label for="firstName" class="form-label">Prénom</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                [(ngModel)]="firstName"
+                required
+                class="form-input"
+                placeholder="Votre prénom"
+              />
+            </div>
+            <div class="form-group">
+              <label for="lastName" class="form-label">Nom</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                [(ngModel)]="lastName"
+                required
+                class="form-input"
+                placeholder="Votre nom"
+              />
+            </div>
+          </div>
+          <div class="form-group" *ngIf="contactType === 'entreprise'">
+            <label for="companyName" class="form-label">Nom de l'entreprise</label>
+            <input
+              type="text"
+              id="companyName"
+              name="companyName"
+              [(ngModel)]="companyName"
+              required
+              class="form-input"
+              placeholder="Nom de votre entreprise"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                [(ngModel)]="email"
+                required
+                class="form-input"
+                placeholder="votre@email.com"
+                autocomplete="email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="phone" class="form-label">Téléphone <span class="form-label-optional">(optionnel)</span></label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                [(ngModel)]="phone"
+                class="form-input"
+                placeholder="01 23 45 67 89"
+                autocomplete="tel"
+              />
+            </div>
+          </div>
+
+          <div class="form-step-actions">
+            <button
+              type="button"
+              class="btn btn-md w-full sm:w-auto px-6 py-3 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+              matRipple
+              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+              (click)="previousStep()"
+            >
+              Précédent
+            </button>
+            <button
+              type="button"
+              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+              matRipple
+              [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+              (click)="nextStep()"
+              [disabled]="!canGoToNextStep()"
+            >
+              Suivant
+            </button>
+          </div>
+        </div>
+
+        <!-- Étape 3: Besoin et catégorie de sujet -->
+        <div class="form-step" *ngIf="currentStep === 3">
+          <div class="form-group">
+            <label class="form-label">Quel est votre besoin ?</label>
+            <div class="contact-type-selector">
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="requestType"
+                  value="formation"
+                  [(ngModel)]="requestType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Demande de formation</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="requestType"
+                  value="devis"
+                  [(ngModel)]="requestType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Demande de devis</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="requestType"
+                  value="information"
+                  [(ngModel)]="requestType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Demande d'information</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="requestType"
+                  value="autre"
+                  [(ngModel)]="requestType"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Autre</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catégorie du sujet</label>
+            <div class="contact-type-selector">
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="subjectCategory"
+                  value="technique"
+                  [(ngModel)]="subjectCategory"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Question technique</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="subjectCategory"
+                  value="commercial"
+                  [(ngModel)]="subjectCategory"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Question commerciale</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="subjectCategory"
+                  value="pedagogique"
+                  [(ngModel)]="subjectCategory"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Question pédagogique</span>
+              </label>
+              <label class="contact-type-option">
+                <input
+                  type="radio"
+                  name="subjectCategory"
+                  value="autre"
+                  [(ngModel)]="subjectCategory"
+                  class="contact-type-input"
+                />
+                <span class="contact-type-label">Autre</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-step-actions">
+            <button
+              type="button"
+              class="btn btn-md w-full sm:w-auto px-6 py-3 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+              matRipple
+              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+              (click)="previousStep()"
+            >
+              Précédent
+            </button>
+            <button
+              type="button"
+              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+              matRipple
+              [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+              (click)="nextStep()"
+              [disabled]="!canGoToNextStep()"
+            >
+              Suivant
+            </button>
+          </div>
+        </div>
+
+        <!-- Étape 4: Message -->
+        <div class="form-step" *ngIf="currentStep === 4">
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              [(ngModel)]="message"
+              required
+              class="form-textarea"
+              placeholder="Décrivez votre demande en détail..."
+              rows="6"
+            ></textarea>
+          </div>
+          <div class="form-group form-group-checkbox">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                [(ngModel)]="consent"
+                name="consent"
+                required
+                class="checkbox-input"
+              />
+              <span class="checkbox-text">
+                J'accepte que mes données soient utilisées pour répondre à ma demande.
+                <a routerLink="/politique-de-confidentialite" class="form-link-inline">En savoir plus</a>
+              </span>
+            </label>
+          </div>
+
+          <div class="form-step-actions">
+            <button
+              type="button"
+              class="btn btn-md w-full sm:w-auto px-6 py-3 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+              matRipple
+              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+              (click)="previousStep()"
+            >
+              Précédent
+            </button>
+            <button
+              type="submit"
+              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+              matRipple
+              [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+              [disabled]="!canGoToNextStep()"
+            >
+              Envoyer
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
