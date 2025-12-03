@@ -286,17 +286,17 @@
   /* Dark mode badges */
   html.dark .badge-green {
     background-color: #fcfcfc1a;
-    color: var(--color-ns-yellow);
+    color: var(--color-ns-green-light);
   }
 
   html.dark .badge-yellow {
     background-color: #fcfcfc1a;
-    color: var(--color-ns-yellow);
+    color: var(--color-ns-green-light);
   }
 
   html.dark .badge-cyan {
     background-color: #fcfcfc1a;
-    color: var(--color-ns-cyan);
+    color: var(--color-ns-green-light);
   }
 
   /* ========== UTILITAIRES GLOBAUX ========== */
