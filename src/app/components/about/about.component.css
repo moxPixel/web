@@ -217,11 +217,11 @@ ul.space-y-6 li {
 }
 
 ul.space-y-6 li:hover {
-  border-color: var(--color-primary-600, #2563eb);
+  border-color: var(--color-primary-500);
 }
 
-html.dark ul.space-y-6 li:hover {
-  border-color: var(--color-accent, #fbbf24);
+:host-context(html.dark) ul.space-y-6 li:hover {
+  border-color: var(--color-ns-green-light);
 }
 
 /* Classes globales (.btn) dans styles.css @layer components */
