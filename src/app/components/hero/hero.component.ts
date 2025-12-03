@@ -4,8 +4,11 @@ import { MatRippleModule } from '@angular/material/core';
 import { ThreeSceneComponent } from '../three-scene/three-scene.component';
 import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
+import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
 import { GsapHelpers } from '../../utils/gsap-helpers';
 import { gsap } from 'gsap';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-hero',
@@ -22,14 +25,26 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   @ViewChild('h1Desktop', { static: false }) h1Desktop!: ElementRef<HTMLHeadingElement>;
 
   private heroParallaxTween?: gsap.core.Tween;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private gsapAnimation: GsapAnimationService,
-    private gsapScroll: GsapScrollService
+    private gsapScroll: GsapScrollService,
+    private pageLoaderInline: PageLoaderInlineService
   ) {}
 
   ngAfterViewInit() {
-    this.startHeroAnimations();
+    // Attendre que le loader soit complètement caché avant de démarrer les animations
+    this.pageLoaderInline.loaderHidden$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((isHidden) => {
+      if (isHidden) {
+        // Attendre un court délai après la disparition du loader pour garantir la transition
+        setTimeout(() => {
+          this.startHeroAnimations();
+        }, 50);
+      }
+    });
   }
   private startHeroAnimations(): void {
     if (this.heroParallax) {
@@ -110,6 +125,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.heroParallaxTween?.scrollTrigger?.kill();
     this.heroParallaxTween?.kill();
     this.heroParallaxTween = undefined;

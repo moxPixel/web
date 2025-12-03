@@ -1,6 +1,9 @@
 /* Header styles - animations gérées par GSAP */
 .header-one {
   will-change: transform, background, backdrop-filter;
+  /* Cacher initialement le header jusqu'à ce que l'animation commence */
+  /* Le transform est géré par GSAP pour préserver le centrage horizontal */
+  opacity: 0;
 }
 
 /* Lignes de soulignement - CSS minimal nécessaire pour les pseudo-éléments */

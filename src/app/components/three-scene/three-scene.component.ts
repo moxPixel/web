@@ -10,6 +10,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { PageLoaderService } from '../../services/page-loader.service';
+import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 // Enregistrer le plugin ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
@@ -41,6 +44,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private clock = new THREE.Clock();
   private isDestroyed = false;
   private animationTriggered = false;
+  private destroy$ = new Subject<void>();
   private mouseX = 0;
   private mouseY = 0;
   private targetRotationX = 0;
@@ -80,6 +84,7 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
     private gsapScrollService: GsapScrollService,
     private gsapAnimationService: GsapAnimationService,
     private pageLoaderService: PageLoaderService,
+    private pageLoaderInline: PageLoaderInlineService,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.checkDarkMode();
@@ -100,6 +105,8 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isDestroyed = true;
+    this.destroy$.next();
+    this.destroy$.complete();
     this.cleanup();
   }
 
@@ -738,19 +745,41 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setupScrollParallax();
 
         // Animation de défloutage fluide sur le conteneur du canvas (une seule fois)
+        // Attendre que le loader soit complètement caché avant de démarrer l'animation
         if (this.canvasContainer?.nativeElement && !this.animationTriggered) {
           this.animationTriggered = true;
-          // Petit délai pour s'assurer que le modèle est complètement rendu
-          setTimeout(() => {
-            this.gsapAnimationService.defloutage(this.canvasContainer.nativeElement, {
-              duration: 1.4,
-              delay: 0.1,
-              blur: 25,
-              opacity: 0,
-              scale: 0.9,
-              ease: 'power3.out'
+
+          const triggerAnimation = () => {
+            // Petit délai pour s'assurer que le modèle est complètement rendu et que le loader est caché
+            setTimeout(() => {
+              this.gsapAnimationService.defloutage(this.canvasContainer.nativeElement, {
+                duration: 1.4,
+                delay: 0.1,
+                blur: 25,
+                opacity: 0,
+                scale: 0.9,
+                ease: 'power3.out'
+              });
+            }, 150);
+          };
+
+          // Vérifier si le loader est déjà caché
+          const loader = this.document.getElementById('page-loader');
+          const isLoaderHidden = this.document.body.classList.contains('loader-hidden');
+
+          if (!loader || isLoaderHidden) {
+            // Le loader est déjà caché, déclencher l'animation immédiatement
+            triggerAnimation();
+          } else {
+            // Attendre que le loader soit complètement caché
+            this.pageLoaderInline.loaderHidden$.pipe(
+              takeUntil(this.destroy$)
+            ).subscribe((isHidden) => {
+              if (isHidden) {
+                triggerAnimation();
+              }
             });
-          }, 150);
+          }
         }
       };
 
