@@ -1,31 +1,29 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 @Component({
-  selector: 'app-eva-chat',
+  selector: 'eva-chat',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatRippleModule],
+  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule],
   templateUrl: './eva-chat.html',
-  styleUrl: './eva-chat.css',
+  styleUrls: ['./eva-chat.css']
 })
 export class EvaChat implements AfterViewInit, OnDestroy {
-  @ViewChild('chatButton', { static: false }) chatButton!: ElementRef<HTMLElement>;
-
+  @ViewChild('chatButton', { static: false }) chatButton!: ElementRef;
   isOpen = false;
   private scrollTrigger?: ScrollTrigger;
 
   constructor(private ngZone: NgZone) {}
 
   ngAfterViewInit(): void {
-    if (this.chatButton) {
-      this.setupScrollAnimation();
-    }
+    this.setupScrollAnimation();
   }
 
   ngOnDestroy(): void {
@@ -35,22 +33,25 @@ export class EvaChat implements AfterViewInit, OnDestroy {
   }
 
   private setupScrollAnimation(): void {
+    if (!this.chatButton?.nativeElement) return;
+    
     this.ngZone.runOutsideAngular(() => {
-      // Initialiser le bouton comme caché
-      gsap.set(this.chatButton.nativeElement, {
+      const btn = this.chatButton.nativeElement;
+      
+      // État initial : caché
+      gsap.set(btn, {
         opacity: 0,
         y: 20,
-        scale: 0.8
+        scale: 0.95
       });
 
-      // Créer l'animation au scroll
+      // Apparaître au scroll avec ScrollTrigger
       this.scrollTrigger = ScrollTrigger.create({
         trigger: 'body',
         start: 'top -100',
-        // Pré-calculer immédiatement pour éviter les saccades au premier scroll
-        immediateRender: true,
+        end: 'max',
         onEnter: () => {
-          gsap.to(this.chatButton.nativeElement, {
+          gsap.to(btn, {
             opacity: 1,
             y: 0,
             scale: 1,
@@ -59,10 +60,10 @@ export class EvaChat implements AfterViewInit, OnDestroy {
           });
         },
         onLeaveBack: () => {
-          gsap.to(this.chatButton.nativeElement, {
+          gsap.to(btn, {
             opacity: 0,
             y: 20,
-            scale: 0.8,
+            scale: 0.95,
             duration: 0.3,
             ease: 'power2.in'
           });
@@ -73,5 +74,6 @@ export class EvaChat implements AfterViewInit, OnDestroy {
 
   toggleChat(): void {
     this.isOpen = !this.isOpen;
+    console.log('Eva Chat toggled:', this.isOpen);
   }
 }

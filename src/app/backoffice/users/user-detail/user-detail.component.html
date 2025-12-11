@@ -1,0 +1,294 @@
+<div class="flex flex-col gap-6">
+  <!-- Header avec bouton retour -->
+  <div class="flex items-center gap-4">
+    <button
+      (click)="router.navigate(['/bo/users'])"
+      mat-icon-button
+      class="!flex !items-center !justify-center size-10 bg-background-2 dark:bg-background-6 text-secondary dark:text-accent rounded-full hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 !p-0 overflow-hidden"
+      matRipple
+      [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+      title="Retour à la liste"
+    >
+      <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5">arrow_back</mat-icon>
+    </button>
+    <div>
+      <h2 class="text-2xl font-bold text-secondary dark:text-accent">Détails de l'utilisateur</h2>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 mt-1">Informations complètes et gestion</p>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="loading()" class="flex items-center justify-center py-12">
+    <div class="flex flex-col items-center gap-4">
+      <svg class="animate-spin h-8 w-8 text-primary-500 dark:text-ns-green-light" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="text-sm text-secondary/70 dark:text-accent/70">Chargement...</p>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error() && !loading()" class="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl">
+    <p class="text-red-600 dark:text-red-400">{{ error() }}</p>
+  </div>
+
+  <!-- Contenu principal -->
+  <div *ngIf="user() && !loading()" class="space-y-6">
+    <!-- Bloc principal sans card -->
+    <div class="space-y-6">
+      <!-- En-tête avec statut et actions -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-6 border-b border-stroke-2 dark:border-stroke-6">
+        <div class="flex items-center gap-4">
+          <div class="size-16 rounded-full flex items-center justify-center text-primary-500 dark:text-ns-green-light border-2 border-primary-500 dark:border-ns-green-light bg-transparent text-2xl font-bold">
+            {{ user()!.firstName?.[0] || user()!.email[0].toUpperCase() }}
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-secondary dark:text-accent">
+              {{ user()!.firstName }} {{ user()!.lastName }}
+            </h3>
+            <p class="text-sm text-secondary/70 dark:text-accent/70">{{ user()!.email }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span [ngClass]="getStatusBadgeClass(user()!.status)">
+            {{ getStatusLabel(user()!.status) }}
+          </span>
+          <span class="badge badge-cyan">{{ getRoleLabel(user()!.role) }}</span>
+          <button
+            type="button"
+            matRipple
+            class="btn px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+            [matRippleColor]="'rgba(0,0,0,0.1)'"
+            (click)="openEmail()"
+          >
+            <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">mail</mat-icon>
+            Envoyer un message
+          </button>
+        </div>
+      </div>
+
+      <!-- Informations de base -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Email</label>
+          <p class="text-base text-secondary dark:text-accent mt-1">{{ user()!.email }}</p>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Rôle</label>
+          <p class="text-base text-secondary dark:text-accent mt-1">{{ getRoleLabel(user()!.role) }}</p>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Statut</label>
+          <p class="text-base text-secondary dark:text-accent mt-1">{{ getStatusLabel(user()!.status) }}</p>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Email vérifié</label>
+          <p class="text-base text-secondary dark:text-accent mt-1">
+            <span [ngClass]="user()!.emailVerified ? 'badge badge-green' : 'badge badge-yellow'">
+              {{ user()!.emailVerified ? 'Oui' : 'Non' }}
+            </span>
+          </p>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Date d'inscription</label>
+          <p class="text-base text-secondary dark:text-accent mt-1">
+            {{ user()!.createdAt | date:'dd/MM/yyyy à HH:mm' }}
+          </p>
+        </div>
+        <div *ngIf="user()!.lastLogin">
+          <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Dernière connexion</label>
+          <p class="text-base text-secondary dark:text-accent mt-1">
+            {{ user()!.lastLogin | date:'dd/MM/yyyy à HH:mm' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Profil spécifique -->
+      <div *ngIf="getProfileData()" class="mt-6 pt-6 border-t border-stroke-2 dark:border-stroke-6">
+        <h4 class="text-lg font-semibold text-secondary dark:text-accent mb-4">Informations du profil</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Profil Company -->
+          <ng-container *ngIf="user()!.role === UserRole.COMPANY">
+            <div *ngIf="getProfileData().companyName">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Nom de l'entreprise</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().companyName }}</p>
+            </div>
+            <div *ngIf="getProfileData().siret">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">SIRET</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().siret }}</p>
+            </div>
+            <div *ngIf="getProfileData().legalForm">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Forme juridique</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().legalForm }}</p>
+            </div>
+            <div *ngIf="getProfileData().numberOfEmployees">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Nombre d'employés</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().numberOfEmployees }}</p>
+            </div>
+          </ng-container>
+
+          <!-- Profil Individual -->
+          <ng-container *ngIf="user()!.role === UserRole.INDIVIDUAL">
+            <div *ngIf="getProfileData().phone">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Téléphone</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().phone }}</p>
+            </div>
+            <div *ngIf="getProfileData().dateOfBirth">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Date de naissance</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().dateOfBirth | date:'dd/MM/yyyy' }}</p>
+            </div>
+          </ng-container>
+
+          <!-- Profil Trainer -->
+          <ng-container *ngIf="user()!.role === UserRole.TRAINER">
+            <div *ngIf="getProfileData().siret">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">SIRET</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().siret }}</p>
+            </div>
+            <div *ngIf="getProfileData().yearsOfExperience">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Années d'expérience</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().yearsOfExperience }}</p>
+            </div>
+            <div *ngIf="getProfileData().specialties?.length">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Spécialités</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().specialties.join(', ') }}</p>
+            </div>
+          </ng-container>
+
+          <!-- Profil Candidate -->
+          <ng-container *ngIf="user()!.role === UserRole.CANDIDATE">
+            <div *ngIf="getProfileData().educationLevel">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Niveau d'études</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().educationLevel }}</p>
+            </div>
+            <div *ngIf="getProfileData().dateOfBirth">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Date de naissance</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">{{ getProfileData().dateOfBirth | date:'dd/MM/yyyy' }}</p>
+            </div>
+          </ng-container>
+
+          <!-- Adresse commune -->
+          <ng-container *ngIf="getProfileData().address || getProfileData().city || getProfileData().postalCode">
+            <div class="md:col-span-2">
+              <label class="text-xs font-semibold text-secondary/60 dark:text-accent/60 uppercase tracking-wider">Adresse</label>
+              <p class="text-base text-secondary dark:text-accent mt-1">
+                <span *ngIf="getProfileData().address">{{ getProfileData().address }}</span>
+                <span *ngIf="getProfileData().address && (getProfileData().postalCode || getProfileData().city)">, </span>
+                <span *ngIf="getProfileData().postalCode">{{ getProfileData().postalCode }}</span>
+                <span *ngIf="getProfileData().postalCode && getProfileData().city"> </span>
+                <span *ngIf="getProfileData().city">{{ getProfileData().city }}</span>
+                <span *ngIf="getProfileData().country">, {{ getProfileData().country }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-6 pt-6 border-t border-stroke-2 dark:border-stroke-6 flex flex-wrap gap-3">
+        <!-- Valider (si pending) -->
+        <button
+          *ngIf="user()!.status === UserStatus.PENDING"
+          (click)="updateStatus(UserStatus.ACTIVE)"
+          class="btn btn-lg px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+          matRipple
+          [matRippleColor]="'rgba(0,0,0,0.1)'"
+        >
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">check_circle</mat-icon>
+          Valider l'inscription
+        </button>
+
+        <!-- Suspendre (si active) -->
+        <button
+          *ngIf="user()!.status === UserStatus.ACTIVE"
+          (click)="updateStatus(UserStatus.SUSPENDED)"
+          class="btn btn-lg px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+          matRipple
+          [matRippleColor]="'rgba(0,0,0,0.1)'"
+        >
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">pause_circle</mat-icon>
+          Suspendre
+        </button>
+
+        <!-- Réactiver (si inactive/suspended) -->
+        <button
+          *ngIf="user()!.status === UserStatus.INACTIVE || user()!.status === UserStatus.SUSPENDED"
+          (click)="updateStatus(UserStatus.ACTIVE)"
+          class="btn btn-lg px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+          matRipple
+          [matRippleColor]="'rgba(0,0,0,0.1)'"
+        >
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">play_circle</mat-icon>
+          Réactiver
+        </button>
+
+        <!-- Supprimer -->
+        <button
+          (click)="deleteUser()"
+          class="btn btn-lg px-6 h-10 rounded-full border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all flex items-center gap-2"
+          matRipple
+          [matRippleColor]="'rgba(0,0,0,0.1)'"
+        >
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">delete</mat-icon>
+          Supprimer
+        </button>
+      </div>
+
+      <app-email-dialog
+        [open]="emailDialogOpen()"
+        [loading]="emailSending()"
+        [initialTo]="user()!.email"
+        (close)="emailDialogOpen.set(false)"
+        (send)="onSendEmail($event)"
+      ></app-email-dialog>
+    </div>
+
+    <!-- Inscriptions de l'utilisateur (sans card) -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.12em] text-secondary/60 dark:text-accent/60">Inscriptions</p>
+          <h3 class="text-lg font-bold text-secondary dark:text-accent">Demandes de formation</h3>
+        </div>
+      </div>
+
+      <div *ngIf="enrollmentsLoading()" class="text-sm text-secondary/70 dark:text-accent/70">Chargement des inscriptions...</div>
+      <div *ngIf="!enrollmentsLoading() && !enrollments().length" class="text-sm text-secondary/70 dark:text-accent/70">Aucune inscription.</div>
+
+      <div *ngIf="!enrollmentsLoading() && enrollments().length" class="space-y-0">
+        <div
+          *ngFor="let e of enrollments()"
+          class="p-4 flex items-center gap-4 group transition-all duration-300 hover:bg-background-2 dark:hover:bg-background-6 hover:rounded-xl border-b border-stroke-2 dark:border-stroke-6 last:border-b-0 cursor-pointer"
+          [routerLink]="['/bo/enrollments', e.id]"
+        >
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge badge-cyan text-[10px] px-2 py-0.5">
+                {{ e.role }}
+              </span>
+              <span class="text-[10px] text-secondary/60 dark:text-accent/70 uppercase">
+                {{ e.status }}
+              </span>
+            </div>
+            <h4 class="text-sm font-semibold text-secondary dark:text-accent leading-tight truncate mb-0.5">
+              {{ e.training?.shortTitle || e.training?.title || 'Formation' }}
+            </h4>
+            <p class="text-xs text-secondary/70 dark:text-accent/80 line-clamp-1">
+              {{ e.email }}
+            </p>
+          </div>
+          <div class="hidden md:flex flex-col items-end gap-1 text-xs text-secondary/70 dark:text-accent/80 flex-shrink-0">
+            <span *ngIf="e.session?.startDate">
+              {{ e.session.startDate | date:'dd MMM yyyy' }}
+            </span>
+            <span>
+              {{ e.createdAt | date:'dd MMM yyyy' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

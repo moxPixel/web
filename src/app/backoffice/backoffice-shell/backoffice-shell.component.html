@@ -1,0 +1,26 @@
+<div class="min-h-screen bg-background-1 dark:bg-background-8 text-secondary dark:text-accent flex relative overflow-visible">
+  <!-- Sidebar verticale (mini) -->
+  <app-backoffice-sidebar class="hidden md:flex"></app-backoffice-sidebar>
+
+  <div class="flex-1 pt-24 md:pt-16 lg:pt-16 pb-8 px-4 md:px-6 lg:px-8 relative overflow-visible md:pl-28 lg:pl-32">
+  <!-- Sphères lumineuses derrière la card -->
+  <div class="backoffice-hero-spheres" aria-hidden="true">
+    <div class="backoffice-hero-sphere backoffice-hero-sphere--1"></div>
+    <div class="backoffice-hero-sphere backoffice-hero-sphere--2"></div>
+    <div class="backoffice-hero-sphere backoffice-hero-sphere--3"></div>
+  </div>
+
+  <div class="max-w-[1920px] mx-auto relative" style="overflow: visible !important;">
+    <div
+      class="relative z-10 bg-[url('/assets/images/home-page-14/hero-bg.svg')] dark:bg-[url('/assets/images/home-page-14/hero-bg-dark.svg')] rounded-t-[12px] md:rounded-t-[20px] rounded-b-[20px] md:rounded-b-[30px] lg:rounded-b-[40px] bg-cover bg-no-repeat min-h-[calc(100vh-8rem)]"
+      style="overflow: visible;"
+    >
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10 py-8 lg:py-12">
+        <div class="router-wrapper" [@pageTransition]="routeAnimationState">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

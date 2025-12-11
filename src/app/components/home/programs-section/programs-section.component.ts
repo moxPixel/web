@@ -1,12 +1,21 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { GsapScrollService } from '../../../services/gsap-scroll.service';
+import { PageLoaderInlineService } from '../../../services/page-loader-inline.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-gsap.registerPlugin(ScrollTrigger);
+type Slide = {
+  link: string;
+  img: string;
+  alt: string;
+  title: string;
+  height: string;
+  width: string;
+};
 
 @Component({
   selector: 'app-programs-section',
@@ -16,99 +25,56 @@ gsap.registerPlugin(ScrollTrigger);
   styleUrl: './programs-section.component.css'
 })
 export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('carouselWrapper', { static: false }) carouselWrapper?: ElementRef<HTMLElement>;
-  @ViewChild('carouselContainer', { static: false }) carouselContainer?: ElementRef<HTMLElement>;
+  @ViewChild('programsHeroParallax', { static: false }) programsHeroParallax!: ElementRef;
 
-  private scrollTriggerInstance?: ScrollTrigger;
-  private cachedMaxScroll = 0; // Cache pour éviter les recalculs coûteux
+  slides: Slide[] = [
+    { link: '/formations/ia', img: '/assets/images/img/p1.jpg', alt: 'Intelligence Artificielle', title: 'Intelligence Artificielle', height: 'h-[340px]', width: 'w-[260px]' },
+    { link: '/formations/cybersecurite', img: '/assets/images/img/p2.jpg', alt: 'Cybersécurité', title: 'Cybersécurité', height: 'h-[300px]', width: 'w-[220px]' },
+    { link: '/formations/data-science', img: '/assets/images/img/p7.jpg', alt: 'Data Science', title: 'Data Science', height: 'h-[340px]', width: 'w-[260px]' },
+    { link: '/formations/cloud-devops', img: '/assets/images/img/p10.jpg', alt: 'Cloud & DevOps', title: 'Cloud & DevOps', height: 'h-[280px]', width: 'w-[380px]' },
+    { link: '/formations/blockchain', img: '/assets/images/img/p18.jpg', alt: 'Blockchain', title: 'Blockchain & Web3', height: 'h-[260px]', width: 'w-[260px]' },
+    { link: '/formations/architecture', img: '/assets/images/img/p6.jpg', alt: 'Architecture Logicielle', title: 'Architecture Logicielle', height: 'h-[340px]', width: 'w-[260px]' }
+  ];
 
-  constructor(private ngZone: NgZone) {}
+  private heroParallaxTween?: any;
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private gsapScroll: GsapScrollService,
+    private pageLoaderInline: PageLoaderInlineService
+  ) {}
 
   ngAfterViewInit(): void {
-    this.ngZone.runOutsideAngular(() => {
-      this.waitForImages();
-    });
-  }
-
-  private waitForImages(): void {
-    const container = this.carouselContainer?.nativeElement;
-    if (!container) {
-      return;
-    }
-
-    const images = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
-    if (images.length === 0) {
-      this.initScrollAnimation();
-      return;
-    }
-
-    let loaded = 0;
-    const total = images.length;
-
-    const onDone = () => {
-      loaded += 1;
-      if (loaded === total) {
-        this.initScrollAnimation();
-      }
-    };
-
-    images.forEach((img) => {
-      if (img.complete) {
-        onDone();
-      } else {
-        img.addEventListener('load', onDone, { once: true });
-        img.addEventListener('error', onDone, { once: true });
+    this.pageLoaderInline.loaderHidden$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((isHidden) => {
+      if (isHidden) {
+        setTimeout(() => {
+          if (this.programsHeroParallax) {
+            this.heroParallaxTween = this.gsapScroll.createParallax(
+              this.programsHeroParallax.nativeElement,
+              -0.25,
+              'top top',
+              'bottom top'
+            );
+          }
+        }, 50);
             }
           });
         }
 
-  private initScrollAnimation(): void {
-    const wrapper = this.carouselWrapper?.nativeElement;
-    const container = this.carouselContainer?.nativeElement;
-
-    if (!wrapper || !container) {
-      return;
-    }
-
-    // Calculer maxScroll une seule fois et le mettre en cache
-    const calculateMaxScroll = () => {
-      this.cachedMaxScroll = container.scrollWidth - container.clientWidth;
-      return this.cachedMaxScroll;
-    };
-
-    // Initialiser le cache
-    calculateMaxScroll();
-
-    const updateScroll = (progress: number) => {
-      // Utiliser le cache au lieu de recalculer à chaque frame
-      if (this.cachedMaxScroll > 0) {
-        container.scrollLeft = progress * this.cachedMaxScroll;
-      } else {
-        container.scrollLeft = 0;
-      }
-    };
-
-    this.scrollTriggerInstance?.kill();
-
-    this.scrollTriggerInstance = ScrollTrigger.create({
-      trigger: wrapper,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 0.5, // Valeur réduite pour plus de fluidité
-      // Pré-calculer immédiatement pour éviter les saccades au premier scroll
-      immediateRender: true,
-      onUpdate: (self) => updateScroll(self.progress),
-      onRefresh: () => {
-        // Recalculer le cache uniquement lors du refresh
-        calculateMaxScroll();
-      },
-      invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
-      refreshPriority: -1 // Priorité basse pour éviter les conflits
-    });
+  trackByIndex(index: number): number {
+    return index;
   }
 
   ngOnDestroy(): void {
-    this.scrollTriggerInstance?.kill();
+    this.destroy$.next();
+    this.destroy$.complete();
+    
+    if (this.heroParallaxTween) {
+      this.heroParallaxTween.scrollTrigger?.kill();
+      this.heroParallaxTween.kill();
+      this.heroParallaxTween = undefined;
   }
 }
-
+}

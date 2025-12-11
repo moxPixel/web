@@ -1,0 +1,29 @@
+{
+  "name": "Unlock Formation - Formations IT & IA",
+  "short_name": "Unlock Formation",
+  "description": "Centre de formation expert en IT, IA, cybersécurité, développement, cloud et data. Formations certifiantes, alternance et reconversion professionnelle.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/images/logo/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "training"],
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

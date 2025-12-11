@@ -1,35 +1,108 @@
-import { Component, HostListener, OnDestroy, Inject, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, Inject, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { gsap } from 'gsap';
+import { TrainingsService } from '../../services/trainings/trainings.service';
+import { Training } from '../../interfaces/training.interface';
+import { AuthApiService } from '../../services/api/auth-api.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MatRippleModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MatRippleModule, MatIconModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnDestroy, AfterViewInit {
+export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
   isMobileMenuOpen = false;
   isDarkMode = false;
+  showMegaMenu = false;
+  showMobileTrainings = false;
+  trainingsGrouped: { category: string; items: Training[] }[] = [];
+  currentRoute = '';
   @ViewChild('headerContainer', { static: false }) headerContainer!: ElementRef;
   private destroy$ = new Subject<void>();
+  private megaMenuTimer?: ReturnType<typeof setTimeout>;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private gsapAnimation: GsapAnimationService,
     private gsapScroll: GsapScrollService,
-    private pageLoaderInline: PageLoaderInlineService
+    private pageLoaderInline: PageLoaderInlineService,
+    private trainingsService: TrainingsService,
+    private authService: AuthApiService,
+    private router: Router
   ) {
     // Vérifier le thème au chargement
     this.checkDarkMode();
+  }
+
+  get userSpaceLink(): string {
+    return this.authService.isAdmin() ? '/bo/trainings' : '/account/enrollments';
+  }
+
+  get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  ngOnInit(): void {
+    // Suivre la route actuelle
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        this.currentRoute = event.url || '';
+      });
+    this.currentRoute = this.router.url || '';
+
+    this.trainingsService.getTrainings().pipe(takeUntil(this.destroy$)).subscribe((trainings) => {
+      const groups: Record<string, Training[]> = {};
+      trainings.forEach((t) => {
+        const cat = t.category || 'Autres';
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(t);
+      });
+      this.trainingsGrouped = Object.entries(groups)
+        .map(([category, items]) => ({
+          category,
+          items: items.slice(0, 5)
+        }))
+        .sort((a, b) => a.category.localeCompare(b.category));
+    });
+  }
+
+  get buttonText(): string {
+    if (!this.isAuthenticated) {
+      return 'Mon espace';
+    }
+    // Si connecté et sur la page enrollments user, afficher "Déconnexion"
+    if (this.currentRoute.startsWith('/account/enrollments')) {
+      return 'Déconnexion';
+    }
+    // Sinon afficher "Mon espace"
+    return 'Mon espace';
+  }
+
+  get buttonAction(): 'link' | 'logout' {
+    if (!this.isAuthenticated) {
+      return 'link';
+    }
+    // Si connecté et sur la page enrollments user, action logout
+    if (this.currentRoute.startsWith('/account/enrollments')) {
+      return 'logout';
+    }
+    // Sinon action link vers mon espace
+    return 'link';
   }
 
   ngAfterViewInit() {
@@ -79,12 +152,42 @@ export class HeaderComponent implements OnDestroy, AfterViewInit {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    if (!this.isMobileMenuOpen) {
+      this.showMobileTrainings = false;
+    }
     this.updateBodyOverflow();
   }
 
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
+    this.showMobileTrainings = false;
     this.updateBodyOverflow();
+  }
+
+  openMegaMenu(): void {
+    if (this.megaMenuTimer) {
+      clearTimeout(this.megaMenuTimer);
+      this.megaMenuTimer = undefined;
+    }
+    this.showMegaMenu = true;
+  }
+
+  closeMegaMenu(): void {
+    this.showMegaMenu = false;
+  }
+
+  scheduleCloseMegaMenu(delay = 180): void {
+    if (this.megaMenuTimer) {
+      clearTimeout(this.megaMenuTimer);
+    }
+    this.megaMenuTimer = setTimeout(() => {
+      this.showMegaMenu = false;
+      this.megaMenuTimer = undefined;
+    }, delay);
+  }
+
+  toggleMobileTrainings(): void {
+    this.showMobileTrainings = !this.showMobileTrainings;
   }
 
   private updateBodyOverflow() {
@@ -149,6 +252,17 @@ export class HeaderComponent implements OnDestroy, AfterViewInit {
       this.document.documentElement.classList.remove('dark');
       this.document.documentElement.style.backgroundColor = '#ffffff';
       this.document.body.style.backgroundColor = '#ffffff';
+    }
+  }
+
+  /**
+   * Déconnexion de l'utilisateur
+   */
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/']);
+    if (this.isMobileMenuOpen) {
+      this.closeMobileMenu();
     }
   }
 }

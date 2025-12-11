@@ -1,0 +1,142 @@
+/* Styles pour le dialog de génération IA - identiques au formulaire de formation */
+
+:host {
+  display: block;
+  color: var(--color-secondary);
+}
+
+:host-context(.dark),
+:host-context(html.dark) {
+  color: var(--color-accent);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+:host-context(.dark) .form-label,
+:host-context(html.dark) .form-label,
+html.dark .form-label {
+  color: var(--color-accent) !important;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: var(--color-red-500);
+}
+
+.form-input,
+.form-textarea,
+select.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-secondary);
+  background-color: transparent;
+  border: 1px solid var(--color-stroke-2);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+:host-context(.dark) .form-input,
+:host-context(.dark) .form-textarea,
+:host-context(.dark) select.form-input,
+:host-context(html.dark) .form-input,
+:host-context(html.dark) .form-textarea,
+:host-context(html.dark) select.form-input,
+html.dark .form-input,
+html.dark .form-textarea,
+html.dark select.form-input {
+  color: var(--color-accent) !important;
+  border-color: var(--color-stroke-6);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-secondary);
+  opacity: 0.4;
+}
+
+:host-context(.dark) .form-input::placeholder,
+:host-context(.dark) .form-textarea::placeholder,
+:host-context(html.dark) .form-input::placeholder,
+:host-context(html.dark) .form-textarea::placeholder,
+html.dark .form-input::placeholder,
+html.dark .form-textarea::placeholder {
+  color: var(--color-accent) !important;
+  opacity: 0.4;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+select.form-input:focus {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-background-2);
+}
+
+:host-context(.dark) .form-input:focus,
+:host-context(.dark) .form-textarea:focus,
+:host-context(.dark) select.form-input:focus,
+:host-context(html.dark) .form-input:focus,
+:host-context(html.dark) .form-textarea:focus,
+:host-context(html.dark) select.form-input:focus,
+html.dark .form-input:focus,
+html.dark .form-textarea:focus,
+html.dark select.form-input:focus {
+  border-color: var(--color-ns-green-light);
+  background-color: var(--color-background-7);
+}
+
+.form-input.error,
+.form-textarea.error {
+  border-color: var(--color-red-500);
+}
+
+:host-context(.dark) .form-input.error,
+:host-context(.dark) .form-textarea.error,
+:host-context(html.dark) .form-input.error,
+:host-context(html.dark) .form-textarea.error,
+html.dark .form-input.error,
+html.dark .form-textarea.error {
+  border-color: var(--color-red-400);
+}
+
+/* Select styling */
+select.form-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a1a1c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+html.dark select.form-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fcfcfc' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+select.form-input option {
+  background-color: var(--color-background-1);
+  color: var(--color-secondary);
+}
+
+html.dark select.form-input option {
+  background-color: var(--color-background-8);
+  color: var(--color-accent);
+}

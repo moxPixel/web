@@ -19,30 +19,60 @@
 
 .contact-container {
   width: 100%;
-  max-width: 440px;
+  max-width: 847px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
   align-items: center;
-  padding: 40px 0;
-  min-height: 640px;
+}
+
+.contact-card {
+  width: 100%;
+  background: var(--color-background-4);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+:host-context(.dark) .contact-card {
+  background: var(--color-background-6);
+}
+
+@media (min-width: 768px) {
+  .contact-card {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contact-card {
+    padding: 2.75rem;
+  }
 }
 
 .contact-header {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.75rem;
   width: 100%;
 }
 
 .contact-title {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   margin: 0;
   color: var(--color-secondary);
   line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .contact-title {
+    font-size: 1.5rem;
+  }
 }
 
 :host-context(.dark) :is(.contact-title, .contact-subtitle, .form-label, .contact-type-label, .checkbox-text) {
@@ -56,8 +86,6 @@
 /* Stepper - Design Premium */
 .stepper {
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto 32px;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -238,9 +266,7 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  flex: 1 1 auto;
-  justify-content: flex-start;
-  max-width: 440px;
+  max-width: 847px;
 }
 
 .form-step {
@@ -551,8 +577,10 @@ html.dark .form-step-actions .btn-outline:hover,
 
   .contact-container {
     gap: 24px;
-    min-height: auto;
-    padding: 24px 0;
+  }
+
+  .contact-card {
+    padding: 1.5rem;
   }
 
   .form-row {
@@ -560,18 +588,32 @@ html.dark .form-step-actions .btn-outline:hover,
     gap: 24px;
   }
 
-  .contact-title {
-    font-size: 1.25rem;
+  /* Stepper plus compact en mobile */
+  .stepper-step-circle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stepper-step-number {
+    font-size: 0.75rem;
+  }
+
+  .stepper-check-icon {
+    width: 14px;
+    height: 14px;
   }
 
   .stepper-step-label {
     font-size: 0.6875rem;
   }
 
-  .stepper-step-number {
-    width: 32px;
-    height: 32px;
-    font-size: 0.75rem;
+  .stepper-step {
+    gap: 6px;
+  }
+
+  .stepper-line-wrapper {
+    margin: 0 4px;
+    min-width: 24px;
   }
 
   .contact-type-selector {
@@ -581,6 +623,43 @@ html.dark .form-step-actions .btn-outline:hover,
   .contact-type-option {
     min-width: 100%;
   }
+}
 
+/* Très petit mobile - Stepper encore plus compact */
+@media (max-width: 380px) {
+  .stepper-step-circle {
+    width: 28px;
+    height: 28px;
+  }
+
+  .stepper-step-number {
+    font-size: 0.6875rem;
+  }
+
+  .stepper-check-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .stepper-step-label {
+    font-size: 0.625rem;
+  }
+
+  .stepper-step {
+    gap: 4px;
+  }
+
+  .stepper-line-wrapper {
+    margin: 0 2px;
+    min-width: 16px;
+  }
+
+  .stepper-step.active .stepper-step-circle {
+    box-shadow: 0 0 0 3px rgba(134, 79, 254, 0.1);
+  }
+
+  :host-context(.dark) .stepper-step.active .stepper-step-circle {
+    box-shadow: 0 0 0 3px rgba(232, 251, 198, 0.1);
+  }
 }
 

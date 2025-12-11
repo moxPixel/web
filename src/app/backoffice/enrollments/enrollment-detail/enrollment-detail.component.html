@@ -1,0 +1,259 @@
+<div class="space-y-6">
+  <!-- Header avec bouton retour (style harmonisé) -->
+  <div class="flex items-center gap-4">
+    <button
+      type="button"
+      routerLink="/bo/enrollments"
+      class="!flex !items-center !justify-center size-10 bg-background-2 dark:bg-background-6 text-secondary dark:text-accent rounded-full hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 !p-0 overflow-hidden"
+      matRipple
+      [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+      title="Retour aux inscriptions"
+    >
+      <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5">arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="text-2xl font-bold text-secondary dark:text-accent">Détail de l'inscription</h1>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 mt-1">Consultez et mettez à jour la demande.</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading()" class="flex items-center justify-center py-12">
+    <div class="flex flex-col items-center gap-3 text-secondary/70 dark:text-accent/70">
+      <mat-icon class="!w-8 !h-8 !text-[32px] animate-spin text-primary-500 dark:text-ns-green-light">refresh</mat-icon>
+      <span>Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error()" class="py-4 text-red-500">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="!loading() && enrollment() as e">
+    <div class="space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="badge badge-cyan text-[10px] px-2 py-0.5">{{ e.role }}</span>
+        <span class="text-xs uppercase text-secondary/60 dark:text-accent/60">{{ e.status }}</span>
+        <button
+          type="button"
+          matRipple
+          class="btn px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+          [matRippleColor]="'rgba(0,0,0,0.1)'"
+          (click)="openEmail()"
+        >
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">mail</mat-icon>
+          Envoyer un message
+        </button>
+      </div>
+
+      <!-- Progression du statut -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="flex-1 flex items-center gap-3">
+            <ng-container *ngFor="let step of statusSteps; let i = index">
+              <div class="flex items-center gap-2 flex-1 min-w-0">
+                <div
+                  class="size-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 border"
+                  [ngClass]="{
+                    'bg-primary-50 dark:bg-ns-green-light/20 border-primary-200 dark:border-ns-green-light/60 text-primary-600 dark:text-ns-green-light': getStepState(step.value) === 'done',
+                    'bg-primary-500 dark:bg-ns-green-light text-white dark:text-secondary border-primary-500 dark:border-ns-green-light': getStepState(step.value) === 'current',
+                    'bg-background-2 dark:bg-background-6 border-stroke-2 dark:border-stroke-6 text-secondary/50 dark:text-accent/50': getStepState(step.value) === 'pending',
+                    'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400': getStepState(step.value) === 'stopped'
+                  }"
+                >
+                  <mat-icon class="!w-5 !h-5 !text-[20px]">{{ step.icon }}</mat-icon>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-semibold text-secondary dark:text-accent">{{ step.label }}</div>
+                  <div class="h-[3px] mt-2 rounded-full"
+                    [ngClass]="{
+                      'bg-primary-500 dark:bg-ns-green-light': getStepState(step.value) === 'done' || getStepState(step.value) === 'current',
+                      'bg-stroke-2 dark:bg-stroke-6': getStepState(step.value) === 'pending',
+                      'bg-red-400 dark:bg-red-500': getStepState(step.value) === 'stopped'
+                    }"
+                  ></div>
+                </div>
+              </div>
+              <div *ngIf="i < statusSteps.length - 1" class="w-4 shrink-0 h-[2px] bg-stroke-2 dark:bg-stroke-6"></div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Radios stylés -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <label
+            class="flex items-start gap-3 rounded-2xl border border-stroke-2 dark:border-stroke-6 bg-background-2/60 dark:bg-background-7/60 px-4 py-3 cursor-pointer transition-all hover:border-primary-500 dark:hover:border-ns-green-light"
+          >
+            <input
+              type="radio"
+              class="mt-1 accent-primary-500 dark:accent-ns-green-light"
+              name="status"
+              value="submitted"
+              [ngModel]="statusValue()"
+              (ngModelChange)="setStatus($event)"
+            />
+            <div>
+              <div class="text-sm font-semibold text-secondary dark:text-accent">Soumise</div>
+              <p class="text-xs text-secondary/70 dark:text-accent/70">Demande reçue, en attente de revue.</p>
+            </div>
+          </label>
+
+          <label
+            class="flex items-start gap-3 rounded-2xl border border-stroke-2 dark:border-stroke-6 bg-background-2/60 dark:bg-background-7/60 px-4 py-3 cursor-pointer transition-all hover:border-primary-500 dark:hover:border-ns-green-light"
+          >
+            <input
+              type="radio"
+              class="mt-1 accent-primary-500 dark:accent-ns-green-light"
+              name="status"
+              value="in_review"
+              [ngModel]="statusValue()"
+              (ngModelChange)="setStatus($event)"
+            />
+            <div>
+              <div class="text-sm font-semibold text-secondary dark:text-accent">En revue</div>
+              <p class="text-xs text-secondary/70 dark:text-accent/70">Analyse des informations et des documents.</p>
+            </div>
+          </label>
+
+          <label
+            class="flex items-start gap-3 rounded-2xl border border-stroke-2 dark:border-stroke-6 bg-background-2/60 dark:bg-background-7/60 px-4 py-3 cursor-pointer transition-all hover:border-primary-500 dark:hover:border-ns-green-light"
+          >
+            <input
+              type="radio"
+              class="mt-1 accent-primary-500 dark:accent-ns-green-light"
+              name="status"
+              value="accepted"
+              [ngModel]="statusValue()"
+              (ngModelChange)="setStatus($event)"
+            />
+            <div>
+              <div class="text-sm font-semibold text-secondary dark:text-accent">Acceptée</div>
+              <p class="text-xs text-secondary/70 dark:text-accent/70">Inscription validée, le participant est inscrit.</p>
+            </div>
+          </label>
+
+          <label
+            class="flex items-start gap-3 rounded-2xl border border-stroke-2 dark:border-stroke-6 bg-background-2/60 dark:bg-background-7/60 px-4 py-3 cursor-pointer transition-all hover:border-red-500 dark:hover:border-red-400"
+          >
+            <input
+              type="radio"
+              class="mt-1 accent-red-500 dark:accent-red-400"
+              name="status"
+              value="rejected"
+              [ngModel]="statusValue()"
+              (ngModelChange)="setStatus($event)"
+            />
+            <div>
+              <div class="text-sm font-semibold text-red-600 dark:text-red-400">Rejetée</div>
+              <p class="text-xs text-secondary/70 dark:text-accent/70">La demande n’a pas été acceptée.</p>
+            </div>
+          </label>
+
+          <label
+            class="flex items-start gap-3 rounded-2xl border border-stroke-2 dark:border-stroke-6 bg-background-2/60 dark:bg-background-7/60 px-4 py-3 cursor-pointer transition-all hover:border-red-500 dark:hover:border-red-400"
+          >
+            <input
+              type="radio"
+              class="mt-1 accent-red-500 dark:accent-red-400"
+              name="status"
+              value="cancelled"
+              [ngModel]="statusValue()"
+              (ngModelChange)="setStatus($event)"
+            />
+            <div>
+              <div class="text-sm font-semibold text-red-600 dark:text-red-400">Annulée</div>
+              <p class="text-xs text-secondary/70 dark:text-accent/70">La demande a été annulée par l’utilisateur.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            mat-raised-button
+            color="primary"
+            class="!bg-secondary !text-white hover:!bg-secondary/90 dark:!bg-white dark:!text-secondary !px-4 !h-10 !rounded-full !flex !items-center !gap-2"
+            [disabled]="statusUpdating()"
+            (click)="updateStatus()"
+          >
+            <mat-icon class="!w-4 !h-4 !text-[16px]">done</mat-icon>
+            <span>Mettre à jour</span>
+          </button>
+          <span *ngIf="statusUpdating()" class="text-sm text-secondary/70 dark:text-accent/70">Mise à jour...</span>
+        </div>
+
+        <hr class="border-t border-stroke-2 dark:border-stroke-6 mt-4" />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-secondary dark:text-accent">
+        <div class="space-y-1">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Nom</p>
+          <p class="font-semibold">{{ e.firstName }} {{ e.lastName }}</p>
+        </div>
+        <div class="space-y-1">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Email</p>
+          <p class="font-semibold">{{ e.email }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.phone">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Téléphone</p>
+          <p class="font-semibold">{{ e.phone }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.companyName">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Entreprise</p>
+          <p class="font-semibold">{{ e.companyName }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.jobTitle">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Poste</p>
+          <p class="font-semibold">{{ e.jobTitle }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.siret">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">SIRET</p>
+          <p class="font-semibold">{{ e.siret }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.teamSize">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Taille équipe</p>
+          <p class="font-semibold">{{ e.teamSize }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.preferredFormat">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Format souhaité</p>
+          <p class="font-semibold">{{ e.preferredFormat }}</p>
+        </div>
+        <div class="space-y-1" *ngIf="e.desiredDate">
+          <p class="text-xs text-secondary/60 dark:text-accent/60">Date souhaitée</p>
+          <p class="font-semibold">{{ e.desiredDate | date:'dd MMM yyyy' }}</p>
+        </div>
+      </div>
+
+      <div class="space-y-1" *ngIf="e.training">
+        <p class="text-xs text-secondary/60 dark:text-accent/60">Formation</p>
+        <p class="font-semibold">{{ e.training.shortTitle || e.training.title }}</p>
+      </div>
+
+      <div class="space-y-1" *ngIf="e.session">
+        <p class="text-xs text-secondary/60 dark:text-accent/60">Session</p>
+        <p class="font-semibold">
+          {{ e.session.startDate | date:'dd MMM yyyy' }}
+          <span *ngIf="e.session.endDate"> — {{ e.session.endDate | date:'dd MMM yyyy' }}</span>
+        </p>
+      </div>
+
+      <div class="space-y-1" *ngIf="e.objectives">
+        <p class="text-xs text-secondary/60 dark:text-accent/60">Objectifs</p>
+        <p>{{ e.objectives }}</p>
+      </div>
+
+      <div class="space-y-1" *ngIf="e.message">
+        <p class="text-xs text-secondary/60 dark:text-accent/60">Message</p>
+        <p>{{ e.message }}</p>
+      </div>
+
+      <app-email-dialog
+        [open]="emailDialogOpen()"
+        [loading]="emailSending()"
+        [initialTo]="e.email"
+        initialSubject="Votre demande d'inscription"
+        (close)="emailDialogOpen.set(false)"
+        (send)="onSendEmail($event)"
+      ></app-email-dialog>
+    </div>
+  </ng-container>
+</div>
+

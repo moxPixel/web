@@ -1,0 +1,221 @@
+<div class="flex flex-col gap-6">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-secondary dark:text-accent">Formations</h2>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 mt-1">Gérez toutes les formations du site.</p>
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      class="!bg-secondary !text-white hover:!bg-secondary/90 dark:!bg-white dark:!text-secondary !px-6 !h-11 !rounded-full !flex !items-center !justify-center !gap-2"
+      (click)="create()"
+    >
+      <span class="leading-none">Créer une formation</span>
+      <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">add</mat-icon>
+    </button>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="relative">
+    <input
+      type="text"
+      placeholder="Rechercher par titre ou slug"
+      class="w-full pl-[42px] pr-4 py-3.5 text-base font-inter-tight text-secondary dark:text-accent bg-transparent border border-stroke-2 dark:border-stroke-6 rounded-xl transition-all outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-ns-green-light focus:border-primary-500 dark:focus:border-ns-green-light placeholder:text-secondary/50 dark:placeholder:text-accent/50"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)"
+    />
+    <span class="absolute left-3 top-0 bottom-0 flex items-center justify-center text-secondary/60 dark:text-accent/70 pointer-events-none">
+      <mat-icon class="!w-5 !h-5 !text-[20px] !leading-[20px] flex-shrink-0">search</mat-icon>
+    </span>
+  </div>
+
+  <!-- Filtres hashtags -->
+  <div class="sticky top-24 sm:top-[110px] md:top-[120px] z-30 border-b border-stroke-2/50 dark:border-stroke-6/50 mb-6 sm:mb-8 py-2 sm:py-3">
+    <div class="space-y-2">
+      <div class="flex gap-x-1 sm:gap-x-1.5 gap-y-2 items-center justify-center overflow-x-auto pb-1 scrollbar-hide">
+        <!-- Filtres Niveau -->
+        <ng-container *ngFor="let filter of levelFilters">
+          <button
+            type="button"
+            matRipple
+            class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md"
+            [ngClass]="selectedLevel === filter.value
+              ? 'border-primary-500 dark:border-ns-green-light text-primary-500 dark:text-ns-green-light bg-transparent'
+              : 'border-transparent text-secondary/70 dark:text-accent/70 hover:text-secondary dark:hover:text-accent hover:border-stroke-2 dark:hover:border-stroke-6'"
+            (click)="setLevelFilter(filter.value)"
+          >
+            {{ filter.label }}
+          </button>
+        </ng-container>
+
+        <!-- Séparateur -->
+        <span class="text-secondary/30 dark:text-accent/30 text-[10px] mx-1 flex-shrink-0">•</span>
+
+        <!-- Filtres Type -->
+        <ng-container *ngFor="let filter of trainingTypeFilters">
+          <button
+            type="button"
+            matRipple
+            class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md"
+            [ngClass]="selectedTrainingType === filter.value
+              ? 'border-primary-500 dark:border-ns-green-light text-primary-500 dark:text-ns-green-light bg-transparent'
+              : 'border-transparent text-secondary/70 dark:text-accent/70 hover:text-secondary dark:hover:text-accent hover:border-stroke-2 dark:hover:border-stroke-6'"
+            (click)="setTrainingTypeFilter(filter.value)"
+          >
+            {{ filter.label }}
+          </button>
+        </ng-container>
+
+        <!-- Séparateur -->
+        <span class="text-secondary/30 dark:text-accent/30 text-[10px] mx-1 flex-shrink-0">•</span>
+
+        <!-- Filtres Public -->
+        <ng-container *ngFor="let filter of audienceTypeFilters">
+          <button
+            type="button"
+            matRipple
+            class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md"
+            [ngClass]="selectedAudienceType === filter.value
+              ? 'border-primary-500 dark:border-ns-green-light text-primary-500 dark:text-ns-green-light bg-transparent'
+              : 'border-transparent text-secondary/70 dark:text-accent/70 hover:text-secondary dark:hover:text-accent hover:border-stroke-2 dark:hover:border-stroke-6'"
+            (click)="setAudienceTypeFilter(filter.value)"
+          >
+            {{ filter.label }}
+          </button>
+        </ng-container>
+
+        <!-- Séparateur -->
+        <span *ngIf="selectedLevel !== 'all' || selectedTrainingType !== 'all' || selectedAudienceType !== 'all'" class="text-secondary/30 dark:text-accent/30 text-[10px] mx-1 flex-shrink-0">•</span>
+
+        <!-- Bouton réinitialiser -->
+        <button
+          *ngIf="selectedLevel !== 'all' || selectedTrainingType !== 'all' || selectedAudienceType !== 'all'"
+          type="button"
+          matRipple
+          class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md border-transparent text-secondary/70 dark:text-accent/70 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500 dark:hover:border-red-400"
+          (click)="clearFilters()"
+        >
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="loading()" class="flex items-center justify-center py-12">
+    <div class="flex flex-col items-center gap-4">
+      <svg class="animate-spin h-8 w-8 text-primary-500 dark:text-ns-green-light" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="text-sm text-secondary/70 dark:text-accent/70">Chargement...</p>
+    </div>
+  </div>
+
+  <!-- Liste de formations compacte -->
+  <ng-container *ngIf="!loading() && filtered().length; else noTrainings">
+    <div class="space-y-0">
+      <div
+        *ngFor="let t of filtered()"
+        class="p-4 flex items-center gap-4 group transition-all duration-300 cursor-pointer hover:bg-background-2 dark:hover:bg-background-6 hover:rounded-xl border-b border-stroke-2 dark:border-stroke-6 last:border-b-0"
+        (click)="edit(t.id)"
+      >
+        <!-- Image compacte -->
+        <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+          <img
+            [src]="getImageUrl(t.heroImage)"
+            [alt]="t.shortTitle"
+            class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          />
+        </div>
+
+        <!-- Contenu principal -->
+        <div class="flex-1 min-w-0 flex items-center justify-between gap-4">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge badge-cyan text-[10px] px-2 py-0.5">
+                {{ t.category || 'Formation' }}
+              </span>
+              <span class="text-[10px] text-secondary/60 dark:text-accent/70 uppercase">
+                {{ t.level }}
+              </span>
+              <span class="text-[10px] text-secondary/60 dark:text-accent/70">
+                {{ t.trainingType }}
+              </span>
+            </div>
+            <h3 class="text-sm font-semibold text-secondary dark:text-accent leading-tight truncate mb-0.5">
+              {{ t.shortTitle }}
+            </h3>
+            <p class="text-xs text-secondary/70 dark:text-accent/80 line-clamp-1">
+              {{ t.tagline || 'Aucune description disponible' }}
+            </p>
+          </div>
+
+          <!-- Informations pratiques compactes -->
+          <div class="hidden md:flex items-center gap-4 text-xs text-secondary/70 dark:text-accent/80 flex-shrink-0">
+            <span class="inline-flex items-center gap-1 whitespace-nowrap">
+              <mat-icon class="!w-3.5 !h-3.5 !text-[14px] !leading-[14px]">euro</mat-icon>
+              <span class="font-medium">{{ t.priceFrom | currency:t.currency:'symbol':'1.0-0':'fr-FR' }}</span>
+            </span>
+            <span class="inline-flex items-center gap-1 whitespace-nowrap" *ngIf="t.durationLabel">
+              <mat-icon class="!w-3.5 !h-3.5 !text-[14px] !leading-[14px]">schedule</mat-icon>
+              <span>{{ t.durationLabel }}</span>
+            </span>
+            <span class="inline-flex items-center gap-1 whitespace-nowrap" *ngIf="t.locationTypes && t.locationTypes.length">
+              <mat-icon class="!w-3.5 !h-3.5 !text-[14px] !leading-[14px]">location_on</mat-icon>
+              <span class="truncate max-w-[120px]">{{ t.locationTypes[0] }}</span>
+            </span>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2 flex-shrink-0" (click)="$event.stopPropagation()">
+            <button
+              matRipple
+              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+              class="flex items-center justify-center size-12 bg-background-4 dark:bg-background-6 rounded-full hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 cursor-pointer"
+              (click)="edit(t.id)"
+              title="Éditer"
+            >
+              <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5 text-primary-500 dark:text-ns-green-light">edit</mat-icon>
+            </button>
+            <button
+              matRipple
+              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+              class="flex items-center justify-center size-12 bg-background-4 dark:bg-background-6 rounded-full hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 cursor-pointer"
+              (click)="delete(t.id)"
+              title="Supprimer"
+            >
+              <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5 text-red-500">delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- État vide -->
+  <ng-template #noTrainings>
+    <div class="pt-16 pb-12 text-center max-w-lg mx-auto">
+      <div class="mb-6">
+        <mat-icon class="!w-16 !h-16 !text-[64px] !leading-[64px] text-secondary/30 dark:text-accent/30">school</mat-icon>
+      </div>
+      <h3 class="text-lg font-semibold text-secondary dark:text-accent mb-2">Aucune formation trouvée</h3>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 mb-6">
+        {{ searchTerm() || selectedLevel !== 'all' || selectedTrainingType !== 'all' || selectedAudienceType !== 'all' 
+          ? 'Aucune formation ne correspond à vos critères de recherche.' 
+          : 'Commencez par créer votre première formation.' }}
+      </p>
+      <button
+        *ngIf="!searchTerm() && selectedLevel === 'all' && selectedTrainingType === 'all' && selectedAudienceType === 'all'"
+        mat-raised-button
+        color="primary"
+        class="!bg-secondary !text-white hover:!bg-secondary/90 dark:!bg-white dark:!text-secondary !px-6 !h-11 !rounded-full !flex !items-center !justify-center !gap-2 !mx-auto"
+        (click)="create()"
+      >
+        <span class="leading-none">Créer une formation</span>
+        <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">add</mat-icon>
+      </button>
+    </div>
+  </ng-template>
+</div>

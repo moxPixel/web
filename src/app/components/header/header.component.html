@@ -8,11 +8,15 @@
         <figure class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 flex items-center justify-center">
           <img
             src="/assets/images/logo/logo.png"
-            alt="Odyssee"
+            alt="Unlock Formation - Retour à l'accueil"
+            width="28"
+            height="28"
             class="w-full h-full object-contain dark:hidden" />
           <img
             src="/assets/images/logo/logo-dark.png"
-            alt="Odyssee"
+            alt="Unlock Formation - Retour à l'accueil"
+            width="28"
+            height="28"
             class="w-full h-full object-contain hidden dark:block" />
         </figure>
       </a>
@@ -29,14 +33,54 @@
             <span>À propos</span>
           </a>
         </li>
-        <li>
-          <a routerLink="/become-consultant" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
-            <span>Devenir consultant</span>
+        <li class="relative" (mouseenter)="openMegaMenu()" (mouseleave)="scheduleCloseMegaMenu()">
+          <a routerLink="/trainings" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-2 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Formations</span>
+            <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">expand_more</mat-icon>
           </a>
+
+          <div
+            *ngIf="trainingsGrouped.length"
+            class="mega-menu-panel absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[min(920px,85vw)] bg-white dark:bg-background-8 border border-stroke-2 dark:border-stroke-6 rounded-2xl shadow-2xl p-0 z-50"
+            [class.open]="showMegaMenu"
+            (mouseenter)="openMegaMenu()"
+            (mouseleave)="scheduleCloseMegaMenu()"
+          >
+            <div class="px-5 sm:px-6 py-5">
+              <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                <ng-container *ngFor="let group of trainingsGrouped">
+                  <div class="space-y-3 min-w-0">
+                    <p class="text-sm font-semibold text-secondary dark:text-accent truncate">{{ group.category }}</p>
+                    <ul class="space-y-2">
+                      <li *ngFor="let t of group.items">
+                        <a
+                          [routerLink]="['/trainings', t.slug]"
+                          class="flex items-center justify-between gap-3 text-sm text-secondary/70 dark:text-accent/70 hover:text-primary-500 dark:hover:text-ns-green-light transition-colors"
+                        >
+                          <span class="truncate">{{ t.shortTitle || t.title }}</span>
+                          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">arrow_forward</mat-icon>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="mt-6 flex justify-end">
+                <a
+                  routerLink="/trainings"
+                  class="btn btn-sm px-5 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+                >
+                  <span class="leading-none">Voir toutes les formations</span>
+                  <mat-icon class="!w-[16px] !h-[16px] !text-[16px] !leading-[16px] flex-shrink-0">arrow_forward</mat-icon>
+                </a>
+              </div>
+            </div>
+          </div>
         </li>
         <li>
-          <a routerLink="/contact-client" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+          <a href="https://odyssee.life/" target="_blank" rel="noopener" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
             <span>Besoin d'expert</span>
+            <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">open_in_new</mat-icon>
           </a>
         </li>
         <li>
@@ -49,9 +93,7 @@
 
     <div class="xl:flex hidden items-center justify-center gap-4">
       <a href="tel:0187664184" class="flex items-center gap-2 text-tagline-1 text-secondary dark:text-accent hover:text-primary-500 dark:hover:text-ns-green-light transition-colors duration-200 font-medium">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-        </svg>
+        <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">phone</mat-icon>
         <span>01 87 66 41 84</span>
       </a>
       <div class="h-6 w-px bg-black dark:bg-white"></div>
@@ -62,26 +104,29 @@
         class="flex items-center justify-center w-10 h-10 rounded-full bg-background-4 dark:bg-background-6 hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200"
         aria-label="Toggle dark mode">
         <!-- Icône soleil (light mode) -->
-        <svg *ngIf="!isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
+        <mat-icon *ngIf="!isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5 text-secondary">light_mode</mat-icon>
         <!-- Icône lune (dark mode) -->
-        <svg *ngIf="isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
+        <mat-icon *ngIf="isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5 text-accent">dark_mode</mat-icon>
       </button>
       <div class="h-6 w-px bg-black dark:bg-white"></div>
-      <a routerLink="/login" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" class="btn btn-lg w-auto px-8 h-12 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all rounded-full">
-        <span>Se connecter</span>
+      <a *ngIf="buttonAction === 'link' && !isAuthenticated" routerLink="/login" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" class="btn btn-lg w-auto px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all rounded-full">
+        <span class="leading-none">{{ buttonText }}</span>
+        <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
       </a>
+      <a *ngIf="buttonAction === 'link' && isAuthenticated" [routerLink]="userSpaceLink" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" class="btn btn-lg w-auto px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all rounded-full">
+        <span class="leading-none">{{ buttonText }}</span>
+        <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
+      </a>
+      <button
+        *ngIf="buttonAction === 'logout'"
+        (click)="logout()"
+        matRipple
+        [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+        class="btn btn-lg w-auto px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all rounded-full"
+      >
+        <span class="leading-none">{{ buttonText }}</span>
+        <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">logout</mat-icon>
+      </button>
     </div>
     <div class="xl:hidden block">
       <button
@@ -107,10 +152,12 @@ Mobile Menu
         <a routerLink="/" (click)="closeMobileMenu()">
           <span class="sr-only">Home</span>
           <figure class="w-6 h-6">
-            <img src="/assets/images/logo/logo.png" alt="Odyssee" class="w-full h-full object-contain dark:hidden block" />
+            <img src="/assets/images/logo/logo.png" alt="Unlock Formation" width="24" height="24" class="w-full h-full object-contain dark:hidden block" />
             <img
               src="/assets/images/logo/logo-dark.png"
-              alt="Odyssee"
+              alt="Unlock Formation"
+              width="24"
+              height="24"
               class="w-full h-full object-contain dark:block hidden" />
           </figure>
         </a>
@@ -145,12 +192,40 @@ Mobile Menu
           </li>
           <li class="relative space-y-0">
             <a
-              routerLink="/become-consultant"
-              routerLinkActive="active"
-              (click)="closeMobileMenu()"
-              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
-              Devenir consultant
+              href="javascript:void(0)"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block flex items-center justify-between"
+              (click)="toggleMobileTrainings()"
+            >
+              <span>Formations</span>
+              <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">{{ showMobileTrainings ? 'expand_less' : 'expand_more' }}</mat-icon>
             </a>
+            <div *ngIf="showMobileTrainings" class="pl-4 pr-2 py-3 space-y-3 border-b border-stroke-4 dark:border-stroke-6 bg-background-2/60 dark:bg-background-7/60">
+              <ng-container *ngFor="let group of trainingsGrouped">
+                <div class="space-y-1">
+                  <p class="text-xs font-semibold text-secondary dark:text-accent uppercase tracking-[0.08em]">{{ group.category }}</p>
+                  <ul class="space-y-1">
+                    <li *ngFor="let t of group.items">
+                      <a
+                        [routerLink]="['/trainings', t.slug]"
+                        (click)="closeMobileMenu()"
+                        class="flex items-center justify-between gap-2 text-sm text-secondary/70 dark:text-accent/70 hover:text-primary-500 dark:hover:text-ns-green-light transition-colors py-1"
+                      >
+                        <span class="truncate">{{ t.shortTitle || t.title }}</span>
+                        <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">arrow_forward</mat-icon>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </ng-container>
+              <a
+                routerLink="/trainings"
+                (click)="closeMobileMenu()"
+                class="btn btn-sm w-full justify-center px-4 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2"
+              >
+                <span class="leading-none">Voir toutes les formations</span>
+                <mat-icon class="!w-[16px] !h-[16px] !text-[16px] !leading-[16px] flex-shrink-0">arrow_forward</mat-icon>
+              </a>
+            </div>
           </li>
           <li class="relative space-y-0">
             <a
@@ -176,26 +251,27 @@ Mobile Menu
             (click)="toggleDarkMode(); closeMobileMenu()"
             class="flex items-center justify-center gap-2 w-full px-8 h-12 rounded-full bg-background-4 dark:bg-background-6 hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 text-secondary dark:text-accent font-medium">
             <!-- Icône soleil (light mode) -->
-            <svg *ngIf="!isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
+            <mat-icon *ngIf="!isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5">light_mode</mat-icon>
             <!-- Icône lune (dark mode) -->
-            <svg *ngIf="isDarkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
+            <mat-icon *ngIf="isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5">dark_mode</mat-icon>
             <span>{{ isDarkMode ? 'Mode clair' : 'Mode sombre' }}</span>
           </button>
-          <a routerLink="/login" (click)="closeMobileMenu()" class="btn btn-lg w-full px-8 h-12 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all text-center rounded-full">
-            <span>Se connecter</span>
+          <a *ngIf="buttonAction === 'link' && !isAuthenticated" routerLink="/login" (click)="closeMobileMenu()" class="btn btn-lg w-full px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all text-center rounded-full">
+            <span class="leading-none">{{ buttonText }}</span>
+            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
           </a>
+          <a *ngIf="buttonAction === 'link' && isAuthenticated" [routerLink]="userSpaceLink" (click)="closeMobileMenu()" class="btn btn-lg w-full px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all text-center rounded-full">
+            <span class="leading-none">{{ buttonText }}</span>
+            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
+          </a>
+          <button
+            *ngIf="buttonAction === 'logout'"
+            (click)="logout(); closeMobileMenu()"
+            class="btn btn-lg w-full px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all text-center rounded-full"
+          >
+            <span class="leading-none">{{ buttonText }}</span>
+            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">logout</mat-icon>
+          </button>
         </div>
       </div>
     </div>

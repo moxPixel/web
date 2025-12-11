@@ -1,0 +1,505 @@
+:host {
+  display: block;
+  color: var(--color-secondary);
+}
+
+:host-context(.dark),
+:host-context(html.dark) {
+  color: var(--color-accent);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+:host-context(.dark) .form-label,
+:host-context(html.dark) .form-label,
+html.dark .form-label {
+  color: var(--color-accent) !important;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: var(--color-red-500);
+}
+
+.form-input,
+.form-textarea,
+select.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-secondary);
+  background-color: transparent;
+  border: 1px solid var(--color-stroke-2);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+:host-context(.dark) .form-input,
+:host-context(.dark) .form-textarea,
+:host-context(.dark) select.form-input,
+:host-context(html.dark) .form-input,
+:host-context(html.dark) .form-textarea,
+:host-context(html.dark) select.form-input,
+html.dark .form-input,
+html.dark .form-textarea,
+html.dark select.form-input {
+  color: var(--color-accent) !important;
+  border-color: var(--color-stroke-5);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-secondary);
+  opacity: 0.4;
+}
+
+:host-context(.dark) .form-input::placeholder,
+:host-context(.dark) .form-textarea::placeholder,
+:host-context(html.dark) .form-input::placeholder,
+:host-context(html.dark) .form-textarea::placeholder,
+html.dark .form-input::placeholder,
+html.dark .form-textarea::placeholder {
+  color: var(--color-accent) !important;
+  opacity: 0.4;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+select.form-input:focus {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-background-2);
+}
+
+:host-context(.dark) .form-input:focus,
+:host-context(.dark) .form-textarea:focus,
+:host-context(.dark) select.form-input:focus,
+:host-context(html.dark) .form-input:focus,
+:host-context(html.dark) .form-textarea:focus,
+:host-context(html.dark) select.form-input:focus,
+html.dark .form-input:focus,
+html.dark .form-textarea:focus,
+html.dark select.form-input:focus {
+  border-color: var(--color-ns-green-light);
+  background-color: var(--color-background-7);
+}
+
+.chip-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chip-input .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  background-color: var(--color-background-2);
+  border: 1px solid var(--color-stroke-2);
+  color: var(--color-secondary);
+}
+
+:host-context(.dark) .chip,
+:host-context(html.dark) .chip,
+html.dark .chip {
+  background-color: var(--color-background-6);
+  border-color: var(--color-stroke-5);
+  color: var(--color-accent);
+}
+
+.chip button {
+  margin-left: 4px;
+  color: var(--color-secondary);
+  opacity: 0.7;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.chip button:hover {
+  color: var(--color-red-500);
+}
+
+:host-context(.dark) .chip button,
+:host-context(html.dark) .chip button,
+html.dark .chip button {
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+
+:host-context(.dark) .chip button:hover,
+:host-context(html.dark) .chip button:hover,
+html.dark .chip button:hover {
+  color: var(--color-red-500);
+}
+
+/* Sélecteurs d'options (radio buttons visuels) */
+.option-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-option {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid var(--color-stroke-2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  position: relative;
+}
+
+:host-context(.dark) .option-option,
+:host-context(html.dark) .option-option,
+html.dark .option-option {
+  border-color: var(--color-stroke-5);
+}
+
+.option-option:hover {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-background-2);
+}
+
+:host-context(.dark) .option-option:hover,
+:host-context(html.dark) .option-option:hover,
+html.dark .option-option:hover {
+  border-color: var(--color-ns-green-light);
+  background-color: var(--color-background-7);
+}
+
+.option-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.option-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  cursor: pointer;
+  user-select: none;
+  display: block;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:host-context(.dark) .option-label,
+:host-context(html.dark) .option-label,
+html.dark .option-label {
+  color: var(--color-accent) !important;
+}
+
+.option-input:checked + .option-label {
+  color: var(--color-primary-500);
+  font-weight: 600;
+}
+
+:host-context(.dark) .option-input:checked + .option-label,
+:host-context(html.dark) .option-input:checked + .option-label,
+html.dark .option-input:checked + .option-label {
+  color: var(--color-ns-green-light) !important;
+}
+
+.option-option.selected,
+.option-option:has(.option-input:checked) {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-background-2);
+}
+
+:host-context(.dark) .option-option.selected,
+:host-context(.dark) .option-option:has(.option-input:checked),
+:host-context(html.dark) .option-option.selected,
+:host-context(html.dark) .option-option:has(.option-input:checked),
+html.dark .option-option.selected,
+html.dark .option-option:has(.option-input:checked) {
+  border-color: var(--color-ns-green-light);
+  background-color: var(--color-background-7);
+}
+
+/* Checkbox options (pour les types de lieu multiples) */
+.checkbox-option .option-input:checked + .option-label {
+  color: var(--color-primary-500);
+  font-weight: 600;
+}
+
+:host-context(.dark) .checkbox-option .option-input:checked + .option-label,
+:host-context(html.dark) .checkbox-option .option-input:checked + .option-label,
+html.dark .checkbox-option .option-input:checked + .option-label {
+  color: var(--color-ns-green-light) !important;
+}
+
+/* Image Upload Zone */
+.image-upload-zone {
+  position: relative;
+  min-height: 200px;
+  border: 2px dashed var(--color-stroke-2);
+  border-radius: 12px;
+  background-color: var(--color-background-2);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+:host-context(.dark) .image-upload-zone,
+:host-context(html.dark) .image-upload-zone,
+html.dark .image-upload-zone {
+  border-color: var(--color-stroke-5);
+  background-color: var(--color-background-6);
+}
+
+.image-upload-zone:hover,
+.image-upload-zone.drag-over {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-background-2);
+}
+
+:host-context(.dark) .image-upload-zone:hover,
+:host-context(.dark) .image-upload-zone.drag-over,
+:host-context(html.dark) .image-upload-zone:hover,
+:host-context(html.dark) .image-upload-zone.drag-over,
+html.dark .image-upload-zone:hover,
+html.dark .image-upload-zone.drag-over {
+  border-color: var(--color-ns-green-light);
+  background-color: var(--color-background-7);
+}
+
+.image-upload-zone.has-image {
+  border-style: solid;
+  padding: 0;
+  min-height: auto;
+}
+
+.hidden-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  height: 100%;
+  min-height: 200px;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-secondary);
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+:host-context(.dark) .upload-icon,
+:host-context(html.dark) .upload-icon,
+html.dark .upload-icon {
+  color: var(--color-accent);
+}
+
+.upload-text {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  margin-bottom: 8px;
+}
+
+:host-context(.dark) .upload-text,
+:host-context(html.dark) .upload-text,
+html.dark .upload-text {
+  color: var(--color-accent);
+}
+
+.upload-subtext {
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+  opacity: 0.6;
+  margin-bottom: 12px;
+}
+
+:host-context(.dark) .upload-subtext,
+:host-context(html.dark) .upload-subtext,
+html.dark .upload-subtext {
+  color: var(--color-accent);
+}
+
+.upload-button {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-primary-500);
+  background-color: transparent;
+  border: 1px solid var(--color-primary-500);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.upload-button:hover {
+  background-color: var(--color-primary-500);
+  color: white;
+}
+
+:host-context(.dark) .upload-button,
+:host-context(html.dark) .upload-button,
+html.dark .upload-button {
+  color: var(--color-ns-green-light);
+  border-color: var(--color-ns-green-light);
+}
+
+:host-context(.dark) .upload-button:hover,
+:host-context(html.dark) .upload-button:hover,
+html.dark .upload-button:hover {
+  background-color: var(--color-ns-green-light);
+  color: var(--color-secondary);
+}
+
+.upload-hint {
+  font-size: 0.75rem;
+  color: var(--color-secondary);
+  opacity: 0.5;
+  margin-top: 8px;
+}
+
+:host-context(.dark) .upload-hint,
+:host-context(html.dark) .upload-hint,
+html.dark .upload-hint {
+  color: var(--color-accent);
+}
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.remove-image-button:hover {
+  background-color: rgba(220, 38, 38, 0.8);
+}
+
+.remove-icon {
+  width: 18px;
+  height: 18px;
+  color: white;
+}
+
+.remove-image-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Barre de progression d'upload */
+.upload-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--color-primary-500);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+:host-context(.dark) .progress-bar::after,
+:host-context(html.dark) .progress-bar::after,
+html.dark .progress-bar::after {
+  background-color: var(--color-ns-green-light);
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  min-width: 40px;
+  text-align: right;
+}

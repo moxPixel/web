@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { AboutComponent } from '../../components/about/about.component';
 import { ProgramsSectionComponent } from '../../components/home/programs-section/programs-section.component';
@@ -8,7 +8,10 @@ import { KeyBenefitsSectionComponent } from '../../components/home/key-benefits-
 import { TestimonialsSectionComponent } from '../../components/home/testimonials-section/testimonials-section.component';
 import { EnrollmentStepsSectionComponent } from '../../components/home/enrollment-steps-section/enrollment-steps-section.component';
 import { BlogPreviewSectionComponent } from '../../components/home/blog-preview-section/blog-preview-section.component';
-import { FooterComponent } from '../../components/footer/footer.component';
+import { ReviewsSectionComponent } from '../../components/home/reviews-section/reviews-section.component';
+import { QualitySectionComponent } from '../../components/home/quality-section/quality-section.component';
+import { PressSectionComponent } from '../../components/home/press-section/press-section.component';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-home',
@@ -23,12 +26,38 @@ import { FooterComponent } from '../../components/footer/footer.component';
     TestimonialsSectionComponent,
     EnrollmentStepsSectionComponent,
     BlogPreviewSectionComponent,
-    FooterComponent
+    ReviewsSectionComponent,
+    QualitySectionComponent,
+    PressSectionComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  private readonly seoService = inject(SeoService);
 
+  ngOnInit(): void {
+    // Configuration SEO pour la page d'accueil
+    this.seoService.updateSeoData({
+      title: 'Formations IT & IA par des experts | Unlock Formation',
+      description: 'Unlock Formation : centre expert en formations IT & IA. Formations certifiantes en développement web, cybersécurité, data science, cloud et DevOps. Alternance et reconversion professionnelle. Experts reconnus et assistant IA EVA.',
+      keywords: 'formation IT, formation IA, formation cybersécurité, formation développement web, formation data science, formation cloud, alternance IT, reconversion IT, formation professionnelle, certification IT',
+      image: '/assets/images/logo/main-logo.png',
+      url: '/',
+      type: 'website',
+      schema: {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Unlock Formation - Formations IT & IA',
+        description: 'Centre expert en formations IT & IA. Formations certifiantes en développement web, cybersécurité, data science, cloud et DevOps.',
+        url: 'https://www.unlock-technologies.fr/',
+        mainEntity: {
+          '@type': 'EducationalOrganization',
+          name: 'Unlock Formation',
+          description: 'Centre de formation expert en IT, IA, cybersécurité, développement, cloud et data.'
+        }
+      }
+    });
+  }
 }
 

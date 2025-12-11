@@ -47,6 +47,8 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private mouseX = 0;
   private mouseY = 0;
+  private smoothedMouseX = 0;
+  private pointerActive = false;
   private targetRotationX = 0;
   private targetRotationY = 0;
   private currentRotationX = 0;
@@ -65,6 +67,9 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   private cachedRect?: DOMRect;
   private rectCacheTime = 0;
   private readonly RECT_CACHE_DURATION = 100; // Cache pendant 100ms
+  // Amplitude max de rotation horizontale du modèle (~20°) pour un suivi marqué mais équilibré
+  private readonly MAX_MOUSE_ROTATION_Y = 0.35;
+  private readonly DEAD_ZONE_THRESHOLD = 0.01; // Seuil minimum pour ignorer les micro-mouvements
 
   private isDarkMode = false;
   private ambientLight?: THREE.AmbientLight;
@@ -491,6 +496,11 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.glowLight.position.set(1.4, -0.6, 4.5);
       this.scene.add(this.glowLight);
 
+      // Point de lumière accent vert (thème dark) pour un halo bien visible autour du visage
+      this.lightAccent = new THREE.PointLight(0xC6F56F, 2.4, 14, 2.0);
+      this.lightAccent.position.set(2.1, 1.6, 3.8);
+      this.scene.add(this.lightAccent);
+
       // Lumière fixe du haut vers le bas
       this.topLight = new THREE.DirectionalLight(0x9ecbff, 1.5);
       this.topLight.position.set(0, 10, 0); // Position en haut
@@ -539,10 +549,6 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.diagonalLight2.target.position.set(0, 0, 0);
       this.scene.add(this.diagonalLight2);
       this.scene.add(this.diagonalLight2.target);
-
-      this.lightAccent = undefined;
-      this.lightRim = undefined;
-      this.lightGlow = undefined;
     } else {
       // Mode clair : éclairage INTENSE pour matériaux FULL BLANC BRILLANT (identique au dark mode)
       this.ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Lumière ambiante plus forte
@@ -569,12 +575,15 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       this.lightRim.position.set(-1.5, 2.2, 6);
       this.scene.add(this.lightRim);
 
-      // Glow doux venant du bas pour souligner les volumes
-      this.lightGlow = new THREE.PointLight(0xffffff, 1.5, 18, 2);
+      // Glow doux venant du bas, légèrement teinté violet pour accompagner l'accent
+      this.lightGlow = new THREE.PointLight(0xB49CFF, 1.1, 18, 2);
       this.lightGlow.position.set(1.4, -0.6, 4.5);
       this.scene.add(this.lightGlow);
 
-      this.lightAccent = undefined;
+      // Point de lumière accent violet (thème light) beaucoup plus marqué, proche du visage
+      this.lightAccent = new THREE.PointLight(0x864FFE, 2.6, 13, 2.0);
+      this.lightAccent.position.set(-0.6, 1.8, 4.0);
+      this.scene.add(this.lightAccent);
 
       // Lumière fixe du haut vers le bas
       this.topLight = new THREE.DirectionalLight(0xffffff, 1.4);
@@ -653,45 +662,102 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setupMouseMoveHandler(): void {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (this.isDestroyed || !this.canvasContainer) return;
+    // Suivi global de la souris : on utilise sa position pour un effet de lumière dynamique
+    // en plus de la rotation. Le calcul est basé sur toute la largeur/hauteur de la fenêtre.
 
-      const container = this.canvasContainer.nativeElement;
-      const now = performance.now();
+    const win = window as any;
+    const hasPointerEvent = typeof win !== 'undefined' && 'PointerEvent' in win;
 
-      // Mettre en cache getBoundingClientRect() pour éviter les recalculs fréquents
-      if (!this.cachedRect || (now - this.rectCacheTime) > this.RECT_CACHE_DURATION) {
-        this.cachedRect = container.getBoundingClientRect();
-        this.rectCacheTime = now;
+    const updateFromPointer = (clientX: number, clientY: number) => {
+      if (this.isDestroyed) return;
+
+      const width =
+        window.innerWidth ||
+        this.document.documentElement.clientWidth ||
+        this.document.body.clientWidth ||
+        1;
+      const height =
+        window.innerHeight ||
+        this.document.documentElement.clientHeight ||
+        this.document.body.clientHeight ||
+        1;
+
+      // Normaliser par rapport à la fenêtre (-1 à 1) pour X et Y
+      const normalizedX = (clientX / width) * 2 - 1;
+      const normalizedY = (clientY / height) * 2 - 1;
+
+      // Limiter les valeurs pour éviter les sauts brutaux
+      const newMouseX = THREE.MathUtils.clamp(normalizedX, -1, 1);
+      const newMouseY = THREE.MathUtils.clamp(normalizedY, -1, 1);
+
+      // Ignorer les micro-mouvements pour éviter les tremblements
+      const diff = Math.abs(newMouseX - this.mouseX);
+      if (diff < this.DEAD_ZONE_THRESHOLD * 2) {
+        // Mouvement trop petit, ne pas mettre à jour
+        return;
       }
-
-      const rect = this.cachedRect;
-
-      // Calculer la position de la souris relative au conteneur (de -1 à 1)
-      this.mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      this.mouseY = ((event.clientY - rect.top) / rect.height) * 2 - 1;
-
-      // Calculer la rotation cible basée UNIQUEMENT sur le mouvement horizontal de la souris
-      // Le mouvement vertical (Y) est complètement ignoré - AUCUN effet
-      const maxRotationY = 0.5; // ~29 degrés en radians (rotation horizontale uniquement)
-
-      // Appliquer une courbe d'easing pour des mouvements plus naturels
-      const easeOut = (t: number) => {
-        const absT = Math.abs(t);
-        const sign = t >= 0 ? 1 : -1;
-        return (1 - Math.pow(1 - absT, 3)) * sign; // ease-out-cubic
-      };
-
-      // Rotation horizontale basée UNIQUEMENT sur mouseX (mouvement gauche/droite)
-      this.targetRotationY = easeOut(this.mouseX) * maxRotationY;
-
-      // AUCUNE rotation verticale - le mouvement Y est complètement ignoré
-      this.targetRotationX = 0;
+      
+      this.mouseX = newMouseX;
+      this.mouseY = newMouseY;
+      this.pointerActive = true;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    // Stocker la référence pour le cleanup
+    const handlePointerLeave = () => {
+      if (this.isDestroyed) return;
+      this.pointerActive = false;
+      this.mouseX = 0;
+      // Réinitialiser aussi smoothedMouseX pour éviter les tremblements résiduels
+      this.smoothedMouseX = 0;
+    };
+
+    if (hasPointerEvent) {
+      const handlePointerMove = (event: PointerEvent) => {
+        updateFromPointer(event.clientX, event.clientY);
+      };
+
+      win.addEventListener('pointermove', handlePointerMove, { passive: true });
+      win.addEventListener('pointerdown', handlePointerMove, { passive: true });
+      win.addEventListener('pointerleave', handlePointerLeave);
+
+      (this as any)._pointerMoveHandler = handlePointerMove;
+      (this as any)._pointerLeaveHandler = handlePointerLeave;
+    } else {
+      const handleMouseMove = (event: MouseEvent) => {
+        updateFromPointer(event.clientX, event.clientY);
+    };
+
+      win.addEventListener('mousemove', handleMouseMove, { passive: true });
+      win.addEventListener('mouseout', handlePointerLeave);
+
     (this as any)._mouseMoveHandler = handleMouseMove;
+      (this as any)._mouseLeaveHandler = handlePointerLeave;
+    }
+  }
+
+  private updatePointerTargetRotation(): void {
+    // Si l'utilisateur n'interagit plus, on ramène progressivement la rotation à 0
+    const targetX = this.pointerActive ? this.mouseX : 0;
+    
+    // Dead zone : ignorer les micro-mouvements pour éviter les tremblements
+    const diff = Math.abs(targetX - this.smoothedMouseX);
+    if (diff < this.DEAD_ZONE_THRESHOLD && this.pointerActive) {
+      // Si le mouvement est trop petit, ne pas mettre à jour pour éviter les tremblements
+      return;
+    }
+    
+    // Lissage plus doux pour éviter les oscillations
+    const smoothing = this.pointerActive ? 0.08 : 0.05;
+    this.smoothedMouseX += (targetX - this.smoothedMouseX) * smoothing;
+
+    const easedX = this.easeOutCubic(this.smoothedMouseX);
+    this.targetRotationY = easedX * this.MAX_MOUSE_ROTATION_Y;
+    this.targetRotationX = 0;
+  }
+
+  private easeOutCubic(value: number): number {
+    const absValue = Math.abs(value);
+    const sign = value >= 0 ? 1 : -1;
+    return (1 - Math.pow(1 - absValue, 3)) * sign;
   }
 
   private loadModel(path: string): void {
@@ -741,8 +807,8 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
         // Ajouter à la scène
         this.scene.add(this.model);
 
-        // Rotation initiale vers la gauche
-        this.model.rotation.set(0, Math.PI * -15 / 180, 0); // ~-15 degrés vers la gauche
+        // Rotation initiale neutre : le modèle regarde en face, le suivi souris gère l'effet
+        this.model.rotation.set(0, 0, 0);
 
         // Descendre le modèle un peu (augmenter y pour descendre)
         this.model.position.y += 0.3;
@@ -934,11 +1000,10 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
             trigger: container,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 0.5, // Valeur réduite pour plus de fluidité et moins de saccades
-            invalidateOnRefresh: false, // Désactivé pour éviter les recalculs fréquents
-            refreshPriority: -1, // Priorité basse pour éviter les conflits
-            // Pré-calculer immédiatement pour éviter les saccades au premier scroll
-            immediateRender: true
+            scrub: 1,
+            invalidateOnRefresh: true,
+            immediateRender: false
+            // anticipatePin, fastScrollEnd, preventOverlaps sont définis globalement
           }
         });
 
@@ -949,12 +1014,8 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
           ease: 'none',
         }, 0);
 
-        // Rotations synchronisées
-        scrollTimeline.to(this.scrollRotationY, {
-          value: Math.PI * 0.25,
-          ease: 'power1.out',
-        }, 0);
-
+        // Rotation liée au scroll : légère inclinaison uniquement (pas de rotation Y pour éviter
+        // tout biais gauche/droite dans le suivi souris)
         scrollTimeline.to(this.scrollRotationX, {
           value: Math.PI * 0.08,
           ease: 'power1.out',
@@ -975,9 +1036,9 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
     this.autoRotationSpeedY = 0; // DÉSACTIVÉ - Pas de rotation horizontale automatique
     // this.autoRotationSpeedY = (Math.random() > 0.5 ? 1 : -1) * baseSpeedY;
 
-    // Angle initial : rotation vers la gauche pour orienter le modèle
-    this.autoRotationTargetX = 0; // Pas d'inclinaison verticale
-    this.autoRotationTargetY = Math.PI * -15 / 180; // ~-15 degrés en radians (rotation vers la gauche)
+    // Angle initial neutre : pas de biais gauche/droite pour garder un suivi symétrique
+    this.autoRotationTargetX = 0;
+    this.autoRotationTargetY = 0;
   }
 
   private updateAutoRotation(): void {
@@ -1058,23 +1119,55 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
           // Mettre à jour la rotation automatique aléatoire
           this.updateAutoRotation();
 
+          // Mettre à jour la rotation cible basée sur la souris avec lissage interne
+          this.updatePointerTargetRotation();
+
           // Interpolation fluide UNIQUEMENT pour l'axe horizontal (Y)
           // L'axe vertical (X) reste toujours à 0 - aucun mouvement vertical
           const deltaY = this.targetRotationY - this.currentRotationY;
-
-          // Facteur d'interpolation adaptatif pour l'axe horizontal uniquement
           const distanceY = Math.abs(deltaY);
-          const lerpFactorY = distanceY > 0.05 ? 0.18 : 0.12;
 
-          // Interpolation uniquement pour l'axe horizontal
+          // Dead zone : ignorer les très petits changements pour éviter les tremblements
+          if (distanceY < 0.002) {
+            // Si le changement est trop petit, ne pas mettre à jour pour éviter les micro-tremblements
+            // Retour progressif vers zéro seulement si vraiment immobile
+            if (distanceY < 0.0005 && !this.pointerActive) {
+              this.currentRotationY *= 0.98;
+            }
+          } else {
+            // Facteur d'interpolation plus doux pour éviter les oscillations
+            const lerpFactorY = distanceY > 0.1 ? 0.10 : 0.06;
+
+            // Interpolation uniquement pour l'axe horizontal avec lissage exponentiel
           this.currentRotationY += deltaY * lerpFactorY;
+          }
 
           // Forcer la rotation verticale à toujours être 0
           this.currentRotationX = 0;
 
-          // Retour progressif vers zéro si la souris est immobile horizontalement
-          if (distanceY < 0.001) {
-            this.currentRotationY *= 0.97;
+          // Effet "la souris est une lumière" : faire suivre la lumière accent autour du visage
+          if (this.lightAccent) {
+            const mouseXNorm = this.mouseX || 0;
+            const mouseYNorm = this.mouseY || 0;
+
+            // Position de base devant le modèle (devant le visage)
+            const baseX = this.model.position.x;
+            const baseY = this.model.position.y + 1.4;
+            const baseZ = this.model.position.z + 4.0;
+
+            // Amplitude de déplacement de la lumière
+            const rangeX = 1.8; // gauche/droite
+            const rangeY = 1.0; // haut/bas
+            const rangeZ = 0.8; // avant/arrière léger
+
+            const targetLX = baseX + mouseXNorm * rangeX;
+            const targetLY = baseY + -mouseYNorm * rangeY; // inverser Y pour un comportement naturel
+            const targetLZ = baseZ + mouseYNorm * rangeZ;
+
+            const lightLerp = 0.18;
+            this.lightAccent.position.x += (targetLX - this.lightAccent.position.x) * lightLerp;
+            this.lightAccent.position.y += (targetLY - this.lightAccent.position.y) * lightLerp;
+            this.lightAccent.position.z += (targetLZ - this.lightAccent.position.z) * lightLerp;
           }
 
           // Appliquer la rotation combinée : rotation auto (0) + scroll + souris
@@ -1127,10 +1220,26 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
       themeObserver.disconnect();
     }
 
-    // Supprimer le gestionnaire de mouvement de la souris
+    // Supprimer les gestionnaires de mouvement de la souris
+    const pointerMoveHandler = (this as any)._pointerMoveHandler;
+    const pointerLeaveHandler = (this as any)._pointerLeaveHandler;
     const mouseMoveHandler = (this as any)._mouseMoveHandler;
+    const mouseLeaveHandler = (this as any)._mouseLeaveHandler;
+
+    // Les écouteurs sont maintenant attachés à window
+    const win = window as any;
+    if (pointerMoveHandler) {
+      win.removeEventListener('pointermove', pointerMoveHandler);
+      win.removeEventListener('pointerdown', pointerMoveHandler);
+    }
+    if (pointerLeaveHandler) {
+      win.removeEventListener('pointerleave', pointerLeaveHandler);
+    }
     if (mouseMoveHandler) {
-      window.removeEventListener('mousemove', mouseMoveHandler);
+      win.removeEventListener('mousemove', mouseMoveHandler);
+    }
+    if (mouseLeaveHandler) {
+      win.removeEventListener('mouseout', mouseLeaveHandler);
     }
 
     // Nettoyer les contrôles

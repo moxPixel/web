@@ -1,0 +1,169 @@
+<div class="flex flex-col gap-6">
+  <!-- Header avec bouton retour -->
+  <div class="flex items-center gap-4">
+    <button
+      (click)="router.navigate(['/bo/users'])"
+      mat-icon-button
+      class="!flex !items-center !justify-center size-10 bg-background-2 dark:bg-background-6 text-secondary dark:text-accent rounded-full hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 !p-0 overflow-hidden"
+      matRipple
+      [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+      title="Retour à la liste"
+    >
+      <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5">arrow_back</mat-icon>
+    </button>
+    <div>
+      <h2 class="text-2xl font-bold text-secondary dark:text-accent">Créer un utilisateur</h2>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 mt-1">Ajouter un nouvel utilisateur ou administrateur</p>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div>
+    <!-- Message d'erreur -->
+    <div *ngIf="error()" class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+      <p class="text-sm text-red-600 dark:text-red-400">{{ error() }}</p>
+    </div>
+
+    <!-- Formulaire -->
+    <form (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Informations de base -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="form-group">
+          <label for="email" class="form-label required">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            class="form-input"
+            placeholder="user@example.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="role" class="form-label required">Rôle</label>
+          <select
+            id="role"
+            name="role"
+            [(ngModel)]="role"
+            required
+            class="form-input"
+          >
+            <option *ngFor="let r of availableRoles" [value]="r">
+              {{ getRoleLabel(r) }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="firstName" class="form-label">Prénom</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            [(ngModel)]="firstName"
+            class="form-input"
+            placeholder="Jean"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName" class="form-label">Nom</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            [(ngModel)]="lastName"
+            class="form-input"
+            placeholder="Dupont"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label required">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            class="form-input"
+            placeholder="••••••••"
+            autocomplete="new-password"
+          />
+          <p class="text-xs text-secondary/60 dark:text-accent/60 mt-1">
+            Min. 8 caractères, majuscule, minuscule, chiffre, caractère spécial
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label required">Confirmer le mot de passe</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            required
+            class="form-input"
+            placeholder="••••••••"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="status" class="form-label required">Statut</label>
+          <select
+            id="status"
+            name="status"
+            [(ngModel)]="status"
+            required
+            class="form-input"
+          >
+            <option [value]="UserStatus.ACTIVE">Actif</option>
+            <option [value]="UserStatus.PENDING">En attente</option>
+            <option [value]="UserStatus.INACTIVE">Inactif</option>
+            <option [value]="UserStatus.SUSPENDED">Suspendu</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Note pour admin -->
+      <div *ngIf="role === UserRole.ADMIN" class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+        <p class="text-sm text-yellow-600 dark:text-yellow-400">
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4 inline-block mr-2">info</mat-icon>
+          Pour créer un administrateur, l'utilisateur sera créé avec le statut sélectionné. Assurez-vous d'utiliser un mot de passe fort.
+        </p>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-stroke-2 dark:border-stroke-6">
+        <button
+          type="button"
+          (click)="router.navigate(['/bo/users'])"
+          class="btn px-6 h-10 rounded-full border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+          matRipple
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          [disabled]="loading()"
+          class="btn px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+          matRipple
+        >
+          <span *ngIf="!loading()">Créer l'utilisateur</span>
+          <span *ngIf="loading()" class="flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Création...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

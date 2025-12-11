@@ -1,0 +1,217 @@
+/* Header styles avec glassmorphisme */
+.header-one {
+  will-change: transform, background, backdrop-filter;
+  opacity: 1;
+}
+
+/* Navigation links avec effets hover */
+.nav-item-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary-500);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+:host-context(html.dark) .nav-item-link::after {
+  background-color: var(--color-ns-green-light);
+}
+
+.nav-item-link:hover::after {
+  width: 75%;
+}
+
+.nav-item-link.active::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(1);
+  width: 75%;
+  height: 2px;
+  background-color: var(--color-primary-500);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
+  border-radius: 2px;
+  transform-origin: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+:host-context(html.dark) .nav-item-link.active::before {
+  background-color: var(--color-ns-green-light);
+}
+
+/* Mobile menu */
+.mobile-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary-500);
+  transition: width 0.3s ease;
+}
+
+:host-context(html.dark) .mobile-nav-link::after {
+  background-color: var(--color-ns-green-light);
+}
+
+.mobile-nav-link:hover::after,
+.mobile-nav-link.active::after {
+  width: 100%;
+}
+
+/* Scrollbar styles */
+.scroll-bar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-bar::-webkit-scrollbar-thumb {
+  background: var(--color-stroke-1);
+  border-radius: 3px;
+}
+
+html.dark .scroll-bar::-webkit-scrollbar-thumb {
+  background: var(--color-stroke-6);
+}
+
+/* Hamburger button */
+.nav-hamburger,
+.nav-hamburger-close {
+  transition: all 0.2s ease;
+}
+
+.nav-hamburger:hover,
+.nav-hamburger-close:hover {
+  transform: scale(1.05);
+}
+
+/* Body overflow when menu is open */
+body.overflow-hidden {
+  overflow: hidden;
+}
+
+/* Sphères lumineuses derrière la card backoffice */
+.backoffice-hero-spheres {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+  top: 8rem;
+}
+
+.backoffice-hero-sphere {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Sphère 1 - Bleu clair, en haut à droite */
+.backoffice-hero-sphere--1 {
+  width: 250px;
+  height: 250px;
+  top: 0%;
+  right: 25%;
+  background: radial-gradient(circle at center, rgba(147, 197, 253, 1) 0%, rgba(147, 197, 253, 0.6) 25%, rgba(147, 197, 253, 0.2) 45%, transparent 65%);
+  opacity: 1;
+  filter: blur(40px);
+}
+
+.dark .backoffice-hero-sphere--1 {
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 1) 0%, rgba(59, 130, 246, 0.7) 25%, rgba(59, 130, 246, 0.25) 45%, transparent 65%);
+  opacity: 0.95;
+}
+
+/* Sphère 2 - Violet, au centre droit */
+.backoffice-hero-sphere--2 {
+  width: 300px;
+  height: 300px;
+  top: 28%;
+  right: 20%;
+  background: radial-gradient(circle at center, rgba(196, 181, 253, 0.95) 0%, rgba(196, 181, 253, 0.55) 25%, rgba(196, 181, 253, 0.2) 45%, transparent 65%);
+  opacity: 1;
+  filter: blur(45px);
+}
+
+.dark .backoffice-hero-sphere--2 {
+  background: radial-gradient(circle at center, rgba(147, 51, 234, 1) 0%, rgba(147, 51, 234, 0.65) 25%, rgba(147, 51, 234, 0.25) 45%, transparent 65%);
+  opacity: 0.9;
+}
+
+/* Sphère 3 - Cyan, en bas à droite */
+.backoffice-hero-sphere--3 {
+  width: 220px;
+  height: 220px;
+  top: 58%;
+  right: 30%;
+  background: radial-gradient(circle at center, rgba(165, 243, 252, 0.9) 0%, rgba(165, 243, 252, 0.5) 25%, rgba(165, 243, 252, 0.15) 45%, transparent 65%);
+  opacity: 0.95;
+  filter: blur(40px);
+}
+
+.dark .backoffice-hero-sphere--3 {
+  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.95) 0%, rgba(34, 211, 238, 0.55) 25%, rgba(34, 211, 238, 0.2) 45%, transparent 65%);
+  opacity: 0.85;
+}
+
+@media (min-width: 1024px) {
+  .backoffice-hero-spheres {
+    top: 10rem;
+  }
+
+  .backoffice-hero-sphere--1 {
+    width: 320px;
+    height: 320px;
+    top: 3%;
+    right: 15%;
+    filter: blur(55px);
+  }
+
+  .backoffice-hero-sphere--2 {
+    width: 400px;
+    height: 400px;
+    top: 28%;
+    right: 10%;
+    filter: blur(65px);
+  }
+
+  .backoffice-hero-sphere--3 {
+    width: 280px;
+    height: 280px;
+    top: 53%;
+    right: 18%;
+    filter: blur(50px);
+  }
+}
+
+/* Styles pour les transitions de page */
+.router-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  overflow: visible;
+}
+
+.router-wrapper > * {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+/* S'assurer que la page entrante est invisible au départ */
+.router-wrapper > *:enter {
+  opacity: 0;
+}

@@ -1,0 +1,388 @@
+<section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible min-h-[calc(100vh-120px)] lg:pb-[100px] pb-16 bg-background-1 dark:bg-background-8">
+  <div class="max-w-[1920px] mx-auto relative">
+    <div class="hero-spheres" aria-hidden="true">
+      <div class="hero-sphere hero-sphere--1"></div>
+      <div class="hero-sphere hero-sphere--2"></div>
+      <div class="hero-sphere hero-sphere--3"></div>
+    </div>
+
+    <div #registerParallax class="relative z-10 bg-[url('/assets/images/home-page-14/hero-bg.svg')] dark:bg-[url('/assets/images/home-page-14/hero-bg-dark.svg')] rounded-t-[12px] md:rounded-t-[20px] rounded-b-[20px] md:rounded-b-[30px] lg:rounded-b-[40px] bg-cover bg-no-repeat overflow-hidden">
+      <div class="main-container relative z-10 py-16 lg:py-24">
+        <!-- Bouton retour -->
+        <div class="mb-6 px-4 sm:px-6 md:px-8 lg:px-12">
+          <button
+            type="button"
+            class="!flex !items-center !justify-center size-10 bg-background-2 dark:bg-background-7 text-secondary dark:text-accent rounded-full hover:bg-background-3 dark:hover:bg-background-6 transition-colors duration-200 overflow-hidden"
+            matRipple
+            [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+            routerLink="/login"
+          >
+            <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5">arrow_back</mat-icon>
+          </button>
+        </div>
+
+        <div class="flex flex-col lg:grid lg:grid-cols-5 items-start gap-10">
+          <div class="lg:col-span-2 w-full space-y-4 text-center lg:text-left">
+            <p class="text-xs uppercase tracking-[0.2em] text-secondary/60 dark:text-accent/60">Inscription</p>
+            <h1 class="md:hidden max-w-[976px] mx-auto mb-4 text-xl sm:text-2xl leading-tight">
+              Créer votre compte <span class="text-primary-500 dark:text-ns-green-light">Unlock</span>
+            </h1>
+            <h1 class="hidden md:block max-w-[976px] md:w-full mx-auto lg:mx-0 mb-4 text-xl md:text-2xl lg:text-3xl" style="word-break: keep-all; hyphens: none; line-height: 1.3;">
+              Créer votre compte <span class="text-primary-500 dark:text-ns-green-light" style="white-space: nowrap;">Unlock</span>
+            </h1>
+            <p class="text-secondary/80 dark:text-accent/80 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Rejoignez Unlock Formation et accédez à nos formations IT & IA, suivez votre progression et gérez vos inscriptions.
+            </p>
+          </div>
+
+          <div class="lg:col-span-3 w-full">
+            <div class="login-card bg-white/80 dark:bg-background-8/80 border border-stroke-2 dark:border-stroke-6 rounded-2xl shadow-sm">
+              <div class="login-header">
+                <h1 class="login-title">Créer un compte</h1>
+                <p class="login-subtitle">
+                  Remplissez le formulaire pour créer votre compte
+        </p>
+      </div>
+
+      <!-- Message d'erreur -->
+      <div *ngIf="error" class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+        <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+      </div>
+
+      <!-- Formulaire -->
+              <form (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Type de compte -->
+        <div class="form-group">
+          <label class="form-label required">Type de compte</label>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <label *ngFor="let roleOption of roles" class="option-selector cursor-pointer">
+              <input
+                type="radio"
+                name="role"
+                [value]="roleOption.value"
+                [ngModel]="role"
+                (ngModelChange)="role = $event; onRoleChange()"
+                class="option-input"
+              />
+              <span class="option-label">{{ roleOption.label }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Informations de base -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="firstName" class="form-label">Prénom</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              [(ngModel)]="firstName"
+              class="form-input"
+              placeholder="Jean"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">Nom</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              [(ngModel)]="lastName"
+              class="form-input"
+              placeholder="Dupont"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label required">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            class="form-input"
+            placeholder="votre@email.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="form-label">Téléphone</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            [(ngModel)]="phone"
+            class="form-input"
+            placeholder="+33 6 12 34 56 78"
+          />
+        </div>
+
+        <!-- Champs spécifiques entreprise -->
+        <div *ngIf="showCompanyFields" class="space-y-4 p-4 bg-background-2 dark:bg-background-6 rounded-xl border border-stroke-2 dark:border-stroke-6">
+          <h3 class="text-sm font-semibold text-secondary dark:text-accent mb-3">Informations entreprise</h3>
+          
+          <div class="form-group">
+            <label for="companyName" class="form-label required">Nom de l'entreprise</label>
+            <input
+              type="text"
+              id="companyName"
+              name="companyName"
+              [(ngModel)]="companyName"
+              required
+              class="form-input"
+              placeholder="Ma Société SARL"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="siret" class="form-label">SIRET</label>
+            <input
+              type="text"
+              id="siret"
+              name="siret"
+              [(ngModel)]="siret"
+              class="form-input"
+              placeholder="123 456 789 00012"
+              maxlength="14"
+            />
+          </div>
+        </div>
+
+        <!-- Champs spécifiques particulier -->
+        <div *ngIf="showPersonalFields" class="space-y-4 p-4 bg-background-2 dark:bg-background-6 rounded-xl border border-stroke-2 dark:border-stroke-6">
+          <h3 class="text-sm font-semibold text-secondary dark:text-accent mb-3">Adresse</h3>
+          
+          <div class="form-group">
+            <label for="address" class="form-label">Adresse</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              [(ngModel)]="address"
+              class="form-input"
+              placeholder="123 Rue de la République"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="postalCode" class="form-label">Code postal</label>
+              <input
+                type="text"
+                id="postalCode"
+                name="postalCode"
+                [(ngModel)]="postalCode"
+                class="form-input"
+                placeholder="75001"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="city" class="form-label">Ville</label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                [(ngModel)]="city"
+                class="form-input"
+                placeholder="Paris"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="country" class="form-label">Pays</label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              [(ngModel)]="country"
+              class="form-input"
+              placeholder="France"
+            />
+          </div>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="password" class="form-label required">Mot de passe</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+              class="form-input"
+              placeholder="••••••••"
+              autocomplete="new-password"
+            />
+            
+            <!-- Indicateur de force du mot de passe -->
+            <div *ngIf="password" class="mt-4 space-y-3">
+              <!-- Barre de progression -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-secondary/60 dark:text-accent/60">Force du mot de passe</span>
+                  <span 
+                    class="font-medium"
+                    [ngClass]="{
+                      'text-red-600 dark:text-red-400': passwordStrength <= 40,
+                      'text-orange-600 dark:text-orange-400': passwordStrength > 40 && passwordStrength <= 60,
+                      'text-yellow-600 dark:text-yellow-400': passwordStrength > 60 && passwordStrength < 100,
+                      'text-green-600 dark:text-green-400': passwordStrength === 100
+                    }"
+                  >
+                    {{ passwordStrengthLabel }}
+                  </span>
+                </div>
+                <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    class="h-full transition-all duration-300"
+                    [ngClass]="passwordStrengthColor"
+                    [style.width.%]="passwordStrength"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Exigences -->
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-xs">
+                  <mat-icon 
+                    [ngClass]="passwordValidation.minLength ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'"
+                    class="!w-4 !h-4 !text-[16px] !leading-4"
+                  >
+                    {{ passwordValidation.minLength ? 'check_circle' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                  <span [ngClass]="passwordValidation.minLength ? 'text-secondary dark:text-accent' : 'text-secondary/60 dark:text-accent/60'">
+                    Au moins 8 caractères
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                  <mat-icon 
+                    [ngClass]="passwordValidation.hasUpperCase ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'"
+                    class="!w-4 !h-4 !text-[16px] !leading-4"
+                  >
+                    {{ passwordValidation.hasUpperCase ? 'check_circle' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                  <span [ngClass]="passwordValidation.hasUpperCase ? 'text-secondary dark:text-accent' : 'text-secondary/60 dark:text-accent/60'">
+                    Une lettre majuscule (A-Z)
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                  <mat-icon 
+                    [ngClass]="passwordValidation.hasLowerCase ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'"
+                    class="!w-4 !h-4 !text-[16px] !leading-4"
+                  >
+                    {{ passwordValidation.hasLowerCase ? 'check_circle' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                  <span [ngClass]="passwordValidation.hasLowerCase ? 'text-secondary dark:text-accent' : 'text-secondary/60 dark:text-accent/60'">
+                    Une lettre minuscule (a-z)
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                  <mat-icon 
+                    [ngClass]="passwordValidation.hasNumber ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'"
+                    class="!w-4 !h-4 !text-[16px] !leading-4"
+                  >
+                    {{ passwordValidation.hasNumber ? 'check_circle' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                  <span [ngClass]="passwordValidation.hasNumber ? 'text-secondary dark:text-accent' : 'text-secondary/60 dark:text-accent/60'">
+                    Un chiffre (0-9)
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                  <mat-icon 
+                    [ngClass]="passwordValidation.hasSpecialChar ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'"
+                    class="!w-4 !h-4 !text-[16px] !leading-4"
+                  >
+                    {{ passwordValidation.hasSpecialChar ? 'check_circle' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                  <span [ngClass]="passwordValidation.hasSpecialChar ? 'text-secondary dark:text-accent' : 'text-secondary/60 dark:text-accent/60'">
+                    Un caractère spécial (!@#$%^&*...)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label required">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              required
+              class="form-input"
+              placeholder="••••••••"
+              autocomplete="new-password"
+            />
+            
+            <!-- Validation de correspondance -->
+            <div *ngIf="confirmPassword" class="mt-2">
+              <div class="flex items-center gap-2 text-xs">
+                <mat-icon 
+                  [ngClass]="passwordValidation.passwordsMatch ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
+                  class="!w-4 !h-4 !text-[16px] !leading-4"
+                >
+                  {{ passwordValidation.passwordsMatch ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+                <span [ngClass]="passwordValidation.passwordsMatch ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+                  {{ passwordValidation.passwordsMatch ? 'Les mots de passe correspondent' : 'Les mots de passe ne correspondent pas' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message info -->
+        <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+          <p class="text-sm text-blue-600 dark:text-blue-400">
+            <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4 inline-block mr-2">info</mat-icon>
+            Votre compte sera en attente de validation par un administrateur. Vous recevrez un email de confirmation une fois validé.
+          </p>
+        </div>
+
+          <button
+            type="submit"
+            [disabled]="loading || !isPasswordValid || !passwordValidation.passwordsMatch"
+            matRipple
+            [matRippleColor]="rippleColor"
+                  class="btn btn-lg btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!loading">Créer mon compte</span>
+            <span *ngIf="loading" class="flex items-center gap-2">
+              <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Création...
+            </span>
+          </button>
+              </form>
+
+              <div class="login-footer">
+                <p class="login-footer-text">
+                  Déjà un compte ?
+                  <a routerLink="/login" class="login-footer-link">
+                    Se connecter
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

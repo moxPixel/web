@@ -1,0 +1,255 @@
+<section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible min-h-[calc(100vh-120px)] lg:pb-[100px] pb-16 bg-background-1 dark:bg-background-8">
+  <div class="max-w-[1920px] mx-auto relative">
+    <div class="hero-spheres" aria-hidden="true">
+      <div class="hero-sphere hero-sphere--1"></div>
+      <div class="hero-sphere hero-sphere--2"></div>
+      <div class="hero-sphere hero-sphere--3"></div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex items-center justify-center py-32">
+      <div class="flex flex-col items-center gap-4">
+        <svg class="animate-spin h-12 w-12 text-primary-500 dark:text-ns-green-light" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-base text-secondary/70 dark:text-accent/70">Chargement de la formation...</p>
+      </div>
+    </div>
+
+    <!-- Erreur -->
+    <div *ngIf="error && !loading" class="flex items-center justify-center py-32">
+      <div class="text-center max-w-md">
+        <mat-icon class="!w-16 !h-16 !text-[64px] !leading-[64px] text-red-500 mb-4">error_outline</mat-icon>
+        <h2 class="text-xl font-semibold text-secondary dark:text-accent mb-2">Erreur</h2>
+        <p class="text-sm text-secondary/70 dark:text-accent/70 mb-6">{{ error }}</p>
+        <button class="btn btn-lg px-6 h-11 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary" matRipple routerLink="/trainings">
+          Retour aux formations
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!loading && !error && training">
+      <div
+        #trainingRegisterParallax
+        class="relative z-10 bg-[url('/assets/images/home-page-14/hero-bg.svg')] dark:bg-[url('/assets/images/home-page-14/hero-bg-dark.svg')] rounded-t-[12px] md:rounded-t-[20px] rounded-b-[20px] md:rounded-b-[30px] lg:rounded-b-[40px] bg-cover bg-no-repeat overflow-hidden"
+      >
+        <div class="main-container relative z-10 py-16 lg:py-24">
+          <!-- Bouton retour -->
+          <div class="mb-6 px-4 sm:px-6 md:px-8 lg:px-12">
+            <button
+              type="button"
+              class="!flex !items-center !justify-center size-10 bg-background-2 dark:bg-background-7 text-secondary dark:text-accent rounded-full hover:bg-background-3 dark:hover:bg-background-6 transition-colors duration-200 overflow-hidden"
+              matRipple
+              [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+              (click)="router.navigate(['/trainings', training.slug || 'trainings'])"
+            >
+              <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5">arrow_back</mat-icon>
+            </button>
+          </div>
+
+          <!-- Header -->
+          <div class="px-4 sm:px-6 md:px-8 lg:px-12 mb-8">
+            <p class="text-xs uppercase tracking-[0.2em] text-secondary/60 dark:text-accent/60 mb-2">Inscription formation</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-secondary dark:text-accent mb-2">
+              {{ training.shortTitle || 'Formation' }}
+            </h1>
+            <p class="text-sm text-secondary/70 dark:text-accent/70">
+              Complétez ce formulaire pour réserver une place ou inscrire votre équipe.
+            </p>
+          </div>
+
+          <!-- Contenu principal dans le hero -->
+          <div class="px-4 sm:px-6 md:px-8 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <!-- Colonne gauche : résumé formation -->
+              <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-background-8 border border-stroke-2 dark:border-stroke-6 rounded-2xl overflow-hidden shadow-lg">
+                  <div class="h-48 relative">
+                    <img [src]="getImageUrl(training.heroImage)" [alt]="training.shortTitle" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-3 left-4 right-4 text-white">
+                      <div class="flex items-center gap-2 mb-1">
+                        <span class="badge badge-green">{{ training.category }}</span>
+                        <span class="text-xs uppercase tracking-wide">{{ training.level | titlecase }}</span>
+                      </div>
+                      <p class="text-lg font-semibold leading-snug">{{ training.shortTitle }}</p>
+                    </div>
+                  </div>
+                  <div class="p-5 space-y-3">
+                    <div class="flex items-center gap-2 text-sm text-secondary/70 dark:text-accent/70">
+                      <mat-icon class="!w-4 !h-4 !text-[16px]">schedule</mat-icon>
+                      <span *ngIf="training.durationDays">{{ training.durationDays }} jours</span>
+                      <span *ngIf="!training.durationDays && training.durationHours">{{ training.durationHours }} heures</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-secondary/70 dark:text-accent/70">
+                      <mat-icon class="!w-4 !h-4 !text-[16px]">school</mat-icon>
+                      <span>{{ training.trainingType | titlecase }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-secondary/70 dark:text-accent/70">
+                      <mat-icon class="!w-4 !h-4 !text-[16px]">place</mat-icon>
+                      <span class="line-clamp-1">{{ training.locationTypes.join(' • ') }}</span>
+                    </div>
+                    <div class="border-t border-stroke-2 dark:border-stroke-6 pt-3 flex items-center justify-between">
+                      <div>
+                        <p class="text-xs text-secondary/60 dark:text-accent/60">À partir de</p>
+                        <p class="text-lg font-bold text-secondary dark:text-accent">
+                          {{ training.priceFrom | currency:'EUR':'symbol':'1.0-0':'fr-FR' }} HT
+                        </p>
+                      </div>
+                  
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Colonne droite : formulaire -->
+              <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-background-8 border border-stroke-2 dark:border-stroke-6 rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
+                  <div class="flex flex-col gap-2">
+                    <p class="text-xs uppercase tracking-[0.12em] text-secondary/60 dark:text-accent/60">Formulaire</p>
+                    <h2 class="text-xl font-bold text-secondary dark:text-accent">Inscription</h2>
+                    <p class="text-sm text-secondary/70 dark:text-accent/70">
+                      Choisissez votre profil et complétez les informations nécessaires. Nous vous recontactons rapidement pour finaliser l'inscription.
+                    </p>
+                  </div>
+
+                  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+                    <!-- Choix du rôle -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                      <label
+                        *ngFor="let role of roles"
+                        class="p-3 border rounded-xl cursor-pointer transition-all"
+                        [ngClass]="form.get('role')?.value === role.value
+                          ? 'border-primary-500 dark:border-ns-green-light bg-primary-50/50 dark:bg-ns-green-light/10 shadow-sm'
+                          : 'border-stroke-2 dark:border-stroke-6 hover:border-primary-200 dark:hover:border-ns-green-light/60'"
+                      >
+                        <input type="radio" class="sr-only" [value]="role.value" formControlName="role">
+                        <div class="flex flex-col gap-1">
+                          <span class="text-sm font-semibold text-secondary dark:text-accent">{{ role.label }}</span>
+                          <span class="text-xs text-secondary/60 dark:text-accent/60">{{ role.description }}</span>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Prénom *</label>
+                        <input formControlName="firstName" class="form-input" placeholder="Votre prénom">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Nom *</label>
+                        <input formControlName="lastName" class="form-input" placeholder="Votre nom">
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Email *</label>
+                        <input formControlName="email" class="form-input" type="email" placeholder="vous@exemple.com">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Téléphone</label>
+                        <input formControlName="phone" class="form-input" placeholder="+33...">
+                      </div>
+                    </div>
+
+                    <div *ngIf="isCompany()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Entreprise</label>
+                        <input formControlName="companyName" class="form-input" placeholder="Nom de votre société">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">SIRET (optionnel)</label>
+                        <input formControlName="siret" class="form-input" placeholder="SIRET">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Poste / rôle</label>
+                        <input formControlName="jobTitle" class="form-input" placeholder="Ex: DRH, Manager...">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Taille de l'équipe</label>
+                        <input formControlName="teamSize" class="form-input" placeholder="Ex: 5 personnes">
+                      </div>
+                    </div>
+
+                    <div *ngIf="isTrainer()" class="space-y-1">
+                      <label class="text-sm font-medium text-secondary dark:text-accent">Votre expérience (formateur)</label>
+                      <textarea formControlName="message" class="form-textarea" rows="3" placeholder="Précisez votre expérience et vos attentes"></textarea>
+                    </div>
+
+                    <div *ngIf="isIndividual() || isCandidate()" class="space-y-1">
+                      <label class="text-sm font-medium text-secondary dark:text-accent">Motivation / contexte</label>
+                      <textarea formControlName="message" class="form-textarea" rows="3" placeholder="Expliquez votre besoin et vos objectifs"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Format préféré</label>
+                        <select formControlName="preferredFormat" class="form-input">
+                          <option *ngFor="let f of formats" [value]="f.value">{{ f.label }}</option>
+                        </select>
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-sm font-medium text-secondary dark:text-accent">Date souhaitée (optionnel)</label>
+                        <input type="date" formControlName="desiredDate" class="form-input">
+                      </div>
+                    </div>
+
+                    <div *ngIf="upcomingSessions.length" class="space-y-2">
+                      <label class="text-sm font-medium text-secondary dark:text-accent">Choisir une session (optionnel)</label>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <label
+                          *ngFor="let s of upcomingSessions"
+                          class="p-3 border rounded-xl cursor-pointer transition-all"
+                          [ngClass]="form.get('sessionId')?.value === s.id
+                            ? 'border-primary-500 dark:border-ns-green-light bg-primary-50/50 dark:bg-ns-green-light/10 shadow-sm'
+                            : 'border-stroke-2 dark:border-stroke-6 hover:border-primary-200 dark:hover:border-ns-green-light/60'"
+                        >
+                          <input type="radio" class="sr-only" [value]="s.id" formControlName="sessionId">
+                          <div class="flex items-start gap-2">
+                            <span class="text-sm font-semibold text-secondary dark:text-accent leading-tight">{{ s.label }}</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="space-y-1">
+                      <label class="text-sm font-medium text-secondary dark:text-accent">Objectifs spécifiques</label>
+                      <textarea formControlName="objectives" class="form-textarea" rows="3" placeholder="Vos objectifs précis pour cette formation"></textarea>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-2">
+                      <p class="text-xs text-secondary/60 dark:text-accent/60">
+                        En soumettant, vous acceptez d'être contacté pour finaliser votre inscription.
+                      </p>
+                      <button
+                        type="submit"
+                        class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary min-w-[180px] flex items-center justify-center gap-2"
+                        [disabled]="submitting"
+                        matRipple
+                        [matRippleColor]="'rgba(255,255,255,0.3)'"
+                      >
+                        <ng-container *ngIf="!submitting; else loadingTpl">
+                          <span>Envoyer</span>
+                          <mat-icon class="!w-5 !h-5 !text-[20px] !leading-[20px]">arrow_forward</mat-icon>
+                        </ng-container>
+                        <ng-template #loadingTpl>
+                          <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          <span>Envoi...</span>
+                        </ng-template>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>

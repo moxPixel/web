@@ -90,6 +90,22 @@ html.dark .scroll-bar::-webkit-scrollbar-thumb {
   background: var(--color-stroke-6);
 }
 
+/* Méga menu formations */
+.mega-menu-panel {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  filter: blur(6px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.22s ease, filter 0.22s ease;
+}
+
+.mega-menu-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  pointer-events: auto;
+}
+
 /* Hamburger button */
 .nav-hamburger,
 .nav-hamburger-close {

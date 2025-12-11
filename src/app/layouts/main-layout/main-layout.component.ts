@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -9,6 +9,7 @@ import { NotificationCenterComponent } from '../../components/notification-cente
 import { EvaChat } from '../../eva-chat/eva-chat';
 import { pageTransition } from '../../animations/page-transition.animation';
 import { filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-main-layout',
@@ -29,6 +30,7 @@ import { filter } from 'rxjs/operators';
 export class MainLayoutComponent implements OnInit, OnDestroy {
   private domContentReadyHandler?: () => void;
   routeAnimationState = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private gsapScrollService: GsapScrollService,
@@ -94,6 +96,28 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
         initScroll();
       }
     });
+
+    // Recharger pour repasser par index/loader quand on change de layout (site <-> backoffice) ou vers account/enrollments
+    this.router.events
+      .pipe(filter(ev => ev instanceof NavigationStart))
+      .subscribe((ev: NavigationStart) => {
+        const target = ev.url || '';
+        const currentUrl = this.router.url || '';
+        const isCurrentBo = currentUrl.startsWith('/bo');
+        const isTargetBo = target.startsWith('/bo');
+        const isTargetAccount = target.startsWith('/account/enrollments');
+        const isCurrentAccount = currentUrl.startsWith('/account/enrollments');
+        
+        // Forcer un reload complet pour ré-afficher le loader index dans ces cas :
+        // 1. Passage entre backoffice et site public
+        // 2. Navigation vers /account/enrollments depuis une autre page
+        // 3. Navigation depuis /account/enrollments vers une autre page
+        if (isCurrentBo !== isTargetBo || 
+            (isTargetAccount && !isCurrentAccount) || 
+            (isCurrentAccount && !isTargetAccount)) {
+          window.location.href = target;
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -103,6 +127,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     }
 
     this.gsapScrollService.cleanup();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

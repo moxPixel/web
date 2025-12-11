@@ -1,0 +1,41 @@
+<aside
+  class="bo-sidebar hidden md:flex flex-col items-center gap-4 text-secondary dark:text-accent bg-white/80 dark:bg-background-8/85 border border-stroke-2 dark:border-stroke-6 shadow-[0_10px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl rounded-[22px]">
+  <figure class="w-9 h-9 mt-4 flex items-center justify-center">
+    <img src="/assets/images/logo/logo.png" alt="Unlock Backoffice" class="w-full h-full object-contain dark:hidden" />
+    <img src="/assets/images/logo/logo-dark.png" alt="Unlock Backoffice" class="w-full h-full object-contain hidden dark:block" />
+  </figure>
+
+  <nav class="flex-1 flex flex-col items-center gap-2">
+    <a routerLink="/bo/users" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" matRipple [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Utilisateurs" tooltipPosition="right">
+      <mat-icon class="text-inherit">people</mat-icon>
+    </a>
+    <a routerLink="/bo/trainings" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" matRipple [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Formations" tooltipPosition="right">
+      <mat-icon class="text-inherit">school</mat-icon>
+    </a>
+    <a routerLink="/bo/certifications" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" matRipple [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Certifications" tooltipPosition="right">
+      <mat-icon class="text-inherit">verified</mat-icon>
+    </a>
+    <a routerLink="/bo/sessions" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" matRipple [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Sessions" tooltipPosition="right">
+      <mat-icon class="text-inherit">event</mat-icon>
+    </a>
+    <a routerLink="/bo/enrollments" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" matRipple [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Inscriptions" tooltipPosition="right">
+      <mat-icon class="text-inherit">assignment</mat-icon>
+    </a>
+    <a routerLink="/bo/contacts" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" matRipple [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Contacts" tooltipPosition="right">
+      <mat-icon class="text-inherit">mail</mat-icon>
+    </a>
+  </nav>
+
+  <div class="pb-4 flex flex-col items-center gap-2">
+    <button matRipple class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" (click)="toggleDarkMode()" appTooltip="Thème" tooltipPosition="right">
+      <mat-icon class="text-inherit">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+    <a routerLink="/" matRipple class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" appTooltip="Retour au site" tooltipPosition="right">
+      <mat-icon class="text-inherit">open_in_new</mat-icon>
+    </a>
+    <button matRipple class="bo-nav-icon text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent transition-colors duration-200" [matRippleColor]="isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'" (click)="logout()" appTooltip="Déconnexion" tooltipPosition="right">
+      <mat-icon class="text-inherit">logout</mat-icon>
+    </button>
+  </div>
+</aside>
+

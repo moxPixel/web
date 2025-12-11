@@ -16,56 +16,81 @@
         <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <div
             #heroContent
-            class="w-full lg:w-1/2 text-center lg:text-left pt-8 lg:pt-12"
+            class="w-full lg:w-1/2 text-center lg:text-left pt-8 lg:pt-12 px-4 sm:px-0"
           >
           <!-- Logo au-dessus du titre -->
           <div #logoContainer data-ns-animate data-delay="0.1" class="mb-3 flex justify-center lg:justify-start mt-12 lg:mt-20" style="opacity: 0;">
             <a routerLink="/" routerLinkActive="active">
               <span class="sr-only">Home</span>
                     <figure class="w-[50px] sm:w-[70px] md:w-[70px] lg:w-[85px] mx-auto lg:mx-0">
-                      <img src="/assets/images/logo/main-logo.png" alt="Unlock" class="w-full h-auto dark:hidden" />
-                      <img src="/assets/images/logo/dark-logo.png" alt="Unlock" class="w-full h-auto hidden dark:block" />
+                      <img src="/assets/images/logo/main-logo.png" alt="Unlock Formation - Centre de formation IT & IA" width="85" height="85" class="w-full h-auto dark:hidden" />
+                      <img src="/assets/images/logo/dark-logo.png" alt="Unlock Formation - Centre de formation IT & IA" width="85" height="85" class="w-full h-auto hidden dark:block" />
                     </figure>
             </a>
           </div>
           <!-- H1 Mobile (court) -->
-          <h1 #h1Mobile class="md:hidden max-w-[976px] mx-auto mb-4 text-xl sm:text-2xl leading-tight" style="margin-top: 8rem !important; opacity: 0;">
-            Centre de formation<br />en <span class="text-primary-500 dark:text-ns-green-light">technologies avancées</span>
+          <h1
+            #h1Mobile
+            class="md:hidden max-w-[976px] mx-auto mb-4 text-xl sm:text-2xl leading-tight"
+            style="margin-top: 8rem !important; opacity: 0;"
+          >
+            Prenez de <span class="text-primary-500 dark:text-ns-green-light">l'avance</span> sur l'avenir
           </h1>
           <!-- H1 Desktop (complet) -->
-          <h1 #h1Desktop class="hidden md:block max-w-[976px] md:w-full mx-auto lg:mx-0 mb-4 text-xl md:text-2xl lg:text-3xl" style="word-break: keep-all; hyphens: none; line-height: 1.3; margin-top: 1rem !important; opacity: 0;">
-            Centre de formation en <span class="text-primary-500 dark:text-ns-green-light" style="white-space: nowrap;">technologies avancées</span>
+          <h1
+            #h1Desktop
+            class="hidden md:block max-w-[976px] md:w-full mx-auto lg:mx-0 mb-4 text-xl md:text-2xl lg:text-3xl"
+            style="word-break: keep-all; hyphens: none; line-height: 1.3; margin-top: 1rem !important; opacity: 0;"
+          >
+            Prenez de <span class="text-primary-500 dark:text-ns-green-light" style="white-space: nowrap;">l'avance</span> sur l'avenir
           </h1>
           <!-- Description Mobile (courte) -->
-          <p class="md:hidden max-w-[800px] mx-auto mb-14 text-base leading-relaxed" style="opacity: 0;">
-            <strong>Unlock</strong> forme aux technologies de demain. IA, cybersécurité, data et bien plus pour des compétences d'excellence.
+          <p
+            class="md:hidden max-w-[800px] mx-auto mb-14 text-base leading-relaxed"
+            style="opacity: 0;"
+          >
+            Maîtrisez l'IA, le développement, la cybersécurité, le cloud et la data grâce à nos experts du secteur. Guidés par <strong>EVA</strong>, notre assistant IA, accélérez votre carrière.
           </p>
           <!-- Description Desktop (complète) -->
-          <p class="hidden md:block max-w-[800px] md:w-full mx-auto lg:mx-0 mb-14 text-lg leading-relaxed" style="word-break: keep-all; hyphens: none; opacity: 0;">
-            <strong>Unlock</strong> est un centre de formation spécialisé dans les <span style="white-space: nowrap;">technologies avancées</span>. Nous formons aux <strong>intelligences artificielles</strong>, à la <strong>cybersécurité</strong>, à la <strong>data</strong> et aux technologies émergentes pour développer des compétences d'excellence, <span style="white-space: nowrap;">alignées sur</span> les <span style="white-space: nowrap;">enjeux du marché</span>.
+          <p
+            class="hidden md:block max-w-[800px] md:w-full mx-auto lg:mx-0 mb-14 text-lg leading-relaxed"
+            style="word-break: keep-all; hyphens: none; opacity: 0;"
+          >
+            Passez à l'action avec des formations concrètes en <strong>IA et data science</strong>, <strong>développement full stack</strong>, <strong>cybersécurité opérationnelle</strong>, <strong>cloud et DevOps</strong>. Nos experts actifs transmettent leurs méthodes terrain. <strong>EVA</strong>, votre copilote IA, personnalise votre montée en compétences.
           </p>
+
+          <!-- Countdown prochaine session globale -->
+          <div
+            class="hero-countdown flex items-center gap-2 justify-center lg:justify-start mt-4 mb-4 text-secondary/80 dark:text-accent/80"
+            style="opacity: 0;"
+          >
+            <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5 text-primary-500 dark:text-ns-green-light">timer</mat-icon>
+            <span>Prochaine session dans <span class="text-primary-500 dark:text-ns-green-light font-semibold">{{ countdownText }}</span></span>
+          </div>
 
           <!-- hero buttons -->
           <div
-            class="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 hero-form w-[90%] md:w-auto mx-auto lg:mx-0"
+            class="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 hero-form w-full sm:w-auto mx-auto lg:mx-0"
           >
             <a
-              routerLink="/contact-client"
+              routerLink="/contact"
               matRipple
               [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
-              class="btn btn-lg w-full sm:w-auto px-8 h-12 flex items-center justify-center border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
+              class="btn btn-lg w-full sm:w-auto px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
               style="opacity: 0;"
             >
-              <span>Je veux me former</span>
+              <span class="leading-none">Échanger avec un conseiller</span>
+              <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
             </a>
             <a
-              routerLink="/become-consultant"
+              routerLink="/trainings"
               matRipple
               [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
-              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+              class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center gap-2"
               style="opacity: 0;"
             >
-              <span>Découvrir nos formations</span>
+              <span class="leading-none">Découvrir les formations</span>
+              <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
             </a>
           </div>
         </div>
@@ -102,4 +127,3 @@
     </div>
   </div>
 </section>
-

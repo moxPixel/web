@@ -1,0 +1,176 @@
+<div class="flex flex-col gap-6">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-secondary dark:text-accent">Certifications</h2>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 mt-1">Gérez les certifications disponibles pour les formations.</p>
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      class="!bg-secondary !text-white hover:!bg-secondary/90 dark:!bg-white dark:!text-secondary !px-6 !h-11 !rounded-full !flex !items-center !justify-center !gap-2"
+      (click)="create()"
+    >
+      <span class="leading-none">Créer une certification</span>
+      <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">add</mat-icon>
+    </button>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="relative">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Rechercher par titre, code ou type"
+      class="w-full pl-[42px] pr-4 py-3.5 text-base font-inter-tight text-secondary dark:text-accent bg-transparent border border-stroke-2 dark:border-stroke-6 rounded-xl transition-all outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-ns-green-light focus:border-primary-500 dark:focus:border-ns-green-light placeholder:text-secondary/50 dark:placeholder:text-accent/50"
+    />
+    <span class="absolute left-3 top-0 bottom-0 flex items-center justify-center text-secondary/60 dark:text-accent/70 pointer-events-none">
+      <mat-icon class="!w-5 !h-5 !text-[20px] !leading-[20px] flex-shrink-0">search</mat-icon>
+    </span>
+  </div>
+
+  <!-- Hashtags filtres -->
+  <div class="sticky top-24 sm:top-[110px] md:top-[120px] z-30 border-b border-stroke-2/50 dark:border-stroke-6/50 mb-6 sm:mb-8 py-2 sm:py-3">
+    <div class="space-y-2">
+      <div class="flex gap-x-1 sm:gap-x-1.5 gap-y-2 items-center justify-center overflow-x-auto pb-1 scrollbar-hide pr-12 sm:pr-16">
+        <!-- Filtres Statut -->
+        <ng-container *ngFor="let filter of statusFilters">
+          <button
+            type="button"
+            matRipple
+            (click)="setStatusFilter(filter.value)"
+            class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md"
+            [ngClass]="selectedStatus === filter.value
+              ? 'border-primary-500 dark:border-ns-green-light text-primary-500 dark:text-ns-green-light bg-transparent'
+              : 'border-transparent text-secondary/70 dark:text-accent/70 hover:text-secondary dark:hover:text-accent hover:border-stroke-2 dark:hover:border-stroke-6'"
+          >
+            {{ filter.label }}
+          </button>
+        </ng-container>
+
+        <!-- Séparateur -->
+        <span class="text-secondary/30 dark:text-accent/30 text-[10px] mx-1 flex-shrink-0">•</span>
+
+        <!-- Filtres Type -->
+        <ng-container *ngFor="let filter of typeFilters">
+          <button
+            type="button"
+            matRipple
+            (click)="setTypeFilter(filter.value)"
+            class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md"
+            [ngClass]="selectedType === filter.value
+              ? 'border-primary-500 dark:border-ns-green-light text-primary-500 dark:text-ns-green-light bg-transparent'
+              : 'border-transparent text-secondary/70 dark:text-accent/70 hover:text-secondary dark:hover:text-accent hover:border-stroke-2 dark:hover:border-stroke-6'"
+          >
+            {{ filter.label }}
+          </button>
+        </ng-container>
+
+        <!-- Séparateur -->
+        <span *ngIf="selectedStatus !== 'all' || selectedType !== 'all'" class="text-secondary/30 dark:text-accent/30 text-[10px] mx-1 flex-shrink-0">•</span>
+
+        <!-- Bouton réinitialiser -->
+        <button
+          *ngIf="selectedStatus !== 'all' || selectedType !== 'all'"
+          type="button"
+          matRipple
+          class="hashtag-filter px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 border border-stroke-2 dark:border-stroke-6 whitespace-nowrap flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-md border-transparent text-secondary/70 dark:text-accent/70 hover:text-red-500 dark:hover:text-red-400 hover:border-red-500 dark:hover:border-red-400"
+          (click)="clearFilters()"
+        >
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des certifications -->
+  <div *ngIf="loading()" class="flex items-center justify-center py-12">
+    <div class="text-secondary/60 dark:text-accent/60">Chargement...</div>
+  </div>
+
+  <div *ngIf="!loading() && filtered().length === 0" class="text-center py-12">
+    <div class="mb-6">
+      <mat-icon class="!w-16 !h-16 !text-[64px] !leading-[64px] text-secondary/30 dark:text-accent/30">workspace_premium</mat-icon>
+    </div>
+    <h3 class="text-lg font-semibold text-secondary dark:text-accent mb-2">Aucune certification trouvée</h3>
+    <p class="text-sm text-secondary/70 dark:text-accent/70 mb-6">
+      {{ searchTerm() || selectedStatus !== 'all' || selectedType !== 'all'
+        ? 'Aucune certification ne correspond à vos critères de recherche.'
+        : 'Commencez par créer votre première certification.' }}
+    </p>
+    <button
+      *ngIf="!searchTerm() && selectedStatus === 'all' && selectedType === 'all'"
+      matRipple
+      class="btn px-6 h-10 rounded-full bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary transition-all flex items-center gap-2 mx-auto"
+      (click)="create()"
+    >
+      <span class="leading-none">Créer une certification</span>
+      <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">add</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="!loading() && filtered().length > 0" class="grid grid-cols-1 gap-4">
+    <div
+      *ngFor="let cert of filtered()"
+      class="p-5 hover:bg-background-2 dark:hover:bg-background-6 hover:rounded-xl transition-all cursor-pointer border-b border-stroke-2 dark:border-stroke-6 last:border-b-0"
+      [routerLink]="['/bo/certifications', cert.id, 'edit']"
+    >
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <!-- Contenu principal -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-2">
+            <h3 class="text-lg font-semibold text-secondary dark:text-accent truncate">
+              {{ cert.title }}
+            </h3>
+            <span [ngClass]="getTypeBadgeClass(cert.type)">{{ cert.type }}</span>
+            <span [ngClass]="getStatusBadgeClass(cert.status)">{{ getStatusLabel(cert.status) }}</span>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-4 text-sm text-secondary/70 dark:text-accent/70">
+            <div class="flex items-center gap-1.5">
+              <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">tag</mat-icon>
+              <span>Code: {{ cert.code }}</span>
+            </div>
+            
+            <div *ngIf="cert.level" class="flex items-center gap-1.5">
+              <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">trending_up</mat-icon>
+              <span>{{ cert.level }}</span>
+            </div>
+            
+            <div *ngIf="cert.issuer" class="flex items-center gap-1.5">
+              <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">business</mat-icon>
+              <span>{{ cert.issuer }}</span>
+            </div>
+          </div>
+
+          <p *ngIf="cert.description" class="text-sm text-secondary/70 dark:text-accent/70 mt-2 line-clamp-2">
+            {{ cert.description }}
+          </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button
+            mat-icon-button
+            type="button"
+            (click)="edit(cert.id); $event.stopPropagation()"
+            class="!flex !items-center !justify-center size-10 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-full hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors duration-200 !p-0"
+            matRipple
+          >
+            <mat-icon class="!w-5 !h-5 !text-[20px] !leading-[20px]">edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            (click)="delete(cert.id); $event.stopPropagation()"
+            class="!flex !items-center !justify-center size-10 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200 !p-0"
+            matRipple
+          >
+            <mat-icon class="!w-5 !h-5 !text-[20px] !leading-[20px]">delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,184 @@
+<header>
+  <div
+    #headerContainer
+    class="header-one rounded-full lp:!max-w-[1290px] xl:max-w-[1140px] lg:max-w-[960px] md:max-w-[720px] sm:max-w-[540px] min-[500px]:max-w-[450px] min-[425px]:max-w-[375px] max-w-[350px] mx-auto w-full fixed left-1/2 z-50 flex items-center justify-between px-2.5 xl:py-0 py-2.5 top-6">
+    <div class="flex-shrink-0">
+      <a routerLink="/bo/users">
+        <span class="sr-only">Backoffice</span>
+        <figure class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 flex items-center justify-center">
+          <img
+            src="/assets/images/logo/logo.png"
+            alt="Unlock Backoffice"
+            class="w-full h-full object-contain dark:hidden" />
+          <img
+            src="/assets/images/logo/logo-dark.png"
+            alt="Unlock Backoffice"
+            class="w-full h-full object-contain hidden dark:block" />
+        </figure>
+      </a>
+    </div>
+    <nav class="hidden xl:flex items-center justify-center flex-1 px-6 py-3">
+      <ul class="flex items-center gap-0 list-none p-0 m-0">
+        <li>
+          <a routerLink="/bo/users" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Utilisateurs</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/bo/trainings" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Formations</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/bo/certifications" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Certifications</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/bo/sessions" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Sessions</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/bo/enrollments" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Inscriptions</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/bo/contacts" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-1 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
+            <span>Contacts</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="xl:flex hidden items-center justify-center gap-4 flex-shrink-0">
+      <div class="text-sm text-secondary/70 dark:text-accent/70 font-medium">admin@unlock</div>
+      <div class="h-6 w-px bg-black dark:bg-white"></div>
+      <button
+        (click)="toggleDarkMode()"
+        matRipple
+        [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+        class="flex items-center justify-center w-10 h-10 rounded-full bg-background-4 dark:bg-background-6 hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200"
+        aria-label="Toggle dark mode">
+        <mat-icon *ngIf="!isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5 text-secondary">light_mode</mat-icon>
+        <mat-icon *ngIf="isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5 text-accent">dark_mode</mat-icon>
+      </button>
+      <div class="h-6 w-px bg-black dark:bg-white"></div>
+      <a routerLink="/" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" class="btn btn-lg w-auto px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all rounded-full">
+        <span class="leading-none">Retour au site</span>
+        <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
+      </a>
+    </div>
+    <div class="xl:hidden block">
+      <button
+        (click)="toggleMobileMenu()"
+        class="nav-hamburger flex flex-col gap-[5px] size-12 bg-background-4 dark:bg-background-6 rounded-full items-center justify-center cursor-pointer">
+        <span class="sr-only">Menu</span>
+        <span class="block w-6 h-0.5 bg-stroke-9 dark:bg-stroke-1"></span>
+        <span class="block w-6 h-0.5 bg-stroke-9 dark:bg-stroke-1"></span>
+        <span class="block w-6 h-0.5 bg-stroke-9 dark:bg-stroke-1"></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile Menu -->
+  <aside
+    [class.translate-x-full]="!isMobileMenuOpen"
+    [class.translate-x-0]="isMobileMenuOpen"
+    class="sidebar fixed top-0 right-0 w-full sm:w-1/2 transition-all duration-300 h-screen bg-white dark:bg-background-7 xl:hidden z-[999] scroll-bar">
+    <div class="lg:p-9 sm:p-8 p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <a routerLink="/bo/users" (click)="closeMobileMenu()">
+          <span class="sr-only">Backoffice</span>
+          <figure class="w-6 h-6">
+            <img src="/assets/images/logo/logo.png" alt="Unlock Backoffice" class="w-full h-full object-contain dark:hidden block" />
+            <img
+              src="/assets/images/logo/logo-dark.png"
+              alt="Unlock Backoffice"
+              class="w-full h-full object-contain dark:block hidden" />
+          </figure>
+        </a>
+        <button
+          (click)="closeMobileMenu()"
+          class="nav-hamburger-close flex flex-col gap-1.5 size-10 bg-background-4 dark:bg-background-9 rounded-full items-center justify-center cursor-pointer relative">
+          <span class="sr-only">Close Menu</span>
+          <span class="block w-4 h-0.5 bg-stroke-9/60 dark:bg-stroke-1 rotate-45 absolute"></span>
+          <span class="block w-4 h-0.5 bg-stroke-9/60 dark:bg-stroke-1 -rotate-45 absolute"></span>
+        </button>
+      </div>
+      <div class="h-[85vh] w-full overflow-y-auto overflow-x-hidden pb-10 scroll-bar">
+        <ul>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/bo/users"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Utilisateurs
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/bo/trainings"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Formations
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/bo/certifications"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Certifications
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/bo/sessions"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Sessions
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/bo/enrollments"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Inscriptions
+            </a>
+          </li>
+          <li class="relative space-y-0">
+            <a
+              routerLink="/bo/contacts"
+              routerLinkActive="active"
+              (click)="closeMobileMenu()"
+              class="mobile-nav-link text-tagline-1 font-normal text-secondary/60 dark:text-accent/60 transition-all duration-200 py-3 border-b border-stroke-4 dark:border-stroke-6 w-full text-left block">
+              Contacts
+            </a>
+          </li>
+        </ul>
+        <div class="flex flex-col gap-3 mt-6 pt-6 border-t border-stroke-4 dark:border-stroke-6">
+          <div class="text-sm text-secondary/70 dark:text-accent/70 px-3 py-2">admin@unlock</div>
+          <button
+            (click)="toggleDarkMode(); closeMobileMenu()"
+            class="flex items-center justify-center gap-2 w-full px-8 h-12 rounded-full bg-background-4 dark:bg-background-6 hover:bg-background-3 dark:hover:bg-background-5 transition-colors duration-200 text-secondary dark:text-accent font-medium">
+            <mat-icon *ngIf="!isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5">light_mode</mat-icon>
+            <mat-icon *ngIf="isDarkMode" class="!w-5 !h-5 !text-[20px] !leading-5">dark_mode</mat-icon>
+            <span>{{ isDarkMode ? 'Mode clair' : 'Mode sombre' }}</span>
+          </button>
+          <a routerLink="/" (click)="closeMobileMenu()" class="btn btn-lg w-full px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all text-center rounded-full">
+            <span class="leading-none">Retour au site</span>
+            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+</header>
+

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+</head>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background-color:#0b0f17;line-height:1.6;">
+  <table role="presentation" style="width:100%;border-collapse:collapse;background-color:#0b0f17;padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" style="width:100%;max-width:720px;border-collapse:collapse;background-color:#0f141c;border:1px solid #1f2734;border-radius:14px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.35);">
+          <tr>
+            <td style="padding:28px 36px;background:linear-gradient(135deg,#111827 0%,#0b0f17 100%);border-bottom:1px solid #1f2734;text-align:center;">
+              <div style="margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:10px;">
+                {{#if logoBase64}}
+                  <img src="{{logoBase64}}" alt="Unlock" style="height:52px;width:auto;display:block;" />
+                {{else}}
+                  <h1 style="margin:0;color:#e5e7eb;font-size:28px;font-weight:700;">Unlock</h1>
+                {{/if}}
+                <p style="margin:0;color:#9ca3af;font-size:13px;letter-spacing:0.4px;">Centre de formation - IA & Tech</p>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:36px;">
+              {{#if header}}
+              <h2 style="margin:0 0 18px;color:#e5e7eb;font-size:20px;font-weight:700;line-height:1.4;">{{header}}</h2>
+              {{/if}}
+
+              {{#if greeting}}
+              <div style="color:#cbd5e1;font-size:15px;line-height:1.7;margin-bottom:16px;">
+                {{{greeting}}}
+              </div>
+              {{/if}}
+
+              {{#if mainMessage}}
+              <div style="color:#cbd5e1;font-size:15px;line-height:1.7;margin-bottom:18px;">
+                {{{mainMessage}}}
+              </div>
+              {{/if}}
+
+              {{#if infoBox}}
+              <table role="presentation" style="width:100%;border-collapse:collapse;background-color:#0c121b;border:1px solid #1f2937;border-left:4px solid #5ce176;border-radius:10px;margin:22px 0;">
+                <tr>
+                  <td style="padding:20px;">
+                    {{#if infoBox.title}}
+                    <p style="margin:0 0 12px;color:#e5e7eb;font-size:16px;font-weight:700;">{{infoBox.title}}</p>
+                    {{/if}}
+
+                    {{#if infoBox.items}}
+                    <ul style="margin:0;padding-left:18px;color:#cbd5e1;">
+                      {{#each infoBox.items}}
+                      <li style="margin-bottom:8px;">{{this}}</li>
+                      {{/each}}
+                    </ul>
+                    {{/if}}
+
+                    {{#if infoBox.content}}
+                    <p style="margin:0;color:#cbd5e1;font-size:14px;">{{infoBox.content}}</p>
+                    {{/if}}
+
+                    {{#if infoBox.details}}
+                    <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:12px;">
+                      {{#each infoBox.details}}
+                      <tr>
+                        <td style="padding:8px 0;color:#9ca3af;font-size:14px;border-bottom:1px solid #1f2937;"><strong style="color:#e5e7eb;">{{this.label}}</strong></td>
+                        <td style="padding:8px 0;color:#e5e7eb;font-size:14px;font-weight:600;text-align:right;border-bottom:1px solid #1f2937;">{{this.value}}</td>
+                      </tr>
+                      {{/each}}
+                    </table>
+                    {{/if}}
+                  </td>
+                </tr>
+              </table>
+              {{/if}}
+
+              {{#if additionalMessage}}
+              <p style="margin:16px 0;color:#cbd5e1;font-size:15px;line-height:1.7;">{{additionalMessage}}</p>
+              {{/if}}
+
+              {{#if buttonUrl}}
+              <table role="presentation" style="width:100%;border-collapse:collapse;margin:24px 0;">
+                <tr>
+                  <td align="center">
+                    <a href="{{buttonUrl}}" style="display:inline-block;padding:13px 28px;background:linear-gradient(135deg,#7c3aed 0%,#5ce176 100%);color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;box-shadow:0 12px 30px rgba(92,225,118,0.25);">
+                      {{buttonText}}
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              {{/if}}
+
+              {{#if messageBox}}
+              <table role="presentation" style="width:100%;border-collapse:collapse;background-color:#0f172a;border:1px solid #1f2937;border-radius:10px;margin:22px 0;">
+                <tr>
+                  <td style="padding:18px;">
+                    <p style="margin:0;color:#e5e7eb;font-size:14px;line-height:1.6;">{{messageBox}}</p>
+                  </td>
+                </tr>
+              </table>
+              {{/if}}
+
+              {{#if warning}}
+              <p style="margin:22px 0;padding:16px;background-color:#1f2937;border:1px solid #f87171;border-radius:10px;color:#fecdd3;font-size:13px;line-height:1.6;">
+                <strong style="color:#fca5a5;">⚠️ Important :</strong> {{warning}}
+              </p>
+              {{/if}}
+
+              {{#if conclusion}}
+              <p style="margin:22px 0 0;color:#e5e7eb;font-size:15px;font-weight:600;">{{conclusion}}</p>
+              {{/if}}
+
+              {{#if signature}}
+              <p style="margin:10px 0 0;color:#9ca3af;font-size:15px;font-style:italic;">{{signature}}</p>
+              {{/if}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:28px 36px;background-color:#0b0f17;border-top:1px solid #1f2734;text-align:center;">
+              <p style="margin:0 0 6px;color:#9ca3af;font-size:13px;">© {{currentYear}} <strong style="color:#e5e7eb;">Unlock</strong>. Tous droits réservés.</p>
+              <p style="margin:0 0 12px;color:#6b7280;font-size:12px;">Cet email a été envoyé automatiquement depuis notre plateforme sécurisée.</p>
+              <p style="margin:0;color:#9ca3af;font-size:13px;">
+                Des questions ? <a href="mailto:{{contactEmail}}" style="color:#5ce176;text-decoration:none;font-weight:600;">Contactez-nous</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+

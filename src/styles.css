@@ -66,7 +66,8 @@
 /* Base styles */
 @layer base {
   :root {
-    scroll-behavior: auto !important;
+    /* Smooth scroll natif CSS - Simple et performant */
+    scroll-behavior: smooth !important;
   }
 
   html {
@@ -304,6 +305,14 @@
     background-color: var(--color-ns-cyan-light);
   }
 
+  .badge-red {
+    background-color: var(--color-ns-red);
+  }
+
+  .badge-gray {
+    background-color: #e5e7eb;
+  }
+
   /* Dark mode badges */
   html.dark .badge-green {
     background-color: #fcfcfc1a;
@@ -318,6 +327,16 @@
   html.dark .badge-cyan {
     background-color: #fcfcfc1a;
     color: var(--color-ns-green-light);
+  }
+
+  html.dark .badge-red {
+    background-color: #fcfcfc1a;
+    color: var(--color-ns-red);
+  }
+
+  html.dark .badge-gray {
+    background-color: #fcfcfc1a;
+    color: #9ca3af;
   }
 
   /* ========== UTILITAIRES GLOBAUX ========== */
@@ -423,6 +442,166 @@
   .glassmorphism-blur-lg {
     -webkit-backdrop-filter: blur(25px);
     backdrop-filter: blur(25px);
+  }
+
+  /* Empêcher le ripple de déborder des boutons ronds */
+  button[matRipple].rounded-full,
+  button[matRipple][class*="rounded-full"],
+  [matRipple].rounded-full,
+  [matRipple][class*="rounded-full"] {
+    overflow: hidden !important;
+    position: relative;
+  }
+
+  /* Conteneur ripple pour les boutons ronds */
+  button[matRipple].rounded-full .mat-ripple-element,
+  button[matRipple][class*="rounded-full"] .mat-ripple-element,
+  [matRipple].rounded-full .mat-ripple-element,
+  [matRipple][class*="rounded-full"] .mat-ripple-element {
+    border-radius: 50% !important;
+  }
+
+  /* ========== MATERIAL DIALOG STYLES ========== */
+  /* Dialog container - radius et background */
+  .mat-mdc-dialog-container,
+  .cdk-overlay-pane .mat-mdc-dialog-container {
+    border-radius: 20px !important;
+    background-color: var(--color-background-1) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container,
+  html.dark .cdk-overlay-pane .mat-mdc-dialog-container {
+    background-color: var(--color-background-8) !important;
+  }
+
+  /* ========== MATERIAL TOOLTIP STYLES ========== */
+  /* Tooltips - Light mode */
+  .mat-mdc-tooltip {
+    --mdc-plain-tooltip-container-color: #1a1a1c !important;
+    --mdc-plain-tooltip-supporting-text-color: #fcfcfc !important;
+    --mdc-plain-tooltip-container-shape: 8px !important;
+  }
+
+  /* Dark mode tooltips */
+  html.dark .mat-mdc-tooltip {
+    --mdc-plain-tooltip-container-color: #fcfcfc !important;
+    --mdc-plain-tooltip-supporting-text-color: #1a1a1c !important;
+  }
+
+  /* Mat Form Field dans les dialogs - radius 12px */
+  .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline {
+    border-radius: 12px !important;
+  }
+
+  /* Mat Form Field - couleurs dark/light */
+  .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__leading,
+  .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__notch,
+  .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-color: var(--color-stroke-2) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__leading,
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__notch,
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-color: var(--color-stroke-6) !important;
+  }
+
+  /* Focus state */
+  .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__leading,
+  .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__notch,
+  .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: var(--color-primary-500) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__leading,
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__notch,
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: var(--color-ns-green-light) !important;
+  }
+
+  /* Labels */
+  .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-floating-label {
+    color: var(--color-secondary) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-floating-label {
+    color: var(--color-accent) !important;
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mat-mdc-floating-label {
+    color: var(--color-primary-500) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field.mdc-text-field--focused .mat-mdc-floating-label {
+    color: var(--color-ns-green-light) !important;
+  }
+
+  /* Input text */
+  .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-input-element {
+    color: var(--color-secondary) !important;
+    caret-color: var(--color-primary-500) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-input-element {
+    color: var(--color-accent) !important;
+    caret-color: var(--color-ns-green-light) !important;
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-input-element::placeholder {
+    color: var(--color-secondary) !important;
+    opacity: 0.5 !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-input-element::placeholder {
+    color: var(--color-accent) !important;
+    opacity: 0.5 !important;
+  }
+
+  /* Select */
+  .mat-mdc-dialog-container .mat-mdc-select {
+    color: var(--color-secondary) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-select {
+    color: var(--color-accent) !important;
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-select-arrow {
+    color: var(--color-secondary) !important;
+    opacity: 0.6 !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-select-arrow {
+    color: var(--color-accent) !important;
+    opacity: 0.6 !important;
+  }
+
+  /* Mat Option */
+  .mat-mdc-dialog-container .mat-mdc-option {
+    color: var(--color-secondary) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-option {
+    color: var(--color-accent) !important;
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  .mat-mdc-dialog-container .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: var(--color-background-2) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  html.dark .mat-mdc-dialog-container .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: var(--color-background-6) !important;
+  }
+
+  /* Mat Error */
+  .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-form-field-error {
+    color: var(--color-red-500) !important;
+  }
+
+  html.dark .mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-form-field-error {
+    color: var(--color-red-400) !important;
   }
 }
 

@@ -1,137 +1,70 @@
-<section id="programs" class="lg:pb-[100px] pb-16 lg:pt-16 pt-12 relative overflow-hidden bg-background-4 dark:bg-background-5 rounded-t-[12px] md:rounded-t-[20px]">
-
-  <!-- Lignes verticales en arrière-plan -->
-  <div class="absolute -z-10 top-5 left-1/2 -translate-x-1/2 h-full max-w-[1290px] w-full flex justify-between lg:gap-[239px] sm:gap-[200px] gap-[150px] px-4">
-    <div data-hero-line class="lp:block hidden w-px h-0" style="background: linear-gradient(180deg, #DFE4EB 0%, rgba(223, 228, 235, 0) 100%); height: 100%;"></div>
-    <div data-hero-line class="lp:block hidden w-px h-0" style="background: linear-gradient(180deg, #DFE4EB 0%, rgba(223, 228, 235, 0) 100%); height: 100%;"></div>
-    <div data-hero-line class="lg:block hidden w-px h-0" style="background: linear-gradient(180deg, #DFE4EB 0%, rgba(223, 228, 235, 0) 100%); height: 100%;"></div>
-    <div data-hero-line class="w-px h-0" style="background: linear-gradient(180deg, #DFE4EB 0%, rgba(223, 228, 235, 0) 100%); height: 100%;"></div>
-    <div data-hero-line class="w-px h-0" style="background: linear-gradient(180deg, #DFE4EB 0%, rgba(223, 228, 235, 0) 100%); height: 100%;"></div>
-    <div data-hero-line class="w-px h-0" style="background: linear-gradient(180deg, #DFE4EB 0%, rgba(223, 228, 235, 0) 100%); height: 100%;"></div>
+<section id="programs" class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible">
+  <div class="max-w-[1920px] mx-auto relative">
+    <!-- Sphères lumineuses derrière la card -->
+    <div class="absolute inset-0 pointer-events-none z-0 overflow-visible programs-hero-spheres" aria-hidden="true">
+      <div class="absolute rounded-full pointer-events-none w-[200px] h-[200px] top-[5%] right-[25%] opacity-100 blur-[35px] lg:w-[280px] lg:h-[280px] lg:right-[15%] lg:blur-[50px] programs-hero-sphere-1"></div>
+      <div class="absolute rounded-full pointer-events-none w-[250px] h-[250px] top-[25%] right-[20%] opacity-100 blur-[40px] lg:w-[350px] lg:h-[350px] lg:right-[10%] lg:blur-[60px] programs-hero-sphere-2"></div>
+      <div class="absolute rounded-full pointer-events-none w-[180px] h-[180px] top-[50%] right-[30%] opacity-95 blur-[35px] lg:w-[240px] lg:h-[240px] lg:right-[18%] lg:blur-[45px] programs-hero-sphere-3"></div>
   </div>
 
-  <div class="main-container mb-[100px]">
+    <div
+      #programsHeroParallax
+      class="relative z-10 bg-[url('/assets/images/home-page-14/hero-bg.svg')] dark:bg-[url('/assets/images/home-page-14/hero-bg-dark.svg')] rounded-[12px] md:rounded-[20px] lg:rounded-[40px] bg-cover bg-no-repeat mb-16 md:mb-[100px] overflow-hidden"
+    >
+      <div class="main-container relative z-10 py-10 lg:py-16">
     <!-- Header Section -->
-    <div class="space-y-14 text-center">
+        <div class="space-y-14 text-center mb-[60px]">
       <div class="space-y-4 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
-        <span class="badge badge-green mb-5 inline-block"> Formations </span>
+        <span class="badge badge-green mb-5 inline-block"> Catalogue </span>
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto">
-          Nos <span class="text-primary-500 dark:text-ns-green-light">formations d'excellence</span> en technologies avancées
+          Des formations <span class="text-primary-500 dark:text-ns-green-light">prêtes pour le marché</span>
         </h2>
         <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Des programmes conçus par des <strong>experts reconnus</strong> pour développer des <strong>compétences stratégiques</strong> et transformer votre carrière.
+          Bootcamps intensifs, parcours diplômants ou alternance : nos programmes <strong>IA et data</strong>, <strong>développement full stack</strong>, <strong>cybersécurité</strong>, <strong>cloud et infrastructure</strong> sont calibrés sur les besoins réels des entreprises et animés par des professionnels en activité.
         </p>
       </div>
     </div>
   </div>
 
-  <!-- Galerie horizontale scrollable avec images -->
-  <div #carouselWrapper class="carousel-wrapper">
-    <div #carouselContainer class="flex gap-4 justify-center items-center scroll-bar carousel-container">
-
-      <!-- Formation IA - Taille normale -->
-      <figure class="rounded-[20px] overflow-hidden max-h-[380px] min-w-[257px] w-full group cursor-pointer">
-        <a routerLink="/formations/ia" class="block relative h-full">
-          <img
-            src="/assets/images/img/p1.jpg"
-            alt="Intelligence Artificielle"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-4 left-4 right-4">
-            <h3 class="text-white font-bold text-lg">Intelligence Artificielle</h3>
-          </div>
+      <!-- Galerie horizontale scrollable avec images (full bleed) -->
+      <div
+        class="carousel-wrapper w-full max-w-full px-0 overflow-hidden"
+      >
+        <div class="carousel-track">
+          <ng-container *ngFor="let slide of slides; trackBy: trackByIndex">
+            <figure class="carousel-slide" [ngClass]="[slide.height, slide.width]">
+              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer">
+                <img [src]="slide.img" [alt]="slide.alt" class="carousel-image" />
+                <div class="carousel-overlay"></div>
+                <div class="carousel-title"><h3>{{ slide.title }}</h3></div>
         </a>
       </figure>
-
-      <!-- Formation Cybersécurité - Plus petite -->
-      <figure class="rounded-[20px] overflow-hidden max-h-[320px] min-w-[200px] w-full group cursor-pointer">
-        <a routerLink="/formations/cybersecurite" class="block relative h-full">
-          <img
-            src="/assets/images/img/p2.jpg"
-            alt="Cybersécurité"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-4 left-4 right-4">
-            <h3 class="text-white font-bold text-base">Cybersécurité</h3>
-          </div>
+          </ng-container>
+          <!-- duplication pour boucle infinie -->
+          <ng-container *ngFor="let slide of slides; trackBy: trackByIndex">
+            <figure class="carousel-slide" [ngClass]="[slide.height, slide.width]">
+              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer">
+                <img [src]="slide.img" [alt]="slide.alt" class="carousel-image" />
+                <div class="carousel-overlay"></div>
+                <div class="carousel-title"><h3>{{ slide.title }}</h3></div>
         </a>
       </figure>
-
-      <!-- Formation Data Science - Taille normale -->
-      <figure class="rounded-[20px] overflow-hidden max-h-[380px] min-w-[257px] w-full group cursor-pointer">
-        <a routerLink="/formations/data-science" class="block relative h-full">
-          <img
-            src="/assets/images/img/p7.jpg"
-            alt="Data Science"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-4 left-4">
-            <h3 class="text-white font-bold text-lg">Data Science</h3>
-          </div>
-        </a>
-      </figure>
-
-      <!-- Formation Cloud & DevOps - Carte grande -->
-      <figure class="rounded-[20px] overflow-hidden max-h-[380px] min-w-[500px] w-full group cursor-pointer">
-        <a routerLink="/formations/cloud-devops" class="block relative h-full">
-          <img
-            src="/assets/images/img/p10.jpg"
-            alt="Cloud & DevOps"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-4 left-4">
-            <h3 class="text-white font-bold text-lg">Cloud & DevOps</h3>
-          </div>
-        </a>
-      </figure>
-
-      <!-- Formation Blockchain - Plus petite -->
-      <figure class="rounded-[20px] overflow-hidden max-h-[300px] min-w-[180px] w-full group cursor-pointer">
-        <a routerLink="/formations/blockchain" class="block relative h-full">
-          <img
-            src="/assets/images/img/p18.jpg"
-            alt="Blockchain"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-4 left-4 right-4">
-            <h3 class="text-white font-bold text-base">Blockchain & Web3</h3>
-          </div>
-        </a>
-      </figure>
-
-      <!-- Formation Architecture Logicielle - Taille normale -->
-      <figure class="rounded-[20px] overflow-hidden max-h-[380px] min-w-[257px] w-full group cursor-pointer">
-        <a routerLink="/formations/architecture" class="block relative h-full">
-          <img
-            src="/assets/images/img/p6.jpg"
-            alt="Architecture Logicielle"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-4 left-4 right-4">
-            <h3 class="text-white font-bold text-lg">Architecture Logicielle</h3>
-          </div>
-        </a>
-      </figure>
-
+          </ng-container>
     </div>
   </div>
 
   <!-- Section Textes Rassurants avec Image -->
   <div class="main-container pt-16 pb-12">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-
       <!-- Image -->
       <div class="order-2 lg:order-1">
         <div class="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-xl">
           <img
             src="/assets/images/img/p8.jpg"
-            alt="Formation Unlock"
+            alt="Formation IT & IA Unlock Formation - Experts reconnus et assistant IA EVA"
+            loading="lazy"
+            width="800"
+            height="600"
             class="w-full h-full object-cover"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
@@ -141,23 +74,25 @@
       <!-- Texte -->
       <div class="order-1 lg:order-2 space-y-6 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
         <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          Chez Unlock, nous combinons <strong>excellence académique</strong> et <strong>approche pratique</strong> pour garantir une montée en compétences rapide et durable. Nos formations sont conçues par des <strong>experts reconnus</strong> du secteur qui maîtrisent à la fois la pédagogie et l'excellence technique, vous offrant des compétences directement applicables dans votre environnement professionnel.
+          Chaque programme est construit autour de projets réels : pipelines de données, architectures applicatives, audits de sécurité, déploiements cloud. Vous apprenez sur les mêmes outils et contextes que ceux utilisés en production dans les entreprises tech.
         </p>
         <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          Nous nous spécialisons exclusivement dans les <strong>technologies de rupture</strong> : Intelligence Artificielle, Cybersécurité, Data Science et architectures modernes. Chaque programme est aligné sur les <strong>besoins réels du marché</strong> et les défis de demain, vous permettant de transformer l'apprentissage en <strong>avantage concurrentiel durable</strong>.
+          Formats flexibles (<strong>présentiel</strong>, <strong>distanciel</strong>, <strong>alternance</strong>) et niveaux progressifs. Nos formateurs partagent leurs retours d'expérience directs. <strong>EVA</strong>, votre copilote IA, clarifie les concepts, corrige vos codes et accélère votre progression.
         </p>
         <div class="pt-2">
           <a
-            routerLink="/services"
+                routerLink="/trainings"
             matRipple
             [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
-            class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center"
+            class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center gap-2"
           >
-            <span>Voir le catalogue</span>
+            <span>Consulter le catalogue</span>
+            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
           </a>
         </div>
       </div>
-
+        </div>
+      </div>
     </div>
   </div>
 </section>

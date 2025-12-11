@@ -1,0 +1,474 @@
+<section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible min-h-[calc(100vh-120px)] lg:pb-[100px] pb-16 bg-background-1 dark:bg-background-8">
+  <div class="max-w-[1920px] mx-auto relative">
+    <div class="hero-spheres" aria-hidden="true">
+      <div class="hero-sphere hero-sphere--1"></div>
+      <div class="hero-sphere hero-sphere--2"></div>
+      <div class="hero-sphere hero-sphere--3"></div>
+    </div>
+
+    <div #orientationParallax class="relative z-10 bg-[url('/assets/images/home-page-14/hero-bg.svg')] dark:bg-[url('/assets/images/home-page-14/hero-bg-dark.svg')] rounded-t-[12px] md:rounded-t-[20px] rounded-b-[20px] md:rounded-b-[30px] lg:rounded-b-[40px] bg-cover bg-no-repeat overflow-hidden">
+      <div class="main-container relative z-10 py-16 lg:py-24">
+        <!-- Bouton retour -->
+        <div class="mb-6 px-4 sm:px-6 md:px-8 lg:px-12">
+          <button
+            type="button"
+            class="!flex !items-center !justify-center size-10 bg-background-2 dark:bg-background-7 text-secondary dark:text-accent rounded-full hover:bg-background-3 dark:hover:bg-background-6 transition-colors duration-200 overflow-hidden"
+            matRipple
+            [matRippleColor]="'rgba(0, 0, 0, 0.1)'"
+            routerLink="/trainings"
+          >
+            <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5">arrow_back</mat-icon>
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-10">
+          <!-- Titre et intro en haut -->
+          <div class="w-full space-y-4 text-center px-4 sm:px-0">
+            <p class="text-xs uppercase tracking-[0.2em] text-secondary/60 dark:text-accent/60">Orientation</p>
+            <h1 class="md:hidden max-w-[976px] mx-auto mb-4 text-xl sm:text-2xl leading-tight">
+              Test d'orientation <span class="text-primary-500 dark:text-ns-green-light">Unlock</span>
+            </h1>
+            <h1 class="hidden md:block max-w-[976px] mx-auto mb-4 text-xl md:text-2xl lg:text-3xl" style="word-break: keep-all; hyphens: none; line-height: 1.3;">
+              Test d'orientation <span class="text-primary-500 dark:text-ns-green-light" style="white-space: nowrap;">Unlock</span>
+            </h1>
+            <p class="text-secondary/80 dark:text-accent/80 leading-relaxed max-w-2xl mx-auto">
+              Un parcours guidé pour évaluer votre profil, calculer vos KPIs et obtenir des recommandations personnalisées avec l'IA.
+            </p>
+          </div>
+
+          <!-- Carte formulaire pleine largeur -->
+          <div class="w-full">
+            <div class="contact-card bg-white/80 dark:bg-background-8/80 border border-stroke-2 dark:border-stroke-6 rounded-2xl shadow-sm">
+              <div class="contact-header">
+                <h2 class="contact-title text-secondary dark:text-accent">Test d'orientation</h2>
+                <p class="contact-subtitle text-secondary/80 dark:text-accent/80">
+                  Parcourez les étapes et obtenez vos recommandations personnalisées.
+                </p>
+              </div>
+
+              <!-- Stepper -->
+              <div class="stepper">
+                <div class="stepper-steps">
+                  <div class="stepper-step" [class.active]="step >= 1" [class.completed]="step > 1">
+                    <div class="stepper-step-circle">
+                      <div class="stepper-step-number" *ngIf="step <= 1">1</div>
+                      <svg *ngIf="step > 1" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="stepper-step-label">Profil</div>
+                  </div>
+                  <div class="stepper-line-wrapper">
+                    <div class="stepper-line" [class.completed]="step > 1"></div>
+                  </div>
+                  <div class="stepper-step" [class.active]="step >= 2" [class.completed]="step > 2">
+                    <div class="stepper-step-circle">
+                      <div class="stepper-step-number" *ngIf="step <= 2">2</div>
+                      <svg *ngIf="step > 2" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="stepper-step-label">Questions</div>
+                  </div>
+                  <div class="stepper-line-wrapper">
+                    <div class="stepper-line" [class.completed]="step > 2"></div>
+                  </div>
+                  <div class="stepper-step" [class.active]="step >= 3" [class.completed]="step > 3">
+                    <div class="stepper-step-circle">
+                      <div class="stepper-step-number" *ngIf="step <= 3">3</div>
+                      <svg *ngIf="step > 3" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="stepper-step-label">Soft Skills</div>
+                  </div>
+                  <div class="stepper-line-wrapper">
+                    <div class="stepper-line" [class.completed]="step > 3"></div>
+                  </div>
+                  <div class="stepper-step" [class.active]="step >= 4" [class.completed]="step > 4">
+                    <div class="stepper-step-circle">
+                      <div class="stepper-step-number" *ngIf="step <= 4">4</div>
+                      <svg *ngIf="step > 4" class="stepper-check-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="stepper-step-label">Résultats</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Formulaire avec stepper -->
+              <form class="contact-form" [class.opacity-50]="isSubmitting">
+                <!-- Étape 1 : Sélection du profil -->
+                <div class="form-step" *ngIf="step === 1">
+                  <div class="form-group">
+                    <label class="form-label">Sélectionnez votre profil</label>
+                    <p class="text-sm text-secondary/70 dark:text-accent/70 mb-4">Choisissez la situation qui vous correspond le mieux pour personnaliser votre parcours d'orientation.</p>
+                    <div class="profile-selector-grid">
+                      <label 
+                        class="profile-option-card" 
+                        *ngFor="let option of profileOptions"
+                        [class.selected]="selectedProfile === option.value"
+                      >
+                        <input 
+                          type="radio" 
+                          name="profileType" 
+                          [value]="option.value" 
+                          [(ngModel)]="selectedProfile" 
+                          class="contact-type-input" 
+                        />
+                        <div class="profile-option-content">
+                          <div class="profile-option-icon">
+                            <mat-icon>{{ option.icon }}</mat-icon>
+                          </div>
+                          <div class="profile-option-text">
+                            <span class="profile-option-title">{{ option.title }}</span>
+                            <span class="profile-option-description">{{ option.description }}</span>
+                          </div>
+                          <div class="profile-option-check">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-step-actions">
+                    <button type="button" class="btn btn-lg btn-primary w-full lg:w-auto" matRipple [matRippleColor]="'rgba(255, 255, 255, 0.3)'" (click)="nextStep()" [disabled]="!selectedProfile">
+                      Suivant
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Étape 2 : Questions dynamiques -->
+                <div class="form-step" *ngIf="step === 2 && selectedProfile" [formGroup]="profileForm">
+                  <!-- Particulier -->
+                  <ng-container *ngIf="selectedProfile === 'particulier'">
+                    <div class="form-group">
+                      <label for="age" class="form-label">Âge <span class="form-label-optional">(optionnel)</span></label>
+                      <input type="number" id="age" formControlName="age" min="15" max="100" class="form-input" placeholder="Ex. 28" />
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Objectif principal</label>
+                      <div class="contact-type-selector">
+                        <label class="contact-type-option" *ngFor="let option of objectiveOptions">
+                          <input type="radio" name="objective" [value]="option.value" formControlName="objective" class="contact-type-input" />
+                          <span class="contact-type-label">{{ option.label }}</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label">Inscrit à Pôle Emploi ?</label>
+                        <div class="contact-type-selector">
+                          <label class="contact-type-option">
+                            <input type="radio" name="poleEmploi" [value]="true" formControlName="poleEmploi" class="contact-type-input" />
+                            <span class="contact-type-label">Oui</span>
+                          </label>
+                          <label class="contact-type-option">
+                            <input type="radio" name="poleEmploi" [value]="false" formControlName="poleEmploi" class="contact-type-input" />
+                            <span class="contact-type-label">Non</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Compte CPF disponible ?</label>
+                        <div class="contact-type-selector">
+                          <label class="contact-type-option">
+                            <input type="radio" name="cpfDisponible" [value]="true" formControlName="cpfDisponible" class="contact-type-input" />
+                            <span class="contact-type-label">Oui</span>
+                          </label>
+                          <label class="contact-type-option">
+                            <input type="radio" name="cpfDisponible" [value]="false" formControlName="cpfDisponible" class="contact-type-input" />
+                            <span class="contact-type-label">Non</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Étudiant -->
+                  <ng-container *ngIf="selectedProfile === 'etudiant'">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="age" class="form-label">Âge <span class="form-label-optional">(optionnel)</span></label>
+                        <input type="number" id="age" formControlName="age" min="15" max="100" class="form-input" placeholder="Ex. 21" />
+                      </div>
+                      <div class="form-group">
+                        <label for="currentStudies" class="form-label">Études actuelles</label>
+                        <input type="text" id="currentStudies" formControlName="currentStudies" class="form-input" placeholder="Licence, BTS, Master..." />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Objectif</label>
+                      <div class="contact-type-selector">
+                        <label class="contact-type-option" *ngFor="let option of objectiveOptions">
+                          <input type="radio" name="objective" [value]="option.value" formControlName="objective" class="contact-type-input" />
+                          <span class="contact-type-label">{{ option.label }}</span>
+                        </label>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Entreprise -->
+                  <ng-container *ngIf="selectedProfile === 'entreprise'">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="companySize" class="form-label">Taille de l'entreprise</label>
+                        <input type="text" id="companySize" formControlName="companySize" class="form-input" placeholder="Ex. 50-200 personnes" />
+                      </div>
+                      <div class="form-group">
+                        <label for="headcountToTrain" class="form-label">Personnes à former</label>
+                        <input type="number" id="headcountToTrain" formControlName="headcountToTrain" min="1" class="form-input" placeholder="Ex. 12" />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Besoins en formation</label>
+                      <div class="contact-type-selector">
+                        <label class="contact-type-option" *ngFor="let need of trainingNeedsOptions">
+                          <input type="checkbox" [checked]="profileForm.value.trainingNeeds?.includes(need)" (change)="toggleTrainingNeed(need, $any($event.target).checked)" class="contact-type-input" />
+                          <span class="contact-type-label">{{ need }}</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Budget / financement</label>
+                      <div class="contact-type-selector">
+                        <label class="contact-type-option">
+                          <input type="radio" name="budgetLevel" value="faible" formControlName="budgetLevel" class="contact-type-input" />
+                          <span class="contact-type-label">Budget contraint</span>
+                        </label>
+                        <label class="contact-type-option">
+                          <input type="radio" name="budgetLevel" value="moyen" formControlName="budgetLevel" class="contact-type-input" />
+                          <span class="contact-type-label">Budget modéré</span>
+                        </label>
+                        <label class="contact-type-option">
+                          <input type="radio" name="budgetLevel" value="eleve" formControlName="budgetLevel" class="contact-type-input" />
+                          <span class="contact-type-label">Budget confortable</span>
+                        </label>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Porteur de projet -->
+                  <ng-container *ngIf="selectedProfile === 'porteur-projet'">
+                    <div class="form-group">
+                      <label for="projectType" class="form-label">Type de projet</label>
+                      <input type="text" id="projectType" formControlName="projectType" class="form-input" placeholder="Ex. Produit SaaS, marketplace, app mobile..." />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Objectif principal</label>
+                      <div class="contact-type-selector">
+                        <label class="contact-type-option" *ngFor="let option of objectiveOptions">
+                          <input type="radio" name="objective" [value]="option.value" formControlName="objective" class="contact-type-input" />
+                          <span class="contact-type-label">{{ option.label }}</span>
+                        </label>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Étranger -->
+                  <ng-container *ngIf="selectedProfile === 'etranger'">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="age" class="form-label">Âge <span class="form-label-optional">(optionnel)</span></label>
+                        <input type="number" id="age" formControlName="age" min="15" max="100" class="form-input" placeholder="Ex. 30" />
+                      </div>
+                      <div class="form-group">
+                        <label for="visaStatus" class="form-label">Visa / droit au travail</label>
+                        <input type="text" id="visaStatus" formControlName="visaStatus" class="form-input" placeholder="Ex. Visa étudiant, VLS-TS..." />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="languageLevel" class="form-label">Niveau de langue</label>
+                      <input type="text" id="languageLevel" formControlName="languageLevel" class="form-input" placeholder="Ex. B2 français / C1 anglais" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Objectif</label>
+                      <div class="contact-type-selector">
+                        <label class="contact-type-option" *ngFor="let option of objectiveOptions">
+                          <input type="radio" name="objective" [value]="option.value" formControlName="objective" class="contact-type-input" />
+                          <span class="contact-type-label">{{ option.label }}</span>
+                        </label>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Digital comfort commun -->
+                  <div class="form-group">
+                    <label for="digitalComfort" class="form-label">Niveau de confort numérique</label>
+                    <div class="digital-comfort-slider">
+                      <div class="digital-comfort-value-display">
+                        <span class="digital-comfort-number">{{ profileForm.value.digitalComfort }}</span>
+                        <span class="digital-comfort-label-text">{{ getDigitalComfortLabel(profileForm.value.digitalComfort) }}</span>
+                      </div>
+                      <div class="digital-comfort-track-wrapper">
+                        <input 
+                          type="range" 
+                          id="digitalComfort" 
+                          min="1" 
+                          max="5" 
+                          step="1" 
+                          formControlName="digitalComfort" 
+                          class="digital-comfort-range" 
+                        />
+                        <div class="digital-comfort-markers">
+                          <span class="digital-comfort-marker" *ngFor="let i of [1,2,3,4,5]" [class.active]="profileForm.value.digitalComfort >= i"></span>
+                        </div>
+                      </div>
+                      <div class="digital-comfort-labels">
+                        <span class="digital-comfort-label-item">Débutant</span>
+                        <span class="digital-comfort-label-item">Intermédiaire</span>
+                        <span class="digital-comfort-label-item">Expert</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="notes" class="form-label">Notes ou contexte <span class="form-label-optional">(optionnel)</span></label>
+                    <textarea id="notes" formControlName="notes" rows="3" class="form-textarea" placeholder="Ajoutez des précisions utiles pour affiner les recommandations..."></textarea>
+                  </div>
+
+                  <div class="form-step-actions">
+                    <button type="button" class="btn btn-lg btn-outline w-full lg:w-auto" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" (click)="previousStep()">
+                      Précédent
+                    </button>
+                    <button type="button" class="btn btn-lg btn-primary w-full lg:w-auto" matRipple [matRippleColor]="'rgba(255, 255, 255, 0.3)'" (click)="nextStep()" [disabled]="profileForm.invalid">
+                      Suivant
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Étape 3 : Soft skills -->
+                <div class="form-step" *ngIf="step === 3" [formGroup]="softSkillsForm">
+                  <div class="form-group">
+                    <label class="form-label">Notez vos soft skills</label>
+                    <div class="grid sm:grid-cols-2 gap-3">
+                      <div *ngFor="let skill of ['logic','autonomy','creativity','patience','communication','techComfort']" class="p-4 rounded-xl border border-stroke-2 dark:border-stroke-6 bg-white dark:bg-background-7 space-y-3">
+                        <div class="flex items-center justify-between">
+                          <p class="text-sm font-semibold text-secondary dark:text-accent">{{ getSkillLabel(skill) }}</p>
+                          <span class="text-sm font-semibold text-primary-500 dark:text-ns-green-light">{{ softSkillsForm.get(skill)?.value }}/5</span>
+                        </div>
+                        <input type="range" min="1" max="5" step="1" [formControlName]="skill" class="w-full orientation-range" />
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="error" class="p-4 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-sm text-red-600 dark:text-red-400">{{ error }}</div>
+                  <div class="form-step-actions">
+                    <button type="button" class="btn btn-lg btn-outline w-full lg:w-auto" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" (click)="previousStep()">
+                      Précédent
+                    </button>
+                    <button type="button" class="btn btn-lg btn-primary w-full lg:w-auto flex items-center justify-center gap-2" matRipple [matRippleColor]="'rgba(255, 255, 255, 0.3)'" (click)="submit()" [disabled]="isSubmitting || softSkillsForm.invalid">
+                      <mat-icon *ngIf="isSubmitting" class="animate-spin !w-5 !h-5 !text-[20px] !leading-5">autorenew</mat-icon>
+                      <span>{{ isSubmitting ? 'Analyse en cours...' : 'Obtenir mes résultats' }}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Étape 4 : Résultats -->
+                <div class="form-step" *ngIf="step === 4">
+                  <ng-container *ngIf="result; else loadingState">
+                    <div class="form-group">
+                      <label class="form-label">Vos indicateurs</label>
+                      <p class="text-sm text-secondary/60 dark:text-accent/60 mb-3">Scores calculés sur la base de vos réponses</p>
+                      <div class="grid sm:grid-cols-2 gap-3">
+                        <div *ngFor="let kpi of kpiList" class="p-4 rounded-xl border border-stroke-2 dark:border-stroke-6 bg-white dark:bg-background-7 space-y-2">
+                          <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-secondary dark:text-accent">{{ kpi.label }}</span>
+                            <span *ngIf="kpi.value !== null" class="text-sm font-semibold text-primary-500 dark:text-ns-green-light">{{ kpi.value }}%</span>
+                            <span *ngIf="kpi.value === null" class="text-xs text-secondary/60 dark:text-accent/60">N/A</span>
+                          </div>
+                          <div class="w-full h-2 rounded-full bg-stroke-2 dark:bg-stroke-6">
+                            <div *ngIf="kpi.value !== null" class="h-full rounded-full bg-primary-500 dark:bg-ns-green-light" [style.width.%]="kpi.value"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Formations recommandées</label>
+                      <p class="text-sm text-secondary/60 dark:text-accent/60 mb-3">Top 3 des parcours les plus adaptés</p>
+                      <div class="space-y-2">
+                        <div *ngFor="let formation of topFormationsValue; let i = index" class="flex items-center gap-3 p-3 rounded-xl border border-stroke-2 dark:border-stroke-6 bg-white dark:bg-background-7">
+                          <div class="w-9 h-9 rounded-full bg-primary-500 text-white flex items-center justify-center font-semibold dark:bg-ns-green-light dark:text-secondary">{{ i + 1 }}</div>
+                          <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-secondary dark:text-accent truncate">{{ formation.label }}</p>
+                            <p class="text-xs text-secondary/60 dark:text-accent/60 truncate">{{ formation.rationale }}</p>
+                          </div>
+                          <span class="text-sm font-bold text-primary-500 dark:text-ns-green-light">{{ formation.score }}%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="p-4 rounded-xl border border-stroke-2 dark:border-stroke-6 bg-white dark:bg-background-7 space-y-3">
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                          <div class="p-3 rounded-lg border border-stroke-2 dark:border-stroke-6 bg-background-1 dark:bg-background-8">
+                            <p class="text-xs text-secondary/60 dark:text-accent/60">Profil</p>
+                            <p class="text-sm font-semibold text-secondary dark:text-accent">{{ profileTypeValue }}</p>
+                          </div>
+                          <div class="p-3 rounded-lg border border-stroke-2 dark:border-stroke-6 bg-background-1 dark:bg-background-8">
+                            <p class="text-xs text-secondary/60 dark:text-accent/60">Objectif</p>
+                            <p class="text-sm font-semibold text-secondary dark:text-accent">{{ primaryObjectiveValue }}</p>
+                          </div>
+                          <div class="p-3 rounded-lg border border-stroke-2 dark:border-stroke-6 bg-background-1 dark:bg-background-8">
+                            <p class="text-xs text-secondary/60 dark:text-accent/60">Digital</p>
+                            <p class="text-sm font-semibold text-primary-500 dark:text-ns-green-light">{{ digitalComfortValue }}/5</p>
+                          </div>
+                          <div class="p-3 rounded-lg border border-stroke-2 dark:border-stroke-6 bg-background-1 dark:bg-background-8">
+                            <p class="text-xs text-secondary/60 dark:text-accent/60">Âge</p>
+                            <p class="text-sm font-semibold text-secondary dark:text-accent">{{ ageValue }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="flex items-center gap-2 mb-2">
+                        <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5 text-primary-500 dark:text-ns-green-light">psychology</mat-icon>
+                        <label class="form-label">Rapport IA personnalisé</label>
+                      </div>
+                      <div class="ai-report-content p-5 rounded-xl border border-stroke-2 dark:border-stroke-6 bg-background-1 dark:bg-background-7" [innerHTML]="aiReportValue"></div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="flex flex-col md:flex-row gap-4 md:items-center md:justify-between p-5 rounded-xl border border-primary-500/40 dark:border-ns-green-light/40 bg-primary-500/5 dark:bg-ns-green-light/5">
+                        <div class="flex-1">
+                          <h3 class="text-base font-semibold text-secondary dark:text-accent mb-1">Prêt à démarrer ?</h3>
+                          <p class="text-sm text-secondary/70 dark:text-accent/70">Un conseiller peut vous guider et clarifier les financements.</p>
+                        </div>
+                        <div class="flex gap-3 flex-wrap md:flex-nowrap">
+                          <a routerLink="/contact" class="btn btn-lg btn-primary w-full md:w-auto" matRipple [matRippleColor]="'rgba(255, 255, 255, 0.3)'">Être contacté</a>
+                          <a routerLink="/trainings" class="btn btn-lg btn-outline w-full md:w-auto" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'">Voir les formations</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-step-actions">
+                      <button type="button" class="btn btn-lg btn-outline w-full lg:w-auto" matRipple [matRippleColor]="'rgba(0, 0, 0, 0.1)'" (click)="step = 1; result = null; selectedProfile = null;">
+                        Refaire le test
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <ng-template #loadingState>
+                    <div class="flex flex-col items-center gap-3 py-10">
+                      <mat-icon class="animate-spin !w-10 !h-10 !text-[40px] !leading-[40px] text-primary-500 dark:text-ns-green-light">autorenew</mat-icon>
+                      <p class="text-sm text-secondary/70 dark:text-accent/70">Analyse en cours...</p>
+                    </div>
+                  </ng-template>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

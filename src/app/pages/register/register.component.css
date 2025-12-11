@@ -1,0 +1,5 @@
+/* Styles spécifiques pour la page d'inscription */
+.register-page {
+  min-height: calc(100vh - 120px);
+}
+

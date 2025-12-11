@@ -1,0 +1,111 @@
+<div class="p-6">
+  <h2 mat-dialog-title class="text-2xl font-bold text-secondary dark:text-accent mb-4">
+    Répondre à la demande de contact
+  </h2>
+
+  <div mat-dialog-content class="space-y-4 mb-6">
+    <!-- Informations du contact -->
+    <div class="bg-background-2 dark:bg-background-6 rounded-lg p-4 space-y-2">
+      <div class="flex items-center gap-2 mb-3">
+        <mat-icon class="!w-5 !h-5 !text-[20px] !leading-5 text-secondary dark:text-accent">person</mat-icon>
+        <h3 class="text-lg font-semibold text-secondary dark:text-accent">
+          {{ contact.firstName && contact.lastName ? contact.firstName + ' ' + contact.lastName : (contact.companyName || contact.email) }}
+        </h3>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <div class="flex items-center gap-2 text-secondary/70 dark:text-accent/70">
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">email</mat-icon>
+          <span>{{ contact.email }}</span>
+        </div>
+        
+        <div *ngIf="contact.phone" class="flex items-center gap-2 text-secondary/70 dark:text-accent/70">
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">phone</mat-icon>
+          <span>{{ contact.phone }}</span>
+        </div>
+        
+        <div class="flex items-center gap-2 text-secondary/70 dark:text-accent/70">
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">schedule</mat-icon>
+          <span>{{ contact.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+        </div>
+        
+        <div class="flex items-center gap-2 text-secondary/70 dark:text-accent/70">
+          <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">category</mat-icon>
+          <span>{{ contact.requestType }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message original -->
+    <div class="bg-background-1 dark:bg-background-8 rounded-lg p-4 border border-stroke-2 dark:border-stroke-6">
+      <h4 class="text-sm font-semibold text-secondary dark:text-accent mb-2">Message original</h4>
+      <p class="text-sm text-secondary/70 dark:text-accent/70 whitespace-pre-wrap">{{ contact.message }}</p>
+    </div>
+
+    <!-- Formulaire de réponse -->
+    <form [formGroup]="form" class="space-y-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Votre réponse</mat-label>
+        <textarea
+          matInput
+          formControlName="response"
+          rows="6"
+          placeholder="Rédigez votre réponse ici..."
+          class="text-secondary dark:text-accent placeholder:text-secondary/50 dark:placeholder:text-accent/50"
+        ></textarea>
+        <mat-error *ngIf="form.get('response')?.hasError('required')">
+          La réponse est obligatoire
+        </mat-error>
+        <mat-error *ngIf="form.get('response')?.hasError('minlength')">
+          La réponse doit contenir au moins 10 caractères
+        </mat-error>
+      </mat-form-field>
+
+      <div class="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="markAsResponded"
+          [checked]="form.get('status')?.value === ContactStatus.RESPONDED"
+          (change)="onStatusChange($event)"
+          class="w-4 h-4 rounded border-stroke-2 dark:border-stroke-6 text-primary-500 dark:text-ns-green-light focus:ring-primary-500 dark:focus:ring-ns-green-light"
+        />
+        <label for="markAsResponded" class="text-sm text-secondary dark:text-accent cursor-pointer">
+          Marquer comme répondu
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <div mat-dialog-actions class="flex justify-end gap-3 pt-4 border-t border-stroke-2 dark:border-stroke-6">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      class="!px-6 !h-11 !rounded-full !text-secondary dark:!text-accent hover:!bg-background-2 dark:hover:!bg-background-6"
+      matRipple
+      [disabled]="saving"
+    >
+      Annuler
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="onSubmit()"
+      [disabled]="form.invalid || saving"
+      class="!bg-secondary !text-white hover:!bg-secondary/90 dark:!bg-white dark:!text-secondary !px-6 !h-11 !rounded-full"
+      matRipple
+      [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
+    >
+      <span *ngIf="!saving">Envoyer la réponse</span>
+      <span *ngIf="saving" class="flex items-center gap-2">
+        <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Envoi...
+      </span>
+    </button>
+  </div>
+</div>
+

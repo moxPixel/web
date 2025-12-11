@@ -1,11 +1,12 @@
 declare module '@studio-freight/lenis' {
   export interface LenisOptions {
     duration?: number;
-    lerp?: number;
+    easing?: (t: number) => number;
+    orientation?: 'vertical' | 'horizontal';
+    gestureOrientation?: 'vertical' | 'horizontal' | 'both';
     smooth?: boolean;
     smoothTouch?: boolean;
     smoothWheel?: boolean;
-    gestureOrientation?: 'vertical' | 'horizontal';
     touchMultiplier?: number;
     wheelMultiplier?: number;
     infinite?: boolean;
@@ -23,4 +24,3 @@ declare module '@studio-freight/lenis' {
     destroy(): void;
   }
 }
-
