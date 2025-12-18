@@ -1,0 +1,14 @@
+node_modules
+logs
+uploads
+.env
+.env.*
+*.log
+.git
+dist
+src
+tsconfig.json
+ecosystem.config.js
+DEPLOYMENT.md
+README.md
+

@@ -73,7 +73,8 @@ export class UploadController {
           success: true,
           data: [],
         };
-        return res.status(200).json(response);
+        res.status(200).json(response);
+        return;
       }
 
       const files = fs.readdirSync(imagesDir).filter((file) => {

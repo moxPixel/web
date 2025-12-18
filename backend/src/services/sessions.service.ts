@@ -31,9 +31,10 @@ export class SessionsService {
       }
 
       // Si seatsAvailable n'est pas fourni, utiliser seats
-      const sessionData = {
+      const sessionData: any = {
         ...data,
         seatsAvailable: data.seatsAvailable ?? data.seats,
+        status: data.status || 'scheduled',
       };
 
       const session = await TrainingSession.create(sessionData, { transaction });
@@ -85,13 +86,14 @@ export class SessionsService {
       if (highlight !== undefined) where.highlight = highlight;
 
       if (startDateFrom || startDateTo) {
-        where.startDate = {};
+        const dateFilter: Record<string, Date> = {};
         if (startDateFrom) {
-          where.startDate[Op.gte] = new Date(startDateFrom);
+          dateFilter[Op.gte as unknown as string] = new Date(startDateFrom);
         }
         if (startDateTo) {
-          where.startDate[Op.lte] = new Date(startDateTo);
+          dateFilter[Op.lte as unknown as string] = new Date(startDateTo);
         }
+        where.startDate = dateFilter as any;
       }
 
       const { count, rows } = await TrainingSession.findAndCountAll({
@@ -183,7 +185,7 @@ export class SessionsService {
         }
       }
 
-      await session.update(data, { transaction });
+      await session.update(data as any, { transaction });
       await session.reload({
         include: [
           {

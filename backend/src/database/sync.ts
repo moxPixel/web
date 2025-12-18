@@ -6,8 +6,18 @@ import { logger } from '../logger/logger';
 /**
  * Script de synchronisation de la base de données
  * Synchronise automatiquement les modèles Sequelize avec la BDD MySQL
+ * 
+ * ⚠️ SÉCURITÉ: En production, la synchronisation est INTERDITE
+ * Utiliser les migrations à la place: npm run db:migrate
  */
 const sync = async (): Promise<void> => {
+  // ⚠️ SÉCURITÉ: Empêcher la sync en production
+  if (env.nodeEnv === 'production') {
+    logger.error('❌ SECURITY ERROR: Database sync is FORBIDDEN in production!');
+    logger.error('❌ Use migrations instead: npm run db:migrate');
+    process.exit(1);
+  }
+
   try {
     logger.info('🚀 Starting database synchronization...');
 

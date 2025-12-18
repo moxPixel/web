@@ -10,7 +10,7 @@ import { env } from './config/env';
 import { logger } from './logger/logger';
 import { requestLogger, errorLogger } from './middleware/logger.middleware';
 import { errorHandler } from './middleware/error.middleware';
-import { apiLimiter, uploadLimiter, createLimiter } from './middleware/rate-limit.middleware';
+import { apiLimiter, uploadLimiter } from './middleware/rate-limit.middleware';
 
 const app: Express = express();
 
@@ -151,7 +151,7 @@ app.use('/', sitemapRoutes);
 
 // Servir les fichiers statiques (images uploadées)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
-  setHeaders: (res, filePath) => {
+  setHeaders: (res) => {
     // Permettre l'accès aux images depuis le frontend (CORS)
     const allowedOrigins = env.allowedOrigins.split(',').map((o) => o.trim());
     const origin = res.req?.headers.origin;
@@ -174,6 +174,24 @@ app.use(errorHandler);
 // Initialiser le serveur
 const startServer = async (): Promise<void> => {
   try {
+    // ⚠️ Vérifications de sécurité en production
+    if (env.nodeEnv === 'production') {
+      // Vérifier que les secrets ne sont pas les valeurs par défaut
+      if (env.security.jwtSecret === 'change-me-in-production' || env.security.jwtSecret.length < 32) {
+        logger.error('❌ SECURITY ERROR: JWT_SECRET must be changed in production (min 32 chars)');
+        process.exit(1);
+      }
+      if (env.security.apiKey === 'change-me-in-production' || env.security.apiKey.length < 32) {
+        logger.error('❌ SECURITY ERROR: API_KEY must be changed in production (min 32 chars)');
+        process.exit(1);
+      }
+      if (env.security.adminPassword === 'Admin123!@#') {
+        logger.error('❌ SECURITY ERROR: ADMIN_PASSWORD must be changed in production');
+        process.exit(1);
+      }
+      logger.info('✅ Security checks passed');
+    }
+
     // Connexion à la base de données
     logger.info('🔌 Connecting to database...');
     await connectDatabase();
@@ -182,15 +200,27 @@ const startServer = async (): Promise<void> => {
     logger.info('📦 Initializing models...');
     await initializeModels();
 
-    // Synchroniser la base de données si configuré
-    if (env.sequelize.sync) {
-      logger.info('🔄 Synchronizing database...');
-      await syncDatabase({
-        force: env.sequelize.forceSync,
-        alter: env.sequelize.alterSync,
-      });
+    // ⚠️ SÉCURITÉ: En production, la synchronisation automatique est INTERDITE
+    // La BDD ne doit JAMAIS être synchronisée automatiquement en production
+    if (env.nodeEnv === 'production') {
+      if (env.sequelize.sync || env.sequelize.forceSync || env.sequelize.alterSync) {
+        logger.error('❌ SECURITY ERROR: Database sync is FORBIDDEN in production!');
+        logger.error('❌ Set DB_SYNC=false, DB_FORCE_SYNC=false, DB_ALTER_SYNC=false');
+        logger.error('❌ Use migrations instead: npm run db:migrate');
+        process.exit(1);
+      }
+      logger.info('✅ Production mode: Database auto-sync is disabled (security enforced)');
     } else {
-      logger.info('ℹ️  Database sync disabled. Use npm run db:sync to sync manually.');
+      // En développement uniquement
+      if (env.sequelize.sync) {
+        logger.warn('⚠️  Development mode: Synchronizing database...');
+        await syncDatabase({
+          force: env.sequelize.forceSync,
+          alter: env.sequelize.alterSync,
+        });
+      } else {
+        logger.info('ℹ️  Database sync disabled. Use npm run db:sync to sync manually.');
+      }
     }
 
     // Démarrer le serveur

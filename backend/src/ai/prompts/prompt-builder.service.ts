@@ -48,7 +48,7 @@ Exemple CORRECT : "Introduction à l'intelligence artificielle"`;
       if (context.level) contextParts.push(context.level);
       if (context.trainingType) contextParts.push(context.trainingType);
       if (context.category) contextParts.push(context.category);
-      if (context.moduleTitle) contextParts.push(`(${context.moduleTitle})`);
+      if ((context as any).moduleTitle) contextParts.push(`(${(context as any).moduleTitle})`);
       
       if (contextParts.length > 0) {
         prompt += `[${contextParts.join(' - ')}]\n\n`;

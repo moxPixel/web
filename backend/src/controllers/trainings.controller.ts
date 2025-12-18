@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import trainingsService from '../services/trainings.service';
 import { CreateTrainingDto, UpdateTrainingDto, TrainingQueryParams } from '../types/training.types';
 import { ApiResponse, PaginatedResponse } from '../types';
-import { logger } from '../logger/logger';
 
 export class TrainingsController {
   /**
@@ -35,7 +34,7 @@ export class TrainingsController {
       const query = req.query as unknown as TrainingQueryParams;
       const result = await trainingsService.findAll(query);
 
-      const response: PaginatedResponse = {
+      const response: PaginatedResponse<any> = {
         success: true,
         data: result.data,
         pagination: result.pagination,

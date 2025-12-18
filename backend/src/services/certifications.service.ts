@@ -53,7 +53,7 @@ export class CertificationsService {
 
       // Filtres
       if (search) {
-        where[Op.or] = [
+        where[Op.or as unknown as string] = [
           { title: { [Op.like]: `%${search}%` } },
           { code: { [Op.like]: `%${search}%` } },
           { type: { [Op.like]: `%${search}%` } },
