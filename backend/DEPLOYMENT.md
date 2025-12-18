@@ -125,7 +125,7 @@ pm2 reload unlock-backend
 - [ ] `DB_SYNC=false` en production
 - [ ] `DB_FORCE_SYNC=false` en production
 - [ ] `DB_ALTER_SYNC=false` en production
-- [ ] `ALLOWED_ORIGINS` configuré avec les domaines réels
+- [ ] `ALLOWED_ORIGINS` configuré avec les domaines réels : `https://unlock-formation.fr,https://www.unlock-formation.fr`
 - [ ] Base de données avec utilisateur dédié (pas root)
 - [ ] Firewall configuré (UFW)
 - [ ] SSL/TLS configuré (Nginx reverse proxy)

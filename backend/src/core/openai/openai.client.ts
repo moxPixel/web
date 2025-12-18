@@ -28,7 +28,7 @@ export class OpenAIClient {
   private apiKey: string;
 
   constructor() {
-    this.apiKey = env.openai.apiKey || '';
+    this.apiKey = env.openai.apiKey;
     if (!this.apiKey) {
       logger.warn('⚠️  OPENAI_API_KEY not configured. AI features will be disabled.');
     }
@@ -36,7 +36,7 @@ export class OpenAIClient {
     this.client = axios.create({
       baseURL: 'https://api.openai.com/v1',
       headers: {
-        'Authorization': `Bearer ${this.apiKey || ''}`,
+        'Authorization': `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json',
       },
       timeout: 60000, // 60 seconds

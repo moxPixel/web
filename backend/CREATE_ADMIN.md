@@ -35,7 +35,7 @@ INSERT INTO users (
 )
 SELECT 
   UUID() as id,
-  'admin@unlock.fr' as email,
+  'mox.meziani@gmail.com' as email,
   '$2b$10$/gjn4q59QBUJH.QOA3FdOOT2s6K85qv1C9T/cOYRa2mud/kPBE0W.' as password,
   'Admin' as firstName,
   'Unlock' as lastName,
@@ -45,7 +45,7 @@ SELECT
   NOW() as createdAt,
   NOW() as updatedAt
 WHERE NOT EXISTS (
-  SELECT 1 FROM users WHERE email = 'admin@unlock.fr'
+  SELECT 1 FROM users WHERE email = 'mox.meziani@gmail.com'
 );
 ```
 

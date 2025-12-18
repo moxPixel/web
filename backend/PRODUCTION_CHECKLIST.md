@@ -23,7 +23,7 @@
 ### CORS
 
 - [ ] `ALLOWED_ORIGINS` configuré avec les domaines réels (pas localhost)
-- [ ] Format: `https://www.unlock-technologies.fr,https://unlock-technologies.fr`
+- [ ] Format: `https://unlock-formation.fr,https://www.unlock-formation.fr`
 
 ## 🚀 Configuration PM2
 

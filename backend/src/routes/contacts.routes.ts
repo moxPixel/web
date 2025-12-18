@@ -30,7 +30,7 @@ const createValidation = [
   body('consent')
     .isBoolean()
     .withMessage('Le consentement doit être un booléen')
-    .equals('true')
+    .equals(true)
     .withMessage('Le consentement est requis'),
   body('firstName')
     .optional()

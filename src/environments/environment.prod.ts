@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.unlock-technologies.fr/api',
+  apiUrl: 'https://unlock-formation.fr/api',
 };
 

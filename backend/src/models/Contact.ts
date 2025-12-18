@@ -64,8 +64,6 @@ Contact.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
     contactType: {
       type: DataTypes.ENUM(...Object.values(ContactType)),
       allowNull: false,

@@ -10,14 +10,24 @@ import { env } from './config/env';
 import { logger } from './logger/logger';
 import { requestLogger, errorLogger } from './middleware/logger.middleware';
 import { errorHandler } from './middleware/error.middleware';
-import { apiLimiter, uploadLimiter } from './middleware/rate-limit.middleware';
+import { apiLimiter, uploadLimiter, createLimiter } from './middleware/rate-limit.middleware';
 
 const app: Express = express();
+
+// Trust proxy - Nécessaire quand l'app est derrière Nginx/reverse proxy
+// Permet à express-rate-limit de détecter correctement les IPs via X-Forwarded-For
+app.set('trust proxy', true);
 
 // Configuration CORS restrictive
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = env.allowedOrigins.split(',').map((o) => o.trim());
+    
+    // Log des origines autorisées au démarrage (une seule fois)
+    if (!app.get('cors_logged')) {
+      logger.info(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
+      app.set('cors_logged', true);
+    }
     
     // En développement, autoriser localhost sans origin (Postman, etc.)
     if (env.nodeEnv === 'development' && !origin) {
@@ -28,7 +38,7 @@ const corsOptions: cors.CorsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      logger.warn(`CORS blocked origin: ${origin}`);
+      logger.warn(`CORS blocked origin: ${origin} (allowed: ${allowedOrigins.join(', ')})`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -151,7 +161,7 @@ app.use('/', sitemapRoutes);
 
 // Servir les fichiers statiques (images uploadées)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
-  setHeaders: (res) => {
+  setHeaders: (res, filePath) => {
     // Permettre l'accès aux images depuis le frontend (CORS)
     const allowedOrigins = env.allowedOrigins.split(',').map((o) => o.trim());
     const origin = res.req?.headers.origin;
