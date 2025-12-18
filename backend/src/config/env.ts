@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 
-dotenv.config();
+// Charger .env mais NE PAS surcharger les variables d'environnement existantes
+// Cela permet à PM2 (--env production) de définir NODE_ENV sans être écrasé par le .env
+dotenv.config({ override: false });
 
 interface EnvConfig {
   nodeEnv: string;

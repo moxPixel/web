@@ -16,7 +16,8 @@ const app: Express = express();
 
 // Trust proxy - Nécessaire quand l'app est derrière Nginx/reverse proxy
 // Permet à express-rate-limit de détecter correctement les IPs via X-Forwarded-For
-app.set('trust proxy', true);
+// On fait confiance uniquement au premier proxy (Nginx) pour la sécurité
+app.set('trust proxy', 1);
 
 // Configuration CORS restrictive
 const corsOptions: cors.CorsOptions = {
