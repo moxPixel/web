@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -23,7 +23,8 @@ import {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink, MatRippleModule, MatIconModule],
   templateUrl: './contact.component.html',
-  styleUrl: './contact.component.css'
+  styleUrl: './contact.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactParallax', { static: false }) contactParallax!: ElementRef;
@@ -56,14 +57,20 @@ export class ContactComponent implements OnInit, AfterViewInit, OnDestroy {
   consent = false;
 
   ngOnInit(): void {
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Contact', url: '/contact' }
+    ]);
+
     // Configuration SEO pour la page Contact
     this.seoService.updateSeoData({
       title: 'Contactez-nous | Unlock Formation',
-      description: 'Contactez Unlock Formation pour vos questions sur nos formations IT & IA, alternance, reconversion ou projets entreprises. Échangez avec nos conseillers experts.',
+      description: 'Contactez Unlock Formation pour vos questions sur nos formations IT & IA, alternance, reconversion ou projets entreprises. Échangez avec nos conseillers experts. Réponse sous 24h.',
       keywords: 'contact unlock formation, devis formation, conseil formation IT, demande information formation, contact entreprise formation',
       image: '/assets/images/logo/main-logo.png',
       url: '/contact',
-      type: 'website'
+      type: 'website',
+      schema: breadcrumbSchema
     });
   }
 

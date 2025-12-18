@@ -7,13 +7,15 @@
         <span class="sr-only">Home</span>
         <figure class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 flex items-center justify-center">
           <img
-            src="/assets/images/logo/logo.png"
+            ngSrc="/assets/images/logo/logo.png"
+            priority
             alt="Unlock Formation - Retour à l'accueil"
             width="28"
             height="28"
             class="w-full h-full object-contain dark:hidden" />
           <img
-            src="/assets/images/logo/logo-dark.png"
+            ngSrc="/assets/images/logo/logo-dark.png"
+            priority
             alt="Unlock Formation - Retour à l'accueil"
             width="28"
             height="28"
@@ -33,7 +35,7 @@
             <span>À propos</span>
           </a>
         </li>
-        <li class="relative" (mouseenter)="openMegaMenu()" (mouseleave)="scheduleCloseMegaMenu()">
+        <li class="relative" (pointerenter)="openMegaMenu()" (pointerleave)="scheduleCloseMegaMenu()">
           <a routerLink="/trainings" routerLinkActive="active text-primary-500 dark:text-ns-green-light font-medium" class="nav-item-link relative inline-flex items-center gap-2 px-4 py-2 text-base leading-normal font-normal no-underline rounded-lg transition-colors duration-200 text-secondary/60 dark:text-accent/60 hover:text-secondary dark:hover:text-accent hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:shadow-none active:transform-none box-border pb-1">
             <span>Formations</span>
             <mat-icon class="!w-4 !h-4 !text-[16px] !leading-4">expand_more</mat-icon>
@@ -43,8 +45,8 @@
             *ngIf="trainingsGrouped.length"
             class="mega-menu-panel absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[min(920px,85vw)] bg-white dark:bg-background-8 border border-stroke-2 dark:border-stroke-6 rounded-2xl shadow-2xl p-0 z-50"
             [class.open]="showMegaMenu"
-            (mouseenter)="openMegaMenu()"
-            (mouseleave)="scheduleCloseMegaMenu()"
+            (pointerenter)="openMegaMenu()"
+            (pointerleave)="scheduleCloseMegaMenu()"
           >
             <div class="px-5 sm:px-6 py-5">
               <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -154,7 +156,8 @@ Mobile Menu
           <figure class="w-6 h-6">
             <img src="/assets/images/logo/logo.png" alt="Unlock Formation" width="24" height="24" class="w-full h-full object-contain dark:hidden block" />
             <img
-              src="/assets/images/logo/logo-dark.png"
+              ngSrc="/assets/images/logo/logo-dark.png"
+            priority
               alt="Unlock Formation"
               width="24"
               height="24"

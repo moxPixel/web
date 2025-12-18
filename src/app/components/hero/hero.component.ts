@@ -1,4 +1,5 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,9 +17,10 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, ThreeSceneComponent, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, ThreeSceneComponent, MatRippleModule, MatIconModule, NgOptimizedImage],
   templateUrl: './hero.component.html',
-  styleUrl: './hero.component.css'
+  styleUrl: './hero.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('heroContent', { static: false }) heroContent!: ElementRef;

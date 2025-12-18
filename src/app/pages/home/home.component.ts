@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { AboutComponent } from '../../components/about/about.component';
 import { ProgramsSectionComponent } from '../../components/home/programs-section/programs-section.component';
@@ -16,6 +16,7 @@ import { SeoService } from '../../services/seo.service';
 @Component({
   selector: 'app-home',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     HeroComponent,
     AboutComponent,
@@ -48,9 +49,20 @@ export class HomeComponent implements OnInit {
       schema: {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
+        '@id': `${this.seoService.baseUrl}/#webpage`,
+        url: `${this.seoService.baseUrl}/`,
         name: 'Unlock Formation - Formations IT & IA',
         description: 'Centre expert en formations IT & IA. Formations certifiantes en développement web, cybersécurité, data science, cloud et DevOps.',
-        url: 'https://www.unlock-technologies.fr/',
+        inLanguage: 'fr-FR',
+        isPartOf: {
+          '@type': 'WebSite',
+          '@id': `${this.seoService.baseUrl}/#website`,
+          url: this.seoService.baseUrl,
+          name: 'Unlock Formation'
+        },
+        breadcrumb: {
+          '@id': `${this.seoService.baseUrl}/#breadcrumb`
+        },
         mainEntity: {
           '@type': 'EducationalOrganization',
           name: 'Unlock Formation',

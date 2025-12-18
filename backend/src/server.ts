@@ -132,6 +132,7 @@ import aiRoutes from './routes/ai.routes';
 import enrollmentsRoutes from './routes/enrollments.routes';
 import mailRoutes from './routes/mail.routes';
 import orientationRoutes from './routes/orientation.routes';
+import sitemapRoutes from './routes/sitemap.routes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
@@ -144,6 +145,9 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/enrollments', enrollmentsRoutes);
 app.use('/api/mail', mailRoutes);
 app.use('/api/orientation', orientationRoutes);
+
+// Sitemap (avant les routes API pour éviter les conflits)
+app.use('/', sitemapRoutes);
 
 // Servir les fichiers statiques (images uploadées)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {

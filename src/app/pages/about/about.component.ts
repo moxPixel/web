@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
@@ -13,6 +13,7 @@ import { SeoService } from '../../services/seo.service';
   selector: 'app-about',
   standalone: true,
   imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible" aria-label="À propos Unlock">
       <div class="max-w-[1920px] mx-auto relative" style="overflow: visible !important;">
@@ -286,6 +287,11 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     // Configuration SEO pour la page À propos
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'À propos', url: '/about' }
+    ]);
+
     this.seoService.updateSeoData({
       title: 'À propos - Unlock Formation',
       description: 'Découvrez Unlock Formation, centre expert en formations IT & IA. Notre mission, nos valeurs, notre équipe d\'experts reconnus. Formations certifiantes en développement, cybersécurité, data et cloud.',
@@ -293,7 +299,13 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
       image: '/assets/images/logo/main-logo.png',
       url: '/about',
       type: 'website',
-      schema: this.seoService.generateOrganizationSchema()
+      schema: {
+        '@context': 'https://schema.org',
+        '@graph': [
+          this.seoService.generateOrganizationSchema(),
+          breadcrumbSchema
+        ]
+      }
     });
   }
 

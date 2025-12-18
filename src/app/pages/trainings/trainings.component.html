@@ -16,18 +16,20 @@
         <div class="absolute inset-0 flex items-center justify-end pr-6 md:pr-10 pointer-events-none z-0">
           <div class="flex flex-col gap-6">
             <img
-              src="/assets/images/logo/main-logo.png"
+              ngSrc="/assets/images/logo/main-logo.png"
               alt="Unlock Formation"
               width="144"
               height="144"
               class="w-24 sm:w-28 md:w-32 lg:w-36 opacity-[0.08] dark:hidden object-contain -rotate-90"
+              priority
             />
             <img
-              src="/assets/images/logo/dark-logo.png"
+              ngSrc="/assets/images/logo/dark-logo.png"
               alt="Unlock Formation"
               width="144"
               height="144"
               class="w-24 sm:w-28 md:w-32 lg:w-36 opacity-[0.12] hidden dark:block object-contain -rotate-90"
+              priority
             />
           </div>
         </div>
@@ -240,9 +242,12 @@
             <!-- Image / visuel -->
             <div class="relative rounded-xl overflow-hidden h-40">
               <img
-                [src]="getImageUrl(training.heroImage)"
-                alt="{{ training.shortTitle }}"
+                [ngSrc]="getImageUrl(training.heroImage)"
+                [alt]="training.shortTitle || 'Formation'"
+                width="800"
+                height="600"
                 class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                loading="lazy"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
             </div>

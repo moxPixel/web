@@ -82,11 +82,17 @@ export class CguComponent implements OnInit {
   private readonly seoService = inject(SeoService);
 
   ngOnInit(): void {
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'CGU', url: '/cgu' }
+    ]);
+
     this.seoService.updateSeoData({
       title: 'CGU - Conditions Générales d\'Utilisation | Unlock Formation',
-      description: 'Conditions générales d\'utilisation du site Unlock Formation. Mentions légales, protection des données personnelles, droits d\'auteur et politique cookies.',
+      description: 'Conditions générales d\'utilisation du site Unlock Formation. Mentions légales, protection des données personnelles, droits d\'auteur et politique cookies. Consultation libre et gratuite.',
       keywords: 'CGU unlock formation, mentions légales, conditions utilisation, protection données, RGPD',
       url: '/cgu',
+      schema: breadcrumbSchema,
       noindex: true, // Pages légales généralement non indexées
       type: 'website'
     });

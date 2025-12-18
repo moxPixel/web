@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
@@ -13,6 +13,7 @@ import { SeoService } from '../../services/seo.service';
   selector: 'app-training-project',
   standalone: true,
   imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible min-h-[calc(100vh-120px)] lg:pb-[100px] pb-16 bg-background-1 dark:bg-background-8" aria-label="Construire votre projet de formation">
       <div class="max-w-[1920px] mx-auto relative">
@@ -244,13 +245,19 @@ export class TrainingProjectComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit(): void {
     // Configuration SEO pour la page Projet de formation
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Projet de formation', url: '/projet-formation' }
+    ]);
+
     this.seoService.updateSeoData({
       title: 'Projet de formation entreprise | Unlock Formation',
       description: 'Unlock Formation accompagne les entreprises dans la conception de projets de formation IT & IA sur mesure. Diagnostic, ingénierie pédagogique, déploiement et suivi pour vos équipes.',
       keywords: 'formation entreprise IT, formation intra entreprise, projet formation sur mesure, montée en compétences IT entreprise, formation personnalisée entreprise',
       image: '/assets/images/logo/main-logo.png',
       url: '/projet-formation',
-      type: 'website'
+      type: 'website',
+      schema: breadcrumbSchema
     });
   }
 

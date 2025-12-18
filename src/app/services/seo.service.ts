@@ -27,7 +27,7 @@ export class SeoService {
   private readonly router = inject(Router);
   private readonly defaultSiteName = 'Unlock Formation';
   private readonly defaultImage = '/assets/images/logo/main-logo.png';
-  private readonly baseUrl = 'https://www.unlock-technologies.fr';
+  readonly baseUrl = 'https://www.unlock-technologies.fr';
 
   constructor() {
     // Écouter les changements de route pour mettre à jour les meta tags
@@ -131,17 +131,25 @@ export class SeoService {
    * Met à jour les données structurées Schema.org (JSON-LD)
    */
   private updateSchema(schema: any): void {
-    // Supprimer l'ancien script JSON-LD s'il existe
-    const existingScript = document.querySelector('script[type="application/ld+json"]');
-    if (existingScript) {
-      existingScript.remove();
-    }
+    // Supprimer tous les anciens scripts JSON-LD
+    const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
+    existingScripts.forEach(script => script.remove());
 
-    // Créer le nouveau script JSON-LD
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schema);
-    document.head.appendChild(script);
+    // Si c'est un objet avec @graph, créer un script pour chaque élément
+    if (schema['@graph'] && Array.isArray(schema['@graph'])) {
+      schema['@graph'].forEach((item: any) => {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(item);
+        document.head.appendChild(script);
+      });
+    } else {
+      // Créer le nouveau script JSON-LD
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(schema);
+      document.head.appendChild(script);
+    }
   }
 
   /**
@@ -179,8 +187,13 @@ export class SeoService {
     provider: string;
     url: string;
     image?: string;
+    category?: string;
+    level?: string;
+    durationHours?: number;
+    durationDays?: number;
+    priceFrom?: number;
   }): any {
-    return {
+    const schema: any = {
       '@context': 'https://schema.org',
       '@type': 'Course',
       name: courseData.name,
@@ -188,12 +201,63 @@ export class SeoService {
       provider: {
         '@type': 'Organization',
         name: courseData.provider,
+        url: this.baseUrl,
+        logo: `${this.baseUrl}/assets/images/logo/main-logo.png`,
         sameAs: this.baseUrl
       },
       url: courseData.url,
       image: courseData.image || `${this.baseUrl}/assets/images/logo/main-logo.png`,
       inLanguage: 'fr-FR',
-      courseCode: courseData.name.toLowerCase().replace(/\s+/g, '-')
+      courseCode: courseData.name.toLowerCase().replace(/\s+/g, '-'),
+      educationalCredentialAwarded: 'Certificat de formation',
+      teaches: courseData.description,
+      audience: {
+        '@type': 'EducationalAudience',
+        educationalRole: 'student'
+      }
+    };
+
+    if (courseData.category) {
+      schema.about = {
+        '@type': 'Thing',
+        name: courseData.category
+      };
+    }
+
+    if (courseData.level) {
+      schema.educationalLevel = courseData.level;
+    }
+
+    if (courseData.durationHours) {
+      schema.timeRequired = `PT${courseData.durationHours}H`;
+    }
+
+    if (courseData.priceFrom) {
+      schema.offers = {
+        '@type': 'Offer',
+        price: courseData.priceFrom,
+        priceCurrency: 'EUR',
+        availability: 'https://schema.org/InStock',
+        url: courseData.url
+      };
+    }
+
+    return schema;
+  }
+
+  /**
+   * Génère les données Schema.org pour un BreadcrumbList
+   */
+  generateBreadcrumbSchema(items: Array<{ name: string; url: string }>): any {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        item: item.url.startsWith('http') ? item.url : `${this.baseUrl}${item.url}`
+      }))
     };
   }
 

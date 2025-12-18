@@ -1,5 +1,5 @@
-import { Component, HostListener, OnDestroy, Inject, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, HostListener, OnDestroy, Inject, AfterViewInit, ElementRef, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { MatRippleModule } from '@angular/material/core';
@@ -17,9 +17,10 @@ import { AuthApiService } from '../../services/api/auth-api.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MatRippleModule, MatIconModule, NgOptimizedImage],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
   isMobileMenuOpen = false;
@@ -34,6 +35,7 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private cdr: ChangeDetectorRef,
     private gsapAnimation: GsapAnimationService,
     private gsapScroll: GsapScrollService,
     private pageLoaderInline: PageLoaderInlineService,
@@ -170,10 +172,13 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
       this.megaMenuTimer = undefined;
     }
     this.showMegaMenu = true;
+    // OnPush: garantir le refresh même si l'ouverture est déclenchée via des événements non-Angular selon le navigateur
+    this.cdr.markForCheck();
   }
 
   closeMegaMenu(): void {
     this.showMegaMenu = false;
+    this.cdr.markForCheck();
   }
 
   scheduleCloseMegaMenu(delay = 180): void {
@@ -183,6 +188,8 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
     this.megaMenuTimer = setTimeout(() => {
       this.showMegaMenu = false;
       this.megaMenuTimer = undefined;
+      // OnPush + setTimeout: sans markForCheck, la vue peut ne pas refléter la fermeture (souvent visible sur Safari)
+      this.cdr.markForCheck();
     }, delay);
   }
 
@@ -208,6 +215,10 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.megaMenuTimer) {
+      clearTimeout(this.megaMenuTimer);
+      this.megaMenuTimer = undefined;
+    }
     if (this.document?.body) {
       this.document.body.classList.remove('overflow-hidden');
     }

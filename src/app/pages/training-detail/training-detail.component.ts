@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,7 @@ import { SeoService } from '../../services/seo.service';
 @Component({
   selector: 'app-training-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule, NgOptimizedImage],
   templateUrl: './training-detail.component.html',
   styleUrls: ['./training-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -91,20 +91,43 @@ export class TrainingDetailComponent implements OnInit, AfterViewInit, OnDestroy
     const imageUrl = training.heroImage ? this.uploadService.getImageUrlFromPath(training.heroImage) : '/assets/images/logo/main-logo.png';
     const fullUrl = `https://www.unlock-technologies.fr/trainings/${slug}`;
 
+    // Générer la description SEO optimisée (120-160 caractères)
+    const seoDescription = this.generateSeoDescription(training, shortDescription);
+    
+    // Générer les schemas
+    const courseSchema = this.seoService.generateCourseSchema({
+      name: training.title,
+      description: description || training.tagline || '',
+      provider: 'Unlock Formation',
+      url: fullUrl,
+      image: imageUrl,
+      category: training.category,
+      level: training.level,
+      durationHours: training.durationHours,
+      durationDays: training.durationDays,
+      priceFrom: training.priceFrom
+    });
+
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Formations', url: '/trainings' },
+      { name: training.title, url: `/trainings/${slug}` }
+    ]);
+
+    // Combiner les schemas dans un @graph
+    const combinedSchema = {
+      '@context': 'https://schema.org',
+      '@graph': [courseSchema, breadcrumbSchema]
+    };
+
     this.seoService.updateSeoData({
       title: `${training.title} | Unlock Formation`,
-      description: shortDescription || `Formation ${training.title} : ${training.category}. ${training.level ? `Niveau ${training.level}.` : ''} Formations certifiantes en IT & IA.`,
-      keywords: `${training.title}, formation ${training.category}, ${training.level || ''}, formation IT, formation IA`,
+      description: seoDescription,
+      keywords: `${training.title}, formation ${training.category}, ${training.level || ''}, formation IT, formation IA, ${training.category || ''}`,
       image: imageUrl,
       url: `/trainings/${slug}`,
       type: 'article',
-      schema: this.seoService.generateCourseSchema({
-        name: training.title,
-        description: description || training.tagline || '',
-        provider: 'Unlock Formation',
-        url: fullUrl,
-        image: imageUrl
-      })
+      schema: combinedSchema
     });
   }
 
@@ -139,6 +162,55 @@ export class TrainingDetailComponent implements OnInit, AfterViewInit, OnDestroy
   getImageUrl(path?: string): string {
     if (!path) return '/assets/images/img/p1.jpg';
     return this.uploadService.getImageUrlFromPath(path);
+  }
+
+  /**
+   * Génère une description SEO optimisée (120-160 caractères)
+   */
+  private generateSeoDescription(training: Training, fallbackDescription: string): string {
+    const parts: string[] = [];
+    
+    // Titre de la formation
+    if (training.shortTitle) {
+      parts.push(training.shortTitle);
+    }
+    
+    // Catégorie
+    if (training.category) {
+      parts.push(`Formation ${training.category}`);
+    }
+    
+    // Niveau
+    if (training.level) {
+      parts.push(`Niveau ${training.level}`);
+    }
+    
+    // Durée
+    if (training.durationDays && training.durationHours) {
+      parts.push(`${training.durationDays} jours • ${training.durationHours}h`);
+    }
+    
+    // Tagline ou description
+    if (training.tagline) {
+      parts.push(training.tagline);
+    }
+    
+    // Ajouter le contexte
+    parts.push('Formations certifiantes IT & IA par Unlock Formation');
+    
+    let description = parts.join('. ');
+    
+    // Ajuster la longueur (120-160 caractères)
+    if (description.length > 160) {
+      description = description.substring(0, 157) + '...';
+    } else if (description.length < 120 && fallbackDescription) {
+      description = fallbackDescription;
+      if (description.length > 160) {
+        description = description.substring(0, 157) + '...';
+      }
+    }
+    
+    return description || `Formation ${training.title} : ${training.category || 'IT & IA'}. Formations certifiantes par Unlock Formation.`;
   }
 
   // ───────────── Countdown prochaine session ─────────────

@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, inject, provideEnvironmentInitializer } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, inject, provideEnvironmentInitializer, isDevMode } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { PageLoaderService } from './services/page-loader.service';
 import { PageLoaderInlineService } from './services/page-loader-inline.service';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { AuthApiService } from './services/api/auth-api.service';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,6 +36,9 @@ export const appConfig: ApplicationConfig = {
       
       // Initialiser l'authentification depuis le token stocké
       authService.initFromStorage();
-    })
+    }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          })
   ]
 };

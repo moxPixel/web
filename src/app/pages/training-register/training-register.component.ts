@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, AfterViewInit, ViewChild, ElementRef, inject, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
@@ -20,7 +20,7 @@ type RoleChoice = 'individual' | 'company' | 'trainer' | 'candidate';
 @Component({
   selector: 'app-training-register',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, MatRippleModule, MatIconModule, NgOptimizedImage],
   templateUrl: './training-register.component.html',
   styleUrls: ['./training-register.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

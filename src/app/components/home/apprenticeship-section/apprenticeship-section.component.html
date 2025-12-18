@@ -1,4 +1,4 @@
-<section id="apprenticeship" class="bg-background-4 dark:bg-background-5">
+<section id="apprenticeship" class="apprenticeship-section bg-background-4 dark:bg-background-5">
   <div class="main-container py-14 md:py-16 lg:py-20 xl:py-24">
     
     <!-- Header Section -->
@@ -30,9 +30,9 @@
 
         <!-- Benefits List -->
         <ul class="space-y-4 list-none">
-          <li class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white"></div>
+          <li class="flex items-start gap-4 group cursor-default">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
+              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
             </div>
             <div>
               <h4 class="font-bold text-gray-900 dark:text-white mb-1">Compétences directement transférables</h4>
@@ -42,9 +42,9 @@
             </div>
           </li>
 
-          <li class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white"></div>
+          <li class="flex items-start gap-4 group cursor-default">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
+              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
             </div>
             <div>
               <h4 class="font-bold text-gray-900 dark:text-white mb-1">Accompagnement de bout en bout</h4>
@@ -54,9 +54,9 @@
             </div>
           </li>
 
-          <li class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white"></div>
+          <li class="flex items-start gap-4 group cursor-default">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
+              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
             </div>
             <div>
               <h4 class="font-bold text-gray-900 dark:text-white mb-1">Statut salarié et rémunération</h4>
@@ -85,29 +85,29 @@
       <div class="order-2 lg:order-2 relative">
         <div class="relative aspect-[4/3]">
           <!-- Image principale (en arrière, décalée à droite) -->
-          <div class="absolute top-0 right-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-xl">
+          <div class="absolute top-0 right-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-xl group/image">
             <img
-              src="/assets/images/img/g9.jpg"
+              ngSrc="/assets/images/img/g9.jpg"
               alt="Alternance IT & IA - Contrats d'apprentissage et professionnalisation"
-              loading="lazy"
               width="600"
               height="450"
-              class="w-full h-full object-cover rounded-xl"
+              class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover/image:scale-110"
+              loading="lazy"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent transition-opacity duration-500 group-hover/image:opacity-80"></div>
           </div>
           
           <!-- Image secondaire (superposée à gauche) -->
-          <div class="absolute bottom-0 left-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-2xl z-10">
+          <div class="absolute bottom-0 left-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-2xl z-10 group/image2">
             <img
-              src="/assets/images/img/g5.jpg"
+              ngSrc="/assets/images/img/g5.jpg"
               alt="Formation en alternance IT - Rémunération et accompagnement carrière"
-              loading="lazy"
               width="600"
               height="450"
-              class="w-full h-full object-cover rounded-xl"
+              class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover/image2:scale-110"
+              loading="lazy"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent transition-opacity duration-500 group-hover/image2:opacity-80"></div>
           </div>
         </div>
       </div>

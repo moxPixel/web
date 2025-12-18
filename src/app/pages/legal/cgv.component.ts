@@ -36,11 +36,17 @@ export class CgvComponent implements OnInit {
   private readonly seoService = inject(SeoService);
 
   ngOnInit(): void {
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'CGV', url: '/cgv' }
+    ]);
+
     this.seoService.updateSeoData({
       title: 'CGV - Conditions Générales de Vente | Unlock Formation',
-      description: 'Conditions générales de vente Unlock Formation. Tarifs, modalités de paiement, annulation et remboursement des formations.',
+      description: 'Conditions générales de vente Unlock Formation. Tarifs, modalités de paiement, annulation et remboursement des formations. Informations complètes et transparentes.',
       keywords: 'CGV unlock formation, conditions générales vente, tarifs formations, modalités paiement',
       url: '/cgv',
+      schema: breadcrumbSchema,
       noindex: true, // Pages légales généralement non indexées
       type: 'website'
     });

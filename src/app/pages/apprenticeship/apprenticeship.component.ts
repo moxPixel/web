@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,8 @@ import { SeoService } from '../../services/seo.service';
 @Component({
   selector: 'app-apprenticeship',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule, NgOptimizedImage],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible min-h-[calc(100vh-120px)] lg:pb-[100px] pb-16 bg-background-1 dark:bg-background-8" aria-label="Alternance IT & IA">
       <div class="max-w-[1920px] mx-auto relative">
@@ -131,10 +132,12 @@ import { SeoService } from '../../services/seo.service';
           <div class="lg:col-span-1 order-3 lg:order-1">
             <div class="relative rounded-2xl overflow-hidden shadow-xl">
               <img
-                src="/assets/images/img/g1.jpg"
+                ngSrc="/assets/images/img/g1.jpg"
                 alt="Alternance IT & IA - Formation en entreprise"
-                loading="lazy"
+                width="600"
+                height="800"
                 class="w-full h-auto object-cover"
+                loading="lazy"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
             </div>
@@ -249,6 +252,11 @@ export class ApprenticeshipComponent implements OnInit, AfterViewInit, OnDestroy
   ) {}
 
   ngOnInit(): void {
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Alternance', url: '/alternance' }
+    ]);
+
     // Configuration SEO pour la page Alternance
     this.seoService.updateSeoData({
       title: 'Alternance IT & IA | Unlock Formation',
@@ -256,7 +264,8 @@ export class ApprenticeshipComponent implements OnInit, AfterViewInit, OnDestroy
       keywords: 'alternance IT, alternance IA, contrat apprentissage IT, alternance cybersécurité, alternance développement web, alternance data science, contrat professionnalisation IT, rémunération alternance',
       image: '/assets/images/logo/main-logo.png',
       url: '/alternance',
-      type: 'website'
+      type: 'website',
+      schema: breadcrumbSchema
     });
   }
 

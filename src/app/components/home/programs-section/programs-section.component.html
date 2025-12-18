@@ -26,14 +26,14 @@
     </div>
   </div>
 
-      <!-- Galerie horizontale scrollable avec images (full bleed) -->
+      <!-- Galerie horizontale scrollable en spirale décalée -->
       <div
         class="carousel-wrapper w-full max-w-full px-0 overflow-hidden"
       >
-        <div class="carousel-track">
-          <ng-container *ngFor="let slide of slides; trackBy: trackByIndex">
-            <figure class="carousel-slide" [ngClass]="[slide.height, slide.width]">
-              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer">
+        <div class="carousel-track-spiral">
+          <ng-container *ngFor="let slide of slides; let i = index; trackBy: trackByIndex">
+            <figure class="carousel-slide-spiral" [ngClass]="[slide.height, slide.width]">
+              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light transition-all duration-300">
                 <img [src]="slide.img" [alt]="slide.alt" class="carousel-image" />
                 <div class="carousel-overlay"></div>
                 <div class="carousel-title"><h3>{{ slide.title }}</h3></div>
@@ -41,9 +41,9 @@
       </figure>
           </ng-container>
           <!-- duplication pour boucle infinie -->
-          <ng-container *ngFor="let slide of slides; trackBy: trackByIndex">
-            <figure class="carousel-slide" [ngClass]="[slide.height, slide.width]">
-              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer">
+          <ng-container *ngFor="let slide of slides; let i = index; trackBy: trackByIndex">
+            <figure class="carousel-slide-spiral" [ngClass]="[slide.height, slide.width]">
+              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light transition-all duration-300">
                 <img [src]="slide.img" [alt]="slide.alt" class="carousel-image" />
                 <div class="carousel-overlay"></div>
                 <div class="carousel-title"><h3>{{ slide.title }}</h3></div>

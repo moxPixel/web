@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,8 @@ import { SeoService } from '../../services/seo.service';
 @Component({
   selector: 'app-approach',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatRippleModule, MatIconModule, NgOptimizedImage],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible min-h-[calc(100vh-120px)] lg:pb-[100px] pb-16 bg-background-1 dark:bg-background-8" aria-label="Notre approche pédagogique">
       <div class="max-w-[1920px] mx-auto relative">
@@ -141,10 +142,12 @@ import { SeoService } from '../../services/seo.service';
           <div class="lg:col-span-1 order-3 lg:order-1">
             <div class="relative rounded-2xl overflow-hidden shadow-xl">
               <img
-                src="/assets/images/img/g6.jpg"
+                ngSrc="/assets/images/img/g6.jpg"
                 alt="Notre approche pédagogique - Unlock Formation"
-                loading="lazy"
+                width="600"
+                height="800"
                 class="w-full h-auto object-cover"
+                loading="lazy"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
             </div>
@@ -266,6 +269,11 @@ export class ApproachComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Notre approche', url: '/approche' }
+    ]);
+
     // Configuration SEO pour la page Approche
     this.seoService.updateSeoData({
       title: 'Notre approche pédagogique | Unlock Formation',
@@ -273,7 +281,8 @@ export class ApproachComponent implements OnInit, AfterViewInit, OnDestroy {
       keywords: 'pédagogie formation, méthode apprentissage, formation pratique IT, approche pédagogique formation, EVA assistant IA, experts formateurs IT',
       image: '/assets/images/logo/main-logo.png',
       url: '/approche',
-      type: 'website'
+      type: 'website',
+      schema: breadcrumbSchema
     });
   }
 

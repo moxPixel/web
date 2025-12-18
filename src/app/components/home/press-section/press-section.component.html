@@ -15,22 +15,22 @@
       <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 items-start">
         <!-- Logo à gauche avec fond subtil -->
         <div class="flex items-center justify-center lg:justify-start">
-          <div class="bg-white dark:bg-background-6 rounded-2xl p-6 md:p-8 border border-stroke-2 dark:border-stroke-6">
+          <div class="bg-white dark:bg-background-6 rounded-2xl p-6 md:p-8 border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light transition-all duration-300 group">
             <img 
               [src]="pressArticle.logo" 
               [alt]="'Article Unlock Formation dans ' + pressArticle.title"
               loading="lazy"
               width="280"
               height="160"
-              class="w-full h-auto rounded-xl"
+              class="w-full h-auto rounded-xl transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         </div>
 
         <!-- Contenu à droite -->
         <div class="space-y-6 w-full">
-          <div class="relative pl-4 border-l-4 border-primary-500 dark:border-ns-green-light">
-            <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed" [innerHTML]="pressArticle.excerpt"></p>
+          <div class="relative pl-4 border-l-4 border-primary-500 dark:border-ns-green-light transition-all duration-300 hover:pl-6 hover:border-l-8">
+            <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed transition-all duration-300" [innerHTML]="pressArticle.excerpt"></p>
           </div>
           <div class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
             <p>

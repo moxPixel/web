@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
@@ -23,7 +23,7 @@ type AudienceTypeFilter = 'all' | 'entreprise' | 'monter-en-competence' | 'recon
 @Component({
   selector: 'app-trainings',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, MatRippleModule, MatIconModule],
+  imports: [CommonModule, RouterModule, FormsModule, MatRippleModule, MatIconModule, NgOptimizedImage],
   templateUrl: './trainings.component.html',
   styleUrls: ['./trainings.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -83,13 +83,19 @@ export class TrainingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     // Configuration SEO pour la page Formations
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Formations', url: '/trainings' }
+    ]);
+
     this.seoService.updateSeoData({
       title: 'Catalogue de formations IT & IA | Unlock Formation',
       description: 'Explorez notre catalogue complet de formations IT & IA : développement web, cybersécurité, data science, cloud, DevOps. Formations certifiantes, alternance et reconversion professionnelle.',
       keywords: 'catalogue formations, formations IT, formations IA, formations cybersécurité, formations développement web, formations data science, formations cloud, formations DevOps, alternance IT',
       image: '/assets/images/logo/main-logo.png',
       url: '/trainings',
-      type: 'website'
+      type: 'website',
+      schema: breadcrumbSchema
     });
     
     this.loadTrainings();

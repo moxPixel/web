@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SeoService } from '../../services/seo.service';
 
@@ -6,6 +6,7 @@ import { SeoService } from '../../services/seo.service';
   selector: 'app-faq',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="pt-24 pb-16 bg-background-1 dark:bg-background-8">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-12 space-y-10">
@@ -49,15 +50,26 @@ export class FaqComponent implements OnInit {
       }))
     );
 
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'FAQ', url: '/faq' }
+    ]);
+
+    // Générer le schema FAQPage
+    const faqSchema = this.seoService.generateFAQSchema(faqItems);
+
     // Configuration SEO pour la page FAQ
     this.seoService.updateSeoData({
       title: 'FAQ - Questions fréquentes | Unlock Formation',
-      description: 'Trouvez les réponses à vos questions sur les formations IT & IA, l\'alternance, le financement CPF, les certifications RNCP et l\'inscription aux formations Unlock.',
+      description: 'Trouvez les réponses à vos questions sur les formations IT & IA, l\'alternance, le financement CPF, les certifications RNCP et l\'inscription aux formations Unlock. Réponses détaillées et à jour.',
       keywords: 'FAQ formation IT, questions formations, aide formation, FAQ alternance, FAQ financement formation, FAQ CPF, questions fréquentes formations',
       image: '/assets/images/logo/main-logo.png',
       url: '/faq',
       type: 'website',
-      schema: this.seoService.generateFAQSchema(faqItems)
+      schema: {
+        '@context': 'https://schema.org',
+        '@graph': [breadcrumbSchema, faqSchema]
+      }
     });
   }
 

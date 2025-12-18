@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { OrientationApiService } from '../../services/api/orientation-api.service';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
+import { SeoService } from '../../services/seo.service';
 import {
   OrientationObjective,
   OrientationProfileAnswers,
@@ -31,6 +32,7 @@ interface ProfileOption {
   imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, MatIconModule, MatRippleModule],
   templateUrl: './orientation-test.component.html',
   styleUrls: ['./orientation-test.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrientationTestComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('orientationParallax', { static: false }) orientationParallax!: ElementRef;
@@ -40,6 +42,7 @@ export class OrientationTestComponent implements OnInit, AfterViewInit, OnDestro
   private api = inject(OrientationApiService);
   private gsapScroll = inject(GsapScrollService);
   private pageLoaderInline = inject(PageLoaderInlineService);
+  private seoService = inject(SeoService);
   private destroy$ = new Subject<void>();
 
   step = 1;
@@ -80,6 +83,21 @@ export class OrientationTestComponent implements OnInit, AfterViewInit, OnDestro
   ];
 
   ngOnInit(): void {
+    const breadcrumbSchema = this.seoService.generateBreadcrumbSchema([
+      { name: 'Accueil', url: '/' },
+      { name: 'Test d\'orientation', url: '/orientation' }
+    ]);
+
+    // Configuration SEO pour la page Test d'orientation
+    this.seoService.updateSeoData({
+      title: 'Test d\'orientation professionnelle IT & IA | Unlock Formation',
+      description: 'Découvrez votre profil et les formations IT & IA qui vous correspondent grâce à notre test d\'orientation gratuit. Analyse de vos compétences, motivations et recommandations personnalisées.',
+      keywords: 'test orientation IT, test orientation IA, test orientation professionnelle, orientation formation IT, test compétences IT, orientation carrière numérique',
+      image: '/assets/images/logo/main-logo.png',
+      url: '/orientation',
+      type: 'website',
+      schema: breadcrumbSchema
+    });
     this.initForms();
   }
 
