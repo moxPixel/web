@@ -461,6 +461,114 @@
     border-radius: 50% !important;
   }
 
+  /* ========== HEADER STYLES (COMMUNS) ========== */
+  /* Header container - animations gérées par GSAP */
+  .header-one {
+    will-change: transform, background, backdrop-filter;
+    /* Cacher initialement le header jusqu'à ce que l'animation commence */
+    /* Le transform est géré par GSAP pour préserver le centrage horizontal */
+    opacity: 0;
+  }
+
+  /* Navigation links - lignes de soulignement */
+  .nav-item-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary-500);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  html.dark .nav-item-link::after {
+    background-color: var(--color-ns-green-light);
+  }
+
+  .nav-item-link:hover::after {
+    width: 75%;
+  }
+
+  .nav-item-link.active::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(1);
+    width: 75%;
+    height: 2px;
+    background-color: var(--color-primary-500);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
+    border-radius: 2px;
+    transform-origin: center;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  html.dark .nav-item-link.active::before {
+    background-color: var(--color-ns-green-light);
+  }
+
+  /* Mobile menu - soulignement */
+  .mobile-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary-500);
+    transition: width 0.3s ease;
+  }
+
+  html.dark .mobile-nav-link::after {
+    background-color: var(--color-ns-green-light);
+  }
+
+  .mobile-nav-link:hover::after,
+  .mobile-nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Hamburger button */
+  .nav-hamburger,
+  .nav-hamburger-close {
+    transition: all 0.2s ease;
+  }
+
+  .nav-hamburger:hover,
+  .nav-hamburger-close:hover {
+    transform: scale(1.05);
+  }
+
+  /* Scrollbar styles */
+  .scroll-bar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-bar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-bar::-webkit-scrollbar-thumb {
+    background: var(--color-stroke-1);
+    border-radius: 3px;
+  }
+
+  html.dark .scroll-bar::-webkit-scrollbar-thumb {
+    background: var(--color-stroke-6);
+  }
+
+  /* Body overflow when menu is open */
+  body.overflow-hidden {
+    overflow: hidden;
+  }
+
   /* ========== MATERIAL DIALOG STYLES ========== */
   /* Dialog container - radius et background */
   .mat-mdc-dialog-container,

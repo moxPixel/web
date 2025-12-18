@@ -1,96 +1,6 @@
-/* Header styles - animations gérées par GSAP */
-.header-one {
-  will-change: transform, background, backdrop-filter;
-  /* Cacher initialement le header jusqu'à ce que l'animation commence */
-  /* Le transform est géré par GSAP pour préserver le centrage horizontal */
-  opacity: 0;
-}
+/* Styles spécifiques au header front uniquement */
 
-/* Lignes de soulignement - CSS minimal nécessaire pour les pseudo-éléments */
-.nav-item-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background-color: var(--color-primary-500);
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 2px;
-  z-index: 0;
-  pointer-events: none;
-}
-
-:host-context(html.dark) .nav-item-link::after {
-  background-color: var(--color-ns-green-light);
-}
-
-.nav-item-link:hover::after {
-  width: 75%;
-}
-
-.nav-item-link.active::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(1);
-  width: 75%;
-  height: 2px;
-  background-color: var(--color-primary-500);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
-  border-radius: 2px;
-  transform-origin: center;
-  z-index: 0;
-  pointer-events: none;
-}
-
-:host-context(html.dark) .nav-item-link.active::before {
-  background-color: var(--color-ns-green-light);
-}
-
-
-/* Mobile menu - soulignement (CSS minimal pour pseudo-éléments) */
-.mobile-nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--color-primary-500);
-  transition: width 0.3s ease;
-}
-
-:host-context(html.dark) .mobile-nav-link::after {
-  background-color: var(--color-ns-green-light);
-}
-
-.mobile-nav-link:hover::after,
-.mobile-nav-link.active::after {
-  width: 100%;
-}
-
-/* Scrollbar styles */
-.scroll-bar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scroll-bar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scroll-bar::-webkit-scrollbar-thumb {
-  background: var(--color-stroke-1);
-  border-radius: 3px;
-}
-
-html.dark .scroll-bar::-webkit-scrollbar-thumb {
-  background: var(--color-stroke-6);
-}
-
-/* Méga menu formations */
+/* Méga menu formations (spécifique au header front) */
 .mega-menu-panel {
   opacity: 0;
   transform: translateY(8px) scale(0.98);
@@ -106,21 +16,5 @@ html.dark .scroll-bar::-webkit-scrollbar-thumb {
   pointer-events: auto;
 }
 
-/* Hamburger button */
-.nav-hamburger,
-.nav-hamburger-close {
-  transition: all 0.2s ease;
-}
-
-.nav-hamburger:hover,
-.nav-hamburger-close:hover {
-  transform: scale(1.05);
-}
-
-/* Body overflow when menu is open */
-body.overflow-hidden {
-  overflow: hidden;
-}
-
-/* Classes globales (.btn) dans styles.css @layer components */
+/* Note: Les styles communs (.header-one, .nav-item-link, .mobile-nav-link, .scroll-bar, .nav-hamburger, body.overflow-hidden) sont maintenant dans styles.css @layer components */
 

@@ -9,6 +9,7 @@ import { PageLoaderInlineService } from './services/page-loader-inline.service';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { AuthApiService } from './services/api/auth-api.service';
 import { provideServiceWorker } from '@angular/service-worker';
+import { ThemeService } from './services/theme.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
       const pageLoaderService = inject(PageLoaderService);
       const pageLoaderInline = inject(PageLoaderInlineService);
       const authService = inject(AuthApiService);
+      const themeService = inject(ThemeService);
       
       // Démarrer le préchargement
       pageLoaderService.initialize().catch((error) => {
@@ -36,6 +38,9 @@ export const appConfig: ApplicationConfig = {
       
       // Initialiser l'authentification depuis le token stocké
       authService.initFromStorage();
+
+      // Initialiser le thème (dark/light) une seule fois au bootstrap
+      themeService.init();
     }), provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'

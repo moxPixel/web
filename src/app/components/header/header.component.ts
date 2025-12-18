@@ -4,7 +4,6 @@ import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/ro
 import { filter } from 'rxjs/operators';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
 import { takeUntil } from 'rxjs/operators';
@@ -13,6 +12,7 @@ import { gsap } from 'gsap';
 import { TrainingsService } from '../../services/trainings/trainings.service';
 import { Training } from '../../interfaces/training.interface';
 import { AuthApiService } from '../../services/api/auth-api.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -36,16 +36,13 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private cdr: ChangeDetectorRef,
-    private gsapAnimation: GsapAnimationService,
+    private themeService: ThemeService,
     private gsapScroll: GsapScrollService,
     private pageLoaderInline: PageLoaderInlineService,
     private trainingsService: TrainingsService,
     private authService: AuthApiService,
     private router: Router
-  ) {
-    // Vérifier le thème au chargement
-    this.checkDarkMode();
-  }
+  ) {}
 
   get userSpaceLink(): string {
     return this.authService.isAdmin() ? '/bo/trainings' : '/account/enrollments';
@@ -56,6 +53,15 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+    // Thème global (source de vérité)
+    this.themeService.isDark$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isDark) => {
+        this.isDarkMode = isDark;
+        // OnPush: rafraîchir l'UI (icône + callbacks GSAP qui dépendent de l'état)
+        this.cdr.markForCheck();
+      });
+
     // Suivre la route actuelle
     this.router.events
       .pipe(
@@ -225,45 +231,7 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
   }
 
   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    if (!this.document?.documentElement || !this.document?.body) return;
-
-    if (this.isDarkMode) {
-      this.document.documentElement.classList.add('dark');
-      this.document.documentElement.style.backgroundColor = '#070b10';
-      this.document.body.style.backgroundColor = '#070b10';
-      localStorage.setItem('theme', 'dark');
-    } else {
-      this.document.documentElement.classList.remove('dark');
-      this.document.documentElement.style.backgroundColor = '#ffffff';
-      this.document.body.style.backgroundColor = '#ffffff';
-      localStorage.setItem('theme', 'light');
-    }
-  }
-
-  private checkDarkMode() {
-    // Vérifier que le document est disponible
-    if (!this.document?.documentElement || !this.document?.body) {
-      // Si le document n'est pas encore disponible, réessayer après un court délai
-      setTimeout(() => this.checkDarkMode(), 0);
-      return;
-    }
-
-    // Vérifier le localStorage ou la préférence système
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      this.isDarkMode = true;
-      this.document.documentElement.classList.add('dark');
-      this.document.documentElement.style.backgroundColor = '#070b10';
-      this.document.body.style.backgroundColor = '#070b10';
-    } else {
-      this.isDarkMode = false;
-      this.document.documentElement.classList.remove('dark');
-      this.document.documentElement.style.backgroundColor = '#ffffff';
-      this.document.body.style.backgroundColor = '#ffffff';
-    }
+    this.themeService.toggle();
   }
 
   /**

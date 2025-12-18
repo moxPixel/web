@@ -11,6 +11,7 @@ import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { PageLoaderService } from '../../services/page-loader.service';
 import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
+import { ThemeService } from '../../services/theme.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -95,13 +96,27 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
     private gsapAnimationService: GsapAnimationService,
     private pageLoaderService: PageLoaderService,
     private pageLoaderInline: PageLoaderInlineService,
+    private themeService: ThemeService,
     @Inject(DOCUMENT) private document: Document
-  ) {
-    this.checkDarkMode();
-    this.setupThemeListener();
-  }
+  ) {}
 
   ngOnInit(): void {
+    // Thème global: synchroniser l'état et réagir aux changements (sans MutationObserver)
+    this.themeService.isDark$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isDark) => {
+        const wasDark = this.isDarkMode;
+        this.isDarkMode = isDark;
+
+        // Si la scène est déjà initialisée, mettre à jour éclairage et matériaux
+        if (this.scene && wasDark !== isDark) {
+          this.setupLighting();
+          if (this.model) {
+            this.applyDarkModeToModel(this.model);
+          }
+        }
+      });
+
     // Initialisation des loaders
     this.initializeLoaders();
   }
@@ -244,40 +259,6 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Démarrage de l'animation
     this.animate();
-  }
-
-  private checkDarkMode(): void {
-    if (this.document?.documentElement) {
-      this.isDarkMode = this.document.documentElement.classList.contains('dark');
-    }
-  }
-
-  private setupThemeListener(): void {
-    // Observer les changements de classe sur l'élément html
-    const observer = new MutationObserver(() => {
-      const wasDarkMode = this.isDarkMode;
-      this.checkDarkMode();
-
-      // Si le mode a changé, mettre à jour l'éclairage et les matériaux du modèle
-      if (wasDarkMode !== this.isDarkMode) {
-        if (this.scene) {
-          this.setupLighting();
-        }
-        if (this.model) {
-          this.applyDarkModeToModel(this.model);
-        }
-      }
-    });
-
-    if (this.document?.documentElement) {
-      observer.observe(this.document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-      });
-    }
-
-    // Stocker l'observer pour le cleanup
-    (this as any)._themeObserver = observer;
   }
 
   private applyDarkModeToModel(model: THREE.Group): void {
@@ -1212,12 +1193,6 @@ export class ThreeSceneComponent implements OnInit, AfterViewInit, OnDestroy {
     const resizeObserver = (this as any)._resizeObserver;
     if (resizeObserver) {
       resizeObserver.disconnect();
-    }
-
-    // Supprimer l'observer de thème
-    const themeObserver = (this as any)._themeObserver;
-    if (themeObserver) {
-      themeObserver.disconnect();
     }
 
     // Supprimer les gestionnaires de mouvement de la souris

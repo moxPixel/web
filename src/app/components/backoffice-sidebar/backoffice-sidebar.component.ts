@@ -1,10 +1,13 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { AuthApiService } from '../../services/api/auth-api.service';
+import { ThemeService } from '../../services/theme.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-backoffice-sidebar',
@@ -14,46 +17,32 @@ import { AuthApiService } from '../../services/api/auth-api.service';
   styleUrls: ['./backoffice-sidebar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BackofficeSidebarComponent implements OnInit {
+export class BackofficeSidebarComponent implements OnInit, OnDestroy {
   isDarkMode = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
+    private cdr: ChangeDetectorRef,
+    private themeService: ThemeService,
     private authService: AuthApiService
   ) {}
 
   ngOnInit(): void {
-    this.checkDarkMode();
+    this.themeService.isDark$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isDark) => {
+        this.isDarkMode = isDark;
+        this.cdr.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleDarkMode(): void {
-    this.isDarkMode = !this.isDarkMode;
-    this.applyTheme();
-  }
-
-  private checkDarkMode(): void {
-    if (!this.document?.documentElement || !this.document?.body) return;
-
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    this.isDarkMode = storedTheme === 'dark' || (!storedTheme && prefersDark);
-    this.applyTheme();
-  }
-
-  private applyTheme(): void {
-    if (!this.document?.documentElement || !this.document?.body) return;
-
-    if (this.isDarkMode) {
-      this.document.documentElement.classList.add('dark');
-      this.document.documentElement.style.backgroundColor = '#070b10';
-      this.document.body.style.backgroundColor = '#070b10';
-      localStorage.setItem('theme', 'dark');
-    } else {
-      this.document.documentElement.classList.remove('dark');
-      this.document.documentElement.style.backgroundColor = '#ffffff';
-      this.document.body.style.backgroundColor = '#ffffff';
-      localStorage.setItem('theme', 'light');
-    }
+    this.themeService.toggle();
   }
 
   logout(): void {

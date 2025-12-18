@@ -1,14 +1,14 @@
-import { Component, HostListener, OnDestroy, Inject, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, Inject, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { GsapAnimationService } from '../../services/gsap-animation.service';
 import { GsapScrollService } from '../../services/gsap-scroll.service';
 import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { gsap } from 'gsap';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-header-backoffice',
@@ -17,7 +17,7 @@ import { gsap } from 'gsap';
   templateUrl: './header-backoffice.component.html',
   styleUrl: './header-backoffice.component.css'
 })
-export class HeaderBackofficeComponent implements OnDestroy, AfterViewInit {
+export class HeaderBackofficeComponent implements OnDestroy, AfterViewInit, OnInit {
   isMobileMenuOpen = false;
   isDarkMode = false;
   @ViewChild('headerContainer', { static: false }) headerContainer!: ElementRef;
@@ -25,11 +25,17 @@ export class HeaderBackofficeComponent implements OnDestroy, AfterViewInit {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private gsapAnimation: GsapAnimationService,
+    private themeService: ThemeService,
     private gsapScroll: GsapScrollService,
     private pageLoaderInline: PageLoaderInlineService
-  ) {
-    this.checkDarkMode();
+  ) {}
+
+  ngOnInit(): void {
+    this.themeService.isDark$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isDark) => {
+        this.isDarkMode = isDark;
+      });
   }
 
   ngAfterViewInit() {
@@ -106,42 +112,7 @@ export class HeaderBackofficeComponent implements OnDestroy, AfterViewInit {
   }
 
   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    if (!this.document?.documentElement || !this.document?.body) return;
-
-    if (this.isDarkMode) {
-      this.document.documentElement.classList.add('dark');
-      this.document.documentElement.style.backgroundColor = '#070b10';
-      this.document.body.style.backgroundColor = '#070b10';
-      localStorage.setItem('theme', 'dark');
-    } else {
-      this.document.documentElement.classList.remove('dark');
-      this.document.documentElement.style.backgroundColor = '#ffffff';
-      this.document.body.style.backgroundColor = '#ffffff';
-      localStorage.setItem('theme', 'light');
-    }
-  }
-
-  private checkDarkMode() {
-    if (!this.document?.documentElement || !this.document?.body) {
-      setTimeout(() => this.checkDarkMode(), 0);
-      return;
-    }
-
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      this.isDarkMode = true;
-      this.document.documentElement.classList.add('dark');
-      this.document.documentElement.style.backgroundColor = '#070b10';
-      this.document.body.style.backgroundColor = '#070b10';
-    } else {
-      this.isDarkMode = false;
-      this.document.documentElement.classList.remove('dark');
-      this.document.documentElement.style.backgroundColor = '#ffffff';
-      this.document.body.style.backgroundColor = '#ffffff';
-    }
+    this.themeService.toggle();
   }
 }
 
