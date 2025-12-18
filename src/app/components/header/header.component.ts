@@ -62,6 +62,14 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
         this.cdr.markForCheck();
       });
 
+    // Suivre l'utilisateur connecté pour mettre à jour le header (important pour OnPush)
+    this.authService.currentUser
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        // OnPush: rafraîchir l'UI quand l'utilisateur change (connexion/déconnexion)
+        this.cdr.markForCheck();
+      });
+
     // Suivre la route actuelle
     this.router.events
       .pipe(
@@ -70,6 +78,8 @@ export class HeaderComponent implements OnDestroy, AfterViewInit, OnInit {
       )
       .subscribe((event: any) => {
         this.currentRoute = event.url || '';
+        // OnPush: rafraîchir l'UI quand la route change
+        this.cdr.markForCheck();
       });
     this.currentRoute = this.router.url || '';
 

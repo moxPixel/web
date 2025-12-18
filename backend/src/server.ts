@@ -223,14 +223,14 @@ const startServer = async (): Promise<void> => {
       logger.info('✅ Production mode: Database auto-sync is disabled (security enforced)');
     } else {
       // En développement uniquement
-      if (env.sequelize.sync) {
+    if (env.sequelize.sync) {
         logger.warn('⚠️  Development mode: Synchronizing database...');
-        await syncDatabase({
-          force: env.sequelize.forceSync,
-          alter: env.sequelize.alterSync,
-        });
-      } else {
-        logger.info('ℹ️  Database sync disabled. Use npm run db:sync to sync manually.');
+      await syncDatabase({
+        force: env.sequelize.forceSync,
+        alter: env.sequelize.alterSync,
+      });
+    } else {
+      logger.info('ℹ️  Database sync disabled. Use npm run db:sync to sync manually.');
       }
     }
 
