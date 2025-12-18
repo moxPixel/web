@@ -166,9 +166,9 @@ export class AiTrainingService {
 
     const validated: AiGeneratedTraining = {
       title: generated.title || input.trainingTitle,
-      shortTitle: this.sanitizeString(generated.shortTitle || this.generateShortTitle(generated.title || input.trainingTitle)),
+      shortTitle: this.sanitizeString(generated.shortTitle || this.generateShortTitle(generated.title || input.trainingTitle)) || this.generateShortTitle(generated.title || input.trainingTitle),
       slug: this.sanitizeSlug(generated.slug || generateSlug(generated.title || input.trainingTitle)),
-      category: this.sanitizeString(generated.category),
+      category: this.sanitizeString(generated.category || ''),
       level: this.validateEnum(generated.level, Object.values(TrainingLevel), input.level || TrainingLevel.INTERMEDIAIRE) as TrainingLevel,
       trainingType: this.validateEnum(generated.trainingType, Object.values(TrainingType), TrainingType.BOOTCAMP) as TrainingType,
       audienceType: this.validateEnum(generated.audienceType, Object.values(AudienceType), input.audienceType || AudienceType.ENTREPRISE) as AudienceType,

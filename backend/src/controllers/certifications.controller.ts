@@ -26,7 +26,7 @@ export class CertificationsController {
       const query = req.query as unknown as CertificationQueryParams;
       const result = await certificationsService.findAll(query);
 
-      const response: PaginatedResponse = {
+      const response: PaginatedResponse<any> = {
         success: true,
         data: result.data,
         pagination: result.pagination,

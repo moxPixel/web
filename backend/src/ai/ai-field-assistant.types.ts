@@ -13,6 +13,7 @@ export interface FieldAssistantInput {
     trainingType?: string;
     category?: string;
     title?: string;
+    moduleTitle?: string;
   };
 }
 

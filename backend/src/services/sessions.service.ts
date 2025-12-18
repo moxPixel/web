@@ -31,9 +31,11 @@ export class SessionsService {
       }
 
       // Si seatsAvailable n'est pas fourni, utiliser seats
-      const sessionData = {
+      const sessionData: any = {
         ...data,
-        seatsAvailable: data.seatsAvailable ?? data.seats,
+        seatsAvailable: data.seatsAvailable ?? data.seats ?? undefined,
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
       };
 
       const session = await TrainingSession.create(sessionData, { transaction });
@@ -85,12 +87,12 @@ export class SessionsService {
       if (highlight !== undefined) where.highlight = highlight;
 
       if (startDateFrom || startDateTo) {
-        where.startDate = {};
+        (where as any).startDate = {};
         if (startDateFrom) {
-          where.startDate[Op.gte] = new Date(startDateFrom);
+          (where as any).startDate[Op.gte as unknown as string] = new Date(startDateFrom);
         }
         if (startDateTo) {
-          where.startDate[Op.lte] = new Date(startDateTo);
+          (where as any).startDate[Op.lte as unknown as string] = new Date(startDateTo);
         }
       }
 
@@ -183,7 +185,16 @@ export class SessionsService {
         }
       }
 
-      await session.update(data, { transaction });
+      // Convertir les dates en objets Date si elles sont des strings
+      const updateData: any = { ...data };
+      if (updateData.startDate && typeof updateData.startDate === 'string') {
+        updateData.startDate = new Date(updateData.startDate);
+      }
+      if (updateData.endDate && typeof updateData.endDate === 'string') {
+        updateData.endDate = new Date(updateData.endDate);
+      }
+
+      await session.update(updateData, { transaction });
       await session.reload({
         include: [
           {

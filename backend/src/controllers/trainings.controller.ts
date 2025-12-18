@@ -35,7 +35,7 @@ export class TrainingsController {
       const query = req.query as unknown as TrainingQueryParams;
       const result = await trainingsService.findAll(query);
 
-      const response: PaginatedResponse = {
+      const response: PaginatedResponse<any> = {
         success: true,
         data: result.data,
         pagination: result.pagination,

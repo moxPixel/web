@@ -89,10 +89,10 @@ export class TrainingsService {
 
       // Filtres
       if (search) {
-        where[Op.or] = [
-          { title: { [Op.like]: `%${search}%` } },
-          { shortTitle: { [Op.like]: `%${search}%` } },
-          { slug: { [Op.like]: `%${search}%` } },
+        where[Op.or as unknown as string] = [
+          { title: { [Op.like as unknown as string]: `%${search}%` } },
+          { shortTitle: { [Op.like as unknown as string]: `%${search}%` } },
+          { slug: { [Op.like as unknown as string]: `%${search}%` } },
         ];
       }
 

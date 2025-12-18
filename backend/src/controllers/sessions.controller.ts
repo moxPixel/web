@@ -26,7 +26,7 @@ export class SessionsController {
       const query = req.query as unknown as SessionQueryParams;
       const result = await sessionsService.findAll(query);
 
-      const response: PaginatedResponse = {
+      const response: PaginatedResponse<any> = {
         success: true,
         data: result.data,
         pagination: result.pagination,

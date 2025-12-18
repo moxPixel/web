@@ -28,7 +28,7 @@ export class OpenAIClient {
   private apiKey: string;
 
   constructor() {
-    this.apiKey = env.openai.apiKey;
+    this.apiKey = env.openai.apiKey || '';
     if (!this.apiKey) {
       logger.warn('⚠️  OPENAI_API_KEY not configured. AI features will be disabled.');
     }

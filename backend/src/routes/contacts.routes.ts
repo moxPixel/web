@@ -28,9 +28,10 @@ const createValidation = [
     .isLength({ min: 10 })
     .withMessage('Le message doit contenir au moins 10 caractères'),
   body('consent')
-    .isBoolean()
-    .withMessage('Le consentement doit être un booléen')
-    .equals(true)
+    .custom((value) => {
+      if (value === true || value === 'true') return true;
+      throw new Error('Le consentement est requis');
+    })
     .withMessage('Le consentement est requis'),
   body('firstName')
     .optional()
