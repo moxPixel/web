@@ -57,7 +57,7 @@ const getEnvVar = (key: string, defaultValue?: string): string => {
 
 export const env: EnvConfig = {
   nodeEnv: getEnvVar('NODE_ENV', 'development'),
-  port: parseInt(getEnvVar('PORT', '3000'), 10),
+  port: parseInt(getEnvVar('PORT', '4000'), 10),
   db: {
     host: getEnvVar('DB_HOST', 'localhost'),
     port: parseInt(getEnvVar('DB_PORT', '3306'), 10),

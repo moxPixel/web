@@ -109,7 +109,7 @@ export class UploadApiService {
     // S'assurer que c'est une URL absolue (commence par http:// ou https://)
     if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
       console.error('ERROR: baseUrl is not absolute:', baseUrl);
-      baseUrl = 'http://localhost:3000';
+      baseUrl = 'http://localhost:4000';
     }
     
     // Construire l'URL complète
@@ -122,7 +122,7 @@ export class UploadApiService {
         console.error('Base URL:', baseUrl);
         console.error('Environment API URL:', environment.apiUrl);
         // Forcer la correction
-        return `http://localhost:3000/uploads/images/${filename}`;
+        return `http://localhost:4000/uploads/images/${filename}`;
       }
       console.log('Generated image URL:', imageUrl);
     }
@@ -146,7 +146,7 @@ export class UploadApiService {
       // Double vérification pour éviter les URLs pointant vers le port 4200
       if (url.includes('localhost:4200')) {
         console.error('ERROR: getImageUrlFromPath generated URL pointing to Angular server!', url);
-        return `http://localhost:3000/uploads/images/${filename}`;
+        return `http://localhost:4000/uploads/images/${filename}`;
       }
       return url;
     }
@@ -156,7 +156,7 @@ export class UploadApiService {
     // Double vérification pour éviter les URLs pointant vers le port 4200
     if (url.includes('localhost:4200')) {
       console.error('ERROR: getImageUrl generated URL pointing to Angular server!', url);
-      return `http://localhost:3000/uploads/images/${imagePath}`;
+      return `http://localhost:4000/uploads/images/${imagePath}`;
     }
     return url;
   }

@@ -6,7 +6,7 @@
 cat > .env << 'EOF'
 # Server Configuration
 NODE_ENV=development
-PORT=3000
+PORT=4000
 
 # Database Configuration (MAMP sur Mac)
 DB_HOST=localhost
@@ -34,7 +34,7 @@ ADMIN_EMAIL=admin@unlock.fr
 ADMIN_PASSWORD=Admin123!@#
 
 # CORS
-ALLOWED_ORIGINS=http://localhost:4200,http://localhost:3000
+ALLOWED_ORIGINS=http://localhost:4200,http://localhost:4000
 EOF
 
 echo "✅ Fichier .env créé avec la configuration MAMP"
