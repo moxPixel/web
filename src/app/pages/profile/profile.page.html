@@ -1,0 +1,211 @@
+<section class="ui-profile">
+  <!-- HERO (consistent with trainings/detail/contact) -->
+  <div class="ui-profile__hero-wrap">
+    <div class="ui-profile__hero-spheres" aria-hidden="true">
+      <div class="ui-profile__sphere profile-sphere-1"></div>
+      <div class="ui-profile__sphere profile-sphere-2"></div>
+      <div class="ui-profile__sphere profile-sphere-3"></div>
+    </div>
+
+    <div class="ui-profile__hero-card">
+      <div class="ui-profile__hero-inner">
+        <div class="ui-profile__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-profile__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-profile__hero-grid">
+          <div class="ui-profile__hero-copy">
+            <div class="ui-profile__badge-row">
+              <span class="ui-profile__badge">Mon espace</span>
+              <span class="ui-profile__tags">Profil • Sécurité • Préférences</span>
+            </div>
+
+            <h1 class="ui-profile__h1">
+              Votre <span class="ui-profile__h1-accent">profil</span>
+            </h1>
+
+            <p class="ui-profile__p">
+              Gérez vos informations et vos accès. Cette page est prête à être branchée sur l’auth backend quand il sera dispo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-profile__body ui-container">
+    <!-- Top identity card (avatar) -->
+    <div uiCard class="ui-profile__identity-card">
+      <div class="ui-profile__identity">
+        <div class="ui-profile__avatar" aria-hidden="true">
+          <app-tabler-icon name="user" [size]="22"></app-tabler-icon>
+        </div>
+
+        <div class="ui-profile__identity-meta">
+          <div class="ui-profile__identity-name">{{ auth.user?.displayName }}</div>
+          <div class="ui-profile__identity-email">{{ auth.user?.email }}</div>
+          <div class="ui-profile__identity-chips" aria-label="Statut">
+            <span class="ui-profile__chip ui-profile__chip--online">
+              <span class="ui-profile__chip-dot" aria-hidden="true"></span>
+              Connecté
+            </span>
+            <span class="ui-profile__chip">Espace Unlock</span>
+          </div>
+        </div>
+
+        <div class="ui-profile__identity-actions">
+          <a class="ui-button ui-button--outline ui-profile__identity-action" routerLink="/contact">
+            <span>Besoin d’aide</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-profile__grid">
+      <div class="ui-profile__main">
+        <div uiCard class="ui-profile__card">
+          <div class="ui-profile__card-head">
+            <div>
+              <h2 class="ui-profile__h2">Identité</h2>
+              <p class="ui-profile__muted">Informations de compte</p>
+            </div>
+          </div>
+
+          <div class="ui-profile__kv">
+            <div class="ui-profile__kv-k">
+              <app-tabler-icon name="user" [size]="18"></app-tabler-icon>
+              <span>Nom</span>
+            </div>
+            <div class="ui-profile__kv-v">{{ auth.user?.displayName }}</div>
+          </div>
+
+          <div class="ui-profile__kv">
+            <div class="ui-profile__kv-k">
+              <app-tabler-icon name="mail" [size]="18"></app-tabler-icon>
+              <span>Email</span>
+            </div>
+            <div class="ui-profile__kv-v">{{ auth.user?.email }}</div>
+          </div>
+        </div>
+
+        <div uiCard class="ui-profile__card">
+          <div class="ui-profile__card-head">
+            <div>
+              <h2 class="ui-profile__h2">Sécurité</h2>
+              <p class="ui-profile__muted">Accès et mot de passe</p>
+            </div>
+          </div>
+
+          <div class="ui-profile__row">
+            <div class="ui-profile__row-copy">
+              <div class="ui-profile__row-title">Mot de passe</div>
+              <div class="ui-profile__row-desc">Réinitialisez votre mot de passe en 2 minutes.</div>
+            </div>
+            <a class="ui-button ui-button--outline" routerLink="/forgot-password">Réinitialiser</a>
+          </div>
+        </div>
+
+        <div uiCard class="ui-profile__card">
+          <div class="ui-profile__card-head">
+            <div>
+              <h2 class="ui-profile__h2">Activité</h2>
+              <p class="ui-profile__muted">Demandes, messages et statuts</p>
+            </div>
+          </div>
+
+          <ng-container *ngIf="activityVm$ | async as vm">
+            <div *ngIf="vm.state === 'loading'" class="ui-profile__activity-skel" aria-label="Chargement">
+              <div class="ui-profile__skel-row" *ngFor="let _ of [0,1,2]">
+                <div class="ui-profile__skel-dot"></div>
+                <div class="ui-profile__skel-lines">
+                  <div class="ui-profile__skel-line ui-profile__skel-line--a"></div>
+                  <div class="ui-profile__skel-line ui-profile__skel-line--b"></div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="vm.state === 'ready' && !vm.items.length" class="ui-profile__empty">
+              <div class="ui-profile__empty-icon" aria-hidden="true">
+                <app-tabler-icon name="checklist" [size]="22"></app-tabler-icon>
+              </div>
+              <div>
+                <div class="ui-profile__empty-title">Aucune activité pour le moment</div>
+                <div class="ui-profile__empty-text">
+                  Vos demandes d’inscription et vos messages apparaîtront ici.
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="vm.state === 'ready' && vm.items.length" class="ui-profile__activity">
+              <div class="ui-profile__activity-item" *ngFor="let it of vm.items">
+                <div class="ui-profile__activity-dot" aria-hidden="true"></div>
+
+                <div class="ui-profile__activity-main">
+                  <div class="ui-profile__activity-top">
+                    <div class="ui-profile__activity-title">
+                      <app-tabler-icon [name]="it.icon" [size]="18"></app-tabler-icon>
+                      <span>{{ it.title }}</span>
+                    </div>
+
+                    <div class="ui-profile__status" [attr.data-status]="it.status">
+                      {{ it.statusLabel }}
+                    </div>
+                  </div>
+
+                  <div class="ui-profile__activity-sub" *ngIf="it.subtitle">{{ it.subtitle }}</div>
+                  <div class="ui-profile__activity-detail" *ngIf="it.detail">{{ it.detail }}</div>
+
+                  <div class="ui-profile__activity-bottom">
+                    <div class="ui-profile__activity-date">{{ it.dateLabel }}</div>
+                    <a *ngIf="it.link" class="ui-profile__activity-link" [routerLink]="it.link.routerLink">
+                      <span>{{ it.link.label }}</span>
+                      <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <aside class="ui-profile__side">
+        <div uiCard class="ui-profile__card ui-profile__card--sticky">
+          <div class="ui-profile__card-head">
+            <div>
+              <h2 class="ui-profile__h2">Actions</h2>
+              <p class="ui-profile__muted">Session actuelle</p>
+            </div>
+          </div>
+
+          <div class="ui-profile__pill">
+            <span class="ui-profile__pill-dot" aria-hidden="true"></span>
+            Connecté
+          </div>
+
+          <button
+            *ngIf="(auth.user?.role || '').toLowerCase() === 'admin'"
+            uiButton
+            variant="primary"
+            type="button"
+            class="ui-profile__backoffice"
+            [routerLink]="['/backoffice']"
+          >
+            <span>Backoffice</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+
+          <button uiButton type="button" class="ui-profile__logout ui-button--outline" (click)="logout()">
+            <span>Se déconnecter</span>
+            <app-tabler-icon name="logout" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+

@@ -1,0 +1,57 @@
+<section class="ui-legal">
+  <!-- HERO (consistent with other pages) -->
+  <div class="ui-legal__hero-wrap">
+    <div class="ui-legal__hero-spheres" aria-hidden="true">
+      <div class="ui-legal__sphere legal-sphere-1"></div>
+      <div class="ui-legal__sphere legal-sphere-2"></div>
+      <div class="ui-legal__sphere legal-sphere-3"></div>
+    </div>
+
+    <div class="ui-legal__hero-card">
+      <div class="ui-legal__hero-inner">
+        <div class="ui-legal__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-legal__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-legal__hero-grid">
+          <div class="ui-legal__hero-copy">
+            <div class="ui-legal__badge-row">
+              <span class="ui-legal__badge">FAQ</span>
+            </div>
+
+            <h1 class="ui-legal__h1">
+              Questions <span class="ui-legal__h1-accent">fréquentes</span>
+            </h1>
+
+            <p class="ui-legal__p">
+              Réponses aux questions les plus courantes sur nos formations et services.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="ui-legal__body ui-container">
+    <div class="ui-legal__sections">
+      <div *ngFor="let section of sections" uiCard class="ui-legal__section-card">
+        <div class="ui-legal__section-header" *ngIf="section.title">
+          <h2 class="ui-legal__section-title">
+            <app-tabler-icon name="info-circle" [size]="18" class="ui-legal__section-icon"></app-tabler-icon>
+            <span>{{ section.title }}</span>
+          </h2>
+        </div>
+        <div class="ui-legal__section-items">
+          <div *ngFor="let item of section.items" class="ui-legal__faq-item">
+            <h3 class="ui-legal__faq-question">{{ item.question }}</h3>
+            <p class="ui-legal__faq-answer">{{ item.answer }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

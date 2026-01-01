@@ -1,0 +1,128 @@
+<section class="ui-bo-sub">
+  <div class="ui-bo-sub__hero ui-container">
+    <div class="ui-bo-sub__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-sub__back ui-icon-button" [routerLink]="['/backoffice']">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-sub__head">
+      <div class="ui-bo-sub__pill">Backoffice</div>
+      <div class="ui-bo-sub__head-row">
+        <div>
+          <h1 class="ui-bo-sub__h1">Formations</h1>
+          <p class="ui-bo-sub__p">Créer, modifier, publier et gérer les contenus.</p>
+        </div>
+        <div class="ui-bo-sub__head-actions">
+          <button uiButton type="button" [routerLink]="['/backoffice/sessions']" class="ui-bo-sub__sessions">
+            <app-tabler-icon name="calendar" [size]="18"></app-tabler-icon>
+            <span>Sessions</span>
+          </button>
+          <button uiButton variant="primary" type="button" class="ui-bo-sub__create" (click)="create()">
+            <span>Nouvelle formation</span>
+            <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div class="ui-bo-sub__toolbar">
+      <div class="ui-bo-filterbar">
+        <!-- Recherche (ligne 1) -->
+        <div class="ui-bo-filterbar__search">
+          <label class="ui-bo-sub__label" for="bo-search">Recherche</label>
+          <input
+            uiInput
+            id="bo-search"
+            type="text"
+            [(ngModel)]="search"
+            placeholder="Titre, slug…"
+            (ngModelChange)="scheduleLoad()"
+            (keyup.enter)="load()"
+          />
+        </div>
+
+        <!-- Filtres + actions (ligne 2, toujours alignée / jamais empilée) -->
+        <div class="ui-bo-filterbar__row" aria-label="Filtres formations">
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label" for="bo-status">Statut</label>
+            <app-ui-choice-group
+              [(ngModel)]="status"
+            (ngModelChange)="scheduleLoad()"
+              name="bo-status"
+              [options]="statusOptions"
+              ariaLabel="Filtre statut"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label" for="bo-level">Niveau</label>
+            <app-ui-choice-group
+              [(ngModel)]="level"
+            (ngModelChange)="scheduleLoad()"
+              name="bo-level"
+              [options]="levelOptions"
+              ariaLabel="Filtre niveau"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__actions">
+            <button uiButton type="button" class="ui-bo-sub__apply" (click)="load()">Appliquer</button>
+            <button uiButton variant="ghost" type="button" class="ui-bo-sub__clear" (click)="clearFilters()">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ui-bo-sub__list-wrap">
+      <div *ngIf="hasLoaded && !trainings.length" class="ui-bo-sub__empty">
+        <div class="ui-bo-sub__muted">Aucune formation trouvée.</div>
+      </div>
+
+      <div class="ui-bo-table" *ngIf="trainings.length">
+        <div class="ui-bo-table__head" aria-hidden="true">
+          <div class="ui-bo-table__col ui-bo-table__col--main">Formation</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Slug</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">MAJ</div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">Statut</div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions"></div>
+        </div>
+
+        <div class="ui-bo-row" *ngFor="let t of trainings" (click)="edit(t.id)" role="button" tabindex="0">
+          <div class="ui-bo-table__col ui-bo-table__col--main">
+            <div class="ui-bo-row__title">{{ t.title }}</div>
+            <div class="ui-bo-row__sub">{{ t.category || t.trainingType || '—' }} • {{ t.level }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ t.slug }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ fmtDateTime(t.updatedAt) }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">
+            <span class="ui-bo-sub__status" [class.is-draft]="t.status === 'draft'" [class.is-archived]="t.status === 'archived'">
+              {{ badgeForStatus(t.status) }}
+            </span>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions ui-bo-row__actions" (click)="$event.stopPropagation()">
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="edit(t.id)" aria-label="Modifier">
+              <app-tabler-icon name="pencil" [size]="18"></app-tabler-icon>
+            </button>
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="delete(t.id)" aria-label="Supprimer">
+              <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

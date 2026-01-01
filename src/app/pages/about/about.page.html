@@ -1,0 +1,253 @@
+<section class="ui-about-page">
+  <!-- HERO (consistent with other pages) -->
+  <div class="ui-about-page__hero-wrap">
+    <div class="ui-about-page__hero-spheres" aria-hidden="true">
+      <div class="ui-about-page__sphere about-sphere-1"></div>
+      <div class="ui-about-page__sphere about-sphere-2"></div>
+      <div class="ui-about-page__sphere about-sphere-3"></div>
+    </div>
+
+    <div class="ui-about-page__hero-card">
+      <div class="ui-about-page__hero-inner">
+        <div class="ui-about-page__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-about-page__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-about-page__hero-grid">
+          <div class="ui-about-page__hero-copy">
+            <div class="ui-about-page__badge-row">
+              <span class="ui-about-page__badge">Unlock — École & Centre de formation</span>
+            </div>
+
+            <h1 class="ui-about-page__h1">
+              Former les talents qui façonneront <span class="ui-about-page__h1-accent">le monde de demain</span>
+            </h1>
+
+            <p class="ui-about-page__p">
+              Une école où chaque étudiant transforme sa passion tech en compétences concrètes. IA, data, cybersécurité, cloud, développement : nous vous guidons vers les métiers qui recrutent, avec des intervenants passionnés et <strong>EVA</strong> comme copilote intelligent.
+            </p>
+
+            <div class="ui-about-page__tags">
+              <span class="ui-about-page__tag">Titres RNCP & Certifications</span>
+              <span class="ui-about-page__tag">Présentiel · Distanciel · Hybride</span>
+              <span class="ui-about-page__tag">Accompagnement IA intégré</span>
+            </div>
+
+            <div class="ui-about-page__cta-row">
+              <a routerLink="/approche" uiButton variant="primary" class="ui-about-page__cta">
+                <span>Découvrir notre approche</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+              <a routerLink="/trainings" uiButton variant="outline" class="ui-about-page__cta">
+                <span>Explorer les formations</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+            </div>
+          </div>
+
+          <div class="ui-about-page__hero-stats">
+            <div uiCard class="ui-about-page__stat-card">
+              <p class="ui-about-page__stat-value">150+</p>
+              <p class="ui-about-page__stat-label">étudiants formés chaque année</p>
+            </div>
+            <div uiCard class="ui-about-page__stat-card">
+              <p class="ui-about-page__stat-value">35+</p>
+              <p class="ui-about-page__stat-label">experts et formateurs passionnés</p>
+            </div>
+            <div uiCard class="ui-about-page__stat-card">
+              <p class="ui-about-page__stat-value">4.8/5</p>
+              <p class="ui-about-page__stat-label">satisfaction moyenne étudiants</p>
+            </div>
+            <div uiCard class="ui-about-page__stat-card">
+              <p class="ui-about-page__stat-value">100%</p>
+              <p class="ui-about-page__stat-label">parcours orientés emploi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="ui-about-page__body ui-container">
+    <!-- Mission -->
+    <div class="ui-about-page__section">
+      <div class="ui-about-page__section-grid">
+        <div class="ui-about-page__section-content">
+          <div class="ui-about-page__section-badge">Notre mission</div>
+          <h2 class="ui-about-page__section-title">Révéler les talents tech de demain</h2>
+          <p class="ui-about-page__section-text">
+            Nous créons des parcours qui transforment votre passion en expertise : IA appliquée, data, cloud, développement,
+            cybersécurité, product. Notre objectif ? Faire de vous un professionnel capable d'innover, de créer et d'avoir un véritable impact sur le monde qui vous entoure.
+          </p>
+          <div class="ui-about-page__chips">
+            <span class="ui-about-page__chip">IA & Data</span>
+            <span class="ui-about-page__chip">Cloud & DevOps</span>
+            <span class="ui-about-page__chip">Cybersécurité</span>
+            <span class="ui-about-page__chip">Product & Design</span>
+            <span class="ui-about-page__chip">Développement</span>
+          </div>
+        </div>
+        <div class="ui-about-page__section-features">
+          <div uiCard class="ui-about-page__feature-card">
+            <div class="ui-about-page__feature-icon">
+              <app-tabler-icon name="users" [size]="18"></app-tabler-icon>
+            </div>
+            <p class="ui-about-page__feature-title">Apprendre en créant</p>
+            <p class="ui-about-page__feature-text">Projets concrets, ateliers pratiques, et retours bienveillants pour progresser sereinement.</p>
+          </div>
+          <div uiCard class="ui-about-page__feature-card">
+            <div class="ui-about-page__feature-icon">
+              <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+            </div>
+            <p class="ui-about-page__feature-title">Accompagnement IA</p>
+            <p class="ui-about-page__feature-text">EVA, votre copilote intelligent, vous aide à comprendre, réviser et avancer plus vite.</p>
+          </div>
+          <div uiCard class="ui-about-page__feature-card">
+            <div class="ui-about-page__feature-icon">
+              <app-tabler-icon name="circle-check" [size]="18"></app-tabler-icon>
+            </div>
+            <p class="ui-about-page__feature-title">Diplômes reconnus</p>
+            <p class="ui-about-page__feature-text">Titres RNCP et certifications valorisées sur le marché de l'emploi.</p>
+          </div>
+          <div uiCard class="ui-about-page__feature-card">
+            <div class="ui-about-page__feature-icon">
+              <app-tabler-icon name="calendar" [size]="18"></app-tabler-icon>
+            </div>
+            <p class="ui-about-page__feature-title">Formats flexibles</p>
+            <p class="ui-about-page__feature-text">Présentiel, distanciel, hybride : on s'adapte à votre vie et vos contraintes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approche -->
+    <div uiCard class="ui-about-page__approach-card">
+      <div class="ui-about-page__approach-header">
+        <div class="ui-about-page__section-badge">Comment on travaille</div>
+        <h3 class="ui-about-page__approach-title">Une méthode qui fait ses preuves</h3>
+        <p class="ui-about-page__approach-text">
+          Pas de cours magistraux interminables : chez nous, vous apprenez en pratiquant, en vous trompant, en recommençant.
+          Nos formateurs vous guident, vous challengent et vous soutiennent. EVA vous aide à réviser, à comprendre et à aller plus loin.
+          Résultat : vous gagnez en compétences, en confiance, et en employabilité.
+        </p>
+      </div>
+      <div class="ui-about-page__approach-steps">
+        <div uiCard class="ui-about-page__step-card">
+          <div class="ui-about-page__step-icon">
+            <app-tabler-icon name="checklist" [size]="18"></app-tabler-icon>
+          </div>
+          <p class="ui-about-page__step-title">On comprend votre projet</p>
+          <p class="ui-about-page__step-text">Un échange pour définir vos objectifs, votre niveau, et construire le parcours qui vous correspond.</p>
+        </div>
+        <div uiCard class="ui-about-page__step-card">
+          <div class="ui-about-page__step-icon">
+            <app-tabler-icon name="stack" [size]="18"></app-tabler-icon>
+          </div>
+          <p class="ui-about-page__step-title">Des modules concrets</p>
+          <p class="ui-about-page__step-text">Vous apprenez par la pratique : créer, tester, déployer. Pas de théorie inutile.</p>
+        </div>
+        <div uiCard class="ui-about-page__step-card">
+          <div class="ui-about-page__step-icon">
+            <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+          </div>
+          <p class="ui-about-page__step-title">Formateurs + IA</p>
+          <p class="ui-about-page__step-text">Le meilleur des deux mondes : l'humain pour vous guider, l'IA pour vous débloquer 24/7.</p>
+        </div>
+        <div uiCard class="ui-about-page__step-card">
+          <div class="ui-about-page__step-icon">
+            <app-tabler-icon name="chart-line" [size]="18"></app-tabler-icon>
+          </div>
+          <p class="ui-about-page__step-title">Suivi personnalisé</p>
+          <p class="ui-about-page__step-text">Points réguliers, feedback constructif, et une vraie attention portée à votre progression.</p>
+        </div>
+        <div uiCard class="ui-about-page__step-card">
+          <div class="ui-about-page__step-icon">
+            <app-tabler-icon name="graduation-cap" [size]="18"></app-tabler-icon>
+          </div>
+          <p class="ui-about-page__step-title">Diplôme & employabilité</p>
+          <p class="ui-about-page__step-text">Titre reconnu, portfolio de projets, et accompagnement pour décrocher votre job.</p>
+        </div>
+        <div uiCard class="ui-about-page__step-card">
+          <div class="ui-about-page__step-icon">
+            <app-tabler-icon name="calendar-event" [size]="18"></app-tabler-icon>
+          </div>
+          <p class="ui-about-page__step-title">On reste connectés</p>
+          <p class="ui-about-page__step-text">Après la formation, on continue de vous soutenir : alumni, événements, mises à jour.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Qualité & équipe -->
+    <div class="ui-about-page__section">
+      <div class="ui-about-page__quality-grid">
+        <div uiCard class="ui-about-page__quality-card">
+          <div class="ui-about-page__quality-item">
+            <div class="ui-about-page__quality-icon">
+              <app-tabler-icon name="sparkles" [size]="20"></app-tabler-icon>
+            </div>
+            <div>
+              <p class="ui-about-page__quality-title">Qualité & sérieux</p>
+              <p class="ui-about-page__quality-text">Des parcours reconnus, des intervenants experts, et une équipe qui ne lâche rien.</p>
+            </div>
+          </div>
+          <div class="ui-about-page__quality-item">
+            <div class="ui-about-page__quality-icon">
+              <app-tabler-icon name="users" [size]="20"></app-tabler-icon>
+            </div>
+            <div>
+              <p class="ui-about-page__quality-title">Accompagnement humain</p>
+              <p class="ui-about-page__quality-text">Formateurs accessibles, sessions de questions, et une vraie écoute de vos besoins.</p>
+            </div>
+          </div>
+          <div class="ui-about-page__quality-item">
+            <div class="ui-about-page__quality-icon">
+              <app-tabler-icon name="rocket" [size]="20"></app-tabler-icon>
+            </div>
+            <div>
+              <p class="ui-about-page__quality-title">Boost par l'IA</p>
+              <p class="ui-about-page__quality-text">EVA vous aide à réviser, corriger votre code, et comprendre les concepts difficiles.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ui-about-page__quality-content">
+          <div class="ui-about-page__section-badge">Nos domaines</div>
+          <h3 class="ui-about-page__quality-heading">Les compétences tech qui font la différence</h3>
+          <p class="ui-about-page__quality-description">
+            De l'IA générative au développement web, de la cybersécurité au cloud, du product management au design :
+            nous vous formons aux métiers d'aujourd'hui et de demain, avec des programmes pensés pour l'emploi.
+          </p>
+          <div class="ui-about-page__chips">
+            <span class="ui-about-page__chip">IA générative</span>
+            <span class="ui-about-page__chip">Data & BI</span>
+            <span class="ui-about-page__chip">DevOps & Cloud</span>
+            <span class="ui-about-page__chip">Cybersécurité</span>
+            <span class="ui-about-page__chip">Product</span>
+            <span class="ui-about-page__chip">Design & UX</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Final -->
+    <div uiCard class="ui-about-page__cta-card">
+      <div class="ui-about-page__cta-content">
+        <div class="ui-about-page__section-badge">Prêt à démarrer ?</div>
+        <h4 class="ui-about-page__cta-title">Parlons de votre projet, de vos ambitions, de ce qui vous fait vibrer.</h4>
+        <p class="ui-about-page__cta-text">Que vous soyez en reconversion, en montée en compétences, ou que vous cherchiez à former vos équipes : on est là pour vous.</p>
+      </div>
+      <div class="ui-about-page__cta-actions">
+        <a routerLink="/contact" uiButton variant="outline" class="ui-about-page__cta-btn">
+          <span>Nous contacter</span>
+          <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+        </a>
+        <a routerLink="/trainings" uiButton variant="primary" class="ui-about-page__cta-btn">
+          <span>Voir les formations</span>
+          <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

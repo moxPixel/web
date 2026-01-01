@@ -1,0 +1,227 @@
+<section class="ui-bo-sub">
+  <div class="ui-bo-sub__hero ui-container">
+    <div class="ui-bo-sub__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-sub__back ui-icon-button" [routerLink]="['/backoffice']">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-sub__head">
+      <div class="ui-bo-sub__pill">Backoffice</div>
+      <div class="ui-bo-sub__head-row">
+        <div>
+          <h1 class="ui-bo-sub__h1">Inscriptions</h1>
+          <p class="ui-bo-sub__p">Demandes de formation. Total : {{ total || 0 }}</p>
+        </div>
+        <div class="ui-bo-sub__head-actions">
+          <button uiButton variant="ghost" type="button" (click)="load()">Actualiser</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div class="ui-bo-sub__toolbar">
+      <div class="ui-bo-filterbar">
+        <div class="ui-bo-filterbar__search">
+          <label class="ui-bo-sub__label" for="bo-enroll-search">Recherche</label>
+          <input
+            uiInput
+            id="bo-enroll-search"
+            type="text"
+            [(ngModel)]="search"
+            placeholder="Nom, email…"
+            (ngModelChange)="scheduleLoad()"
+            (keyup.enter)="load()"
+          />
+        </div>
+
+        <div class="ui-bo-filterbar__row" aria-label="Actions filtres inscriptions">
+          <div class="ui-bo-filterbar__actions">
+            <button
+              uiButton
+              variant="ghost"
+              type="button"
+              #filtersBtn
+              (click)="toggleFilters(filtersBtn)"
+              aria-haspopup="dialog"
+              [attr.aria-expanded]="filtersOpen"
+            >
+              <app-tabler-icon name="stack" [size]="18"></app-tabler-icon>
+              <span>Filtres</span>
+              <span *ngIf="activeFiltersCount()" class="ui-bo-filters__count">({{ activeFiltersCount() }})</span>
+            </button>
+            <button uiButton variant="ghost" type="button" class="ui-bo-sub__clear" (click)="clearFilters()" [disabled]="!activeFiltersCount() && !search">
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <app-anchored-panel
+      [open]="filtersOpen"
+      [anchor]="filtersAnchor"
+      [width]="520"
+      preferredPlacement="bottom-end"
+      panelClass="ui-anchored-panel__panel--sheet"
+      (backdropClick)="closeFilters()"
+      (escapeKey)="closeFilters()"
+    >
+      <div class="ui-bo-filters-sheet">
+        <div class="ui-bo-filters-sheet__head">
+          <div class="ui-bo-filters-sheet__title">Filtres</div>
+          <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="closeFilters()" aria-label="Fermer">
+            <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-bo-filters-sheet__body">
+          <div class="ui-bo-filters-sheet__group">
+            <div class="ui-bo-filters-sheet__label">Statut</div>
+            <app-ui-choice-group [(ngModel)]="status" (ngModelChange)="scheduleLoad()" name="bo-enroll-status" [options]="statusOptions" ariaLabel="Filtre statut" size="sm"></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filters-sheet__group">
+            <div class="ui-bo-filters-sheet__label">Rôle</div>
+            <app-ui-choice-group [(ngModel)]="role" (ngModelChange)="scheduleLoad()" name="bo-enroll-role" [options]="roleOptions" ariaLabel="Filtre rôle" size="sm"></app-ui-choice-group>
+          </div>
+        </div>
+
+        <div class="ui-bo-filters-sheet__foot">
+          <button uiButton variant="ghost" type="button" (click)="clearFilters(); closeFilters()" [disabled]="!activeFiltersCount() && !search">
+            Réinitialiser
+          </button>
+          <button uiButton variant="primary" type="button" (click)="closeFilters()">OK</button>
+        </div>
+      </div>
+    </app-anchored-panel>
+
+    <div class="ui-bo-sub__list-wrap">
+      <div *ngIf="hasLoaded && !enrollments.length" class="ui-bo-sub__empty">
+        <div class="ui-bo-sub__muted">Aucune demande trouvée.</div>
+      </div>
+
+      <div class="ui-bo-table" *ngIf="enrollments.length">
+        <div class="ui-bo-table__head ui-bo-table__head--enrollments" aria-hidden="true">
+          <div class="ui-bo-table__col ui-bo-table__col--main">Candidat</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Formation</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Session</div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">Statut</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Date</div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions"></div>
+        </div>
+
+        <div class="ui-bo-row-wrap" *ngFor="let e of enrollments">
+          <div
+            class="ui-bo-row ui-bo-row--enrollments ui-bo-row--accordion"
+            role="button"
+            tabindex="0"
+            [attr.aria-expanded]="isExpanded(e)"
+            [attr.aria-controls]="'bo-enroll-acc-' + e.id"
+            (click)="toggleRow(e)"
+            (keydown.enter)="toggleRow(e)"
+            (keydown.space)="$event.preventDefault(); toggleRow(e)"
+          >
+            <div class="ui-bo-table__col ui-bo-table__col--main">
+              <div class="ui-bo-row__title ui-bo-row__title--with-caret">
+                <span>{{ displayName(e) }}</span>
+                <app-tabler-icon [name]="isExpanded(e) ? 'chevron-up' : 'chevron-down'" [size]="18"></app-tabler-icon>
+              </div>
+              <div class="ui-bo-row__sub">{{ displayEmail(e) }}</div>
+            </div>
+
+            <div class="ui-bo-table__col ui-bo-table__col--meta">
+              <div class="ui-bo-row__sub">{{ trainingLabel(e) }}</div>
+            </div>
+
+            <div class="ui-bo-table__col ui-bo-table__col--meta">
+              <div class="ui-bo-row__sub">{{ sessionLabel(e) }}</div>
+            </div>
+
+            <div class="ui-bo-table__col ui-bo-table__col--status">
+              <span class="ui-bo-sub__status" [attr.data-status]="e.status">{{ badgeStatus(e.status) }}</span>
+            </div>
+
+            <div class="ui-bo-table__col ui-bo-table__col--meta">
+              <div class="ui-bo-row__mono">{{ fmtDateTime(e.createdAt) }}</div>
+            </div>
+
+            <div class="ui-bo-table__col ui-bo-table__col--actions ui-bo-row__actions" (click)="$event.stopPropagation()">
+              <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="toggleRow(e)" aria-label="Détails" title="Détails">
+                <app-tabler-icon name="external-link" [size]="18"></app-tabler-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="ui-bo-contact-acc" [id]="'bo-enroll-acc-' + e.id" [class.is-open]="isExpanded(e)" (click)="$event.stopPropagation()">
+            <div class="ui-bo-contact-acc__inner">
+              <div class="ui-bo-contact-acc__grid">
+                <div class="ui-bo-contact-acc__block" *ngIf="messageOf(e)">
+                  <div class="ui-bo-contact-acc__label">Motivation / message</div>
+                  <div class="ui-bo-contact-acc__text">{{ messageOf(e) }}</div>
+                </div>
+
+                <div class="ui-bo-contact-acc__block" *ngIf="objectivesOf(e)">
+                  <div class="ui-bo-contact-acc__label">Objectifs spécifiques</div>
+                  <div class="ui-bo-contact-acc__text">{{ objectivesOf(e) }}</div>
+                </div>
+
+                <div class="ui-bo-contact-acc__meta">
+                  <div class="ui-bo-contact-acc__kv" *ngIf="roleOf(e)">
+                    <div class="k">Rôle</div>
+                    <div class="v">{{ roleOf(e) }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="phoneOf(e)">
+                    <div class="k">Téléphone</div>
+                    <div class="v">{{ phoneOf(e) }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="companyOf(e)">
+                    <div class="k">Entreprise</div>
+                    <div class="v">{{ companyOf(e) }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="preferredFormatOf(e)">
+                    <div class="k">Format</div>
+                    <div class="v">{{ preferredFormatOf(e) }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="desiredDateOf(e)">
+                    <div class="k">Date souhaitée</div>
+                    <div class="v">{{ fmtDateTime(desiredDateOf(e)) }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui-bo-contact-acc__footer">
+                <div class="ui-bo-contact-acc__status">
+                  <div class="ui-bo-contact-acc__label">Statut (envoi email)</div>
+                  <app-ui-choice-group
+                    [ngModel]="e.status"
+                    (ngModelChange)="setEnrollmentStatus(e, $event)"
+                    name="bo-enroll-status-{{ e.id }}"
+                    [options]="manageStatusOptions"
+                    ariaLabel="Statut inscription"
+                    size="sm"
+                  ></app-ui-choice-group>
+                  <div class="ui-bo-contact-acc__hint" *ngIf="updatingStatusId === e.id">Mise à jour…</div>
+                </div>
+
+                <div class="ui-bo-contact-acc__actions">
+                  <button uiButton variant="ghost" type="button" (click)="toggleRow(e)">Fermer</button>
+                  <ng-container *ngIf="e.training?.slug as trainingSlug">
+                    <a uiButton variant="primary" [routerLink]="['/trainings', trainingSlug]">
+                    <span>Voir la formation</span>
+                    <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+                    </a>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

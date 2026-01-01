@@ -1,0 +1,20 @@
+<div
+  class="ui-choice-group"
+  role="radiogroup"
+  [attr.aria-label]="ariaLabel"
+  [class.ui-choice-group--sm]="size === 'sm'"
+  [class.ui-choice-group--nowrap]="wrap === 'nowrap'"
+>
+  <button
+    type="button"
+    class="ui-choice-group__btn"
+    *ngFor="let o of options; trackBy: trackByValue"
+    [class.is-active]="o.value === value"
+    [disabled]="disabled"
+    (click)="select(o.value)"
+  >
+    <span class="ui-choice-group__label">{{ o.label }}</span>
+  </button>
+</div>
+
+

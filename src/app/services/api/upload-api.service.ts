@@ -1,49 +1,21 @@
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpEvent, HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError, timeout } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { catchError, map, timeout } from 'rxjs/operators';
+
 import { ApiResponse } from '../../interfaces/api.interface';
+import { getApiBaseUrl } from '../../shared/config/api-url';
 
 export interface UploadResponse {
-  url: string;
+  url: string; // e.g. "/uploads/images/filename.webp"
   filename: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UploadApiService {
-  private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/upload`;
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${getApiBaseUrl()}/upload`;
 
-  /**
-   * Uploader une image
-   */
-  uploadImage(file: File): Observable<UploadResponse> {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    return this.http
-      .post<ApiResponse<UploadResponse>>(`${this.apiUrl}/image`, formData, {
-        reportProgress: true,
-        observe: 'events',
-      })
-      .pipe(
-        timeout(60000), // 60 secondes pour l'upload (fichiers peuvent être gros)
-        map((event: HttpEvent<ApiResponse<UploadResponse>>) => {
-          if (event.type === HttpEventType.Response) {
-            return event.body!.data!;
-          }
-          throw new Error('Upload failed');
-        }),
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Uploader une image avec progression
-   */
   uploadImageWithProgress(file: File): Observable<{ progress: number; response?: UploadResponse }> {
     const formData = new FormData();
     formData.append('image', file);
@@ -54,142 +26,68 @@ export class UploadApiService {
         observe: 'events',
       })
       .pipe(
-        timeout(60000), // 60 secondes pour l'upload
+        timeout(60000),
         map((event: HttpEvent<ApiResponse<UploadResponse>>) => {
           switch (event.type) {
-            case HttpEventType.UploadProgress:
-              const progress = event.total
-                ? Math.round((100 * event.loaded) / event.total)
-                : 0;
+            case HttpEventType.UploadProgress: {
+              const progress = event.total ? Math.round((100 * event.loaded) / event.total) : 0;
               return { progress };
+            }
             case HttpEventType.Response:
-              return { progress: 100, response: event.body!.data! };
+              return { progress: 100, response: event.body?.data as UploadResponse };
             default:
               return { progress: 0 };
           }
         }),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
   /**
-   * Supprimer une image
-   */
-  deleteImage(filename: string): Observable<void> {
-    return this.http
-      .delete<ApiResponse<void>>(`${this.apiUrl}/image/${filename}`)
-      .pipe(
-        timeout(10000),
-        map(() => undefined),
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Lister toutes les images
-   */
-  listImages(): Observable<string[]> {
-    return this.http
-      .get<ApiResponse<string[]>>(`${this.apiUrl}/images`)
-      .pipe(
-        timeout(10000),
-        map((response) => response.data || []),
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Obtenir l'URL complète d'une image
-   * IMPORTANT: Toujours retourner une URL absolue avec le protocole et le host
-   */
-  getImageUrl(filename: string): string {
-    // Extraire le base URL depuis l'API URL (enlever /api)
-    let baseUrl = environment.apiUrl.replace('/api', '');
-    
-    // S'assurer que c'est une URL absolue (commence par http:// ou https://)
-    if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
-      console.error('ERROR: baseUrl is not absolute:', baseUrl);
-      baseUrl = 'http://localhost:4000';
-    }
-    
-    // Construire l'URL complète
-    const imageUrl = `${baseUrl}/uploads/images/${filename}`;
-    
-    // Debug: vérifier que l'URL est correcte
-    if (typeof window !== 'undefined') {
-      if (imageUrl.includes('localhost:4200')) {
-        console.error('ERROR: Image URL points to Angular server instead of backend!', imageUrl);
-        console.error('Base URL:', baseUrl);
-        console.error('Environment API URL:', environment.apiUrl);
-        // Forcer la correction
-        return `http://localhost:4000/uploads/images/${filename}`;
-      }
-      console.log('Generated image URL:', imageUrl);
-    }
-    
-    return imageUrl;
-  }
-
-  /**
-   * Obtenir l'URL complète depuis un chemin relatif (/uploads/images/filename)
+   * Convert a backend path like "/uploads/images/x.jpg" into a usable URL for <img>.
+   * - Dev: if `environment.apiUrl` is absolute, we resolve to the backend origin
+   * - Prod (same-origin `/api`): keep relative path (reverse-proxy should serve `/uploads`)
    */
   getImageUrlFromPath(imagePath: string): string {
-    // Si c'est déjà une URL complète (http:// ou https://), la retourner telle quelle
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+    if (imagePath.startsWith('data:')) return imagePath;
+
+    // Keep app assets / any absolute-root paths as-is (except /uploads which must target backend in dev)
+    if (imagePath.startsWith('/') && !imagePath.startsWith('/uploads/')) {
       return imagePath;
     }
-    
-    // Si c'est un chemin relatif (/uploads/images/filename), extraire le filename
+
+    // Common relative asset path
+    if (imagePath.startsWith('assets/')) {
+      return `/${imagePath}`;
+    }
+    if (imagePath.startsWith('uploads/')) {
+      imagePath = `/${imagePath}`;
+    }
+
     if (imagePath.startsWith('/uploads/')) {
-      const filename = imagePath.split('/').pop() || '';
-      const url = this.getImageUrl(filename);
-      // Double vérification pour éviter les URLs pointant vers le port 4200
-      if (url.includes('localhost:4200')) {
-        console.error('ERROR: getImageUrlFromPath generated URL pointing to Angular server!', url);
-        return `http://localhost:4000/uploads/images/${filename}`;
+      const apiBase = getApiBaseUrl();
+      // If apiBase is absolute (dev), strip "/api" to get backend host.
+      if (apiBase.startsWith('http://') || apiBase.startsWith('https://')) {
+        const base = apiBase.replace(/\/api\/?$/, '');
+        return `${base}${imagePath}`;
       }
-      return url;
+      // Otherwise assume same-origin reverse proxy serves /uploads.
+      return imagePath;
     }
-    
-    // Si c'est juste un filename, construire l'URL complète
-    const url = this.getImageUrl(imagePath);
-    // Double vérification pour éviter les URLs pointant vers le port 4200
-    if (url.includes('localhost:4200')) {
-      console.error('ERROR: getImageUrl generated URL pointing to Angular server!', url);
-      return `http://localhost:4000/uploads/images/${imagePath}`;
-    }
-    return url;
+
+    // If only filename is provided, assume /uploads/images/<filename>
+    return this.getImageUrlFromPath(`/uploads/images/${imagePath}`);
   }
 
-  /**
-   * Gestion centralisée des erreurs HTTP
-   */
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Erreur lors de l\'upload';
-    
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Erreur: ${error.error.message}`;
-    } else {
-      switch (error.status) {
-        case 0:
-          errorMessage = 'Impossible de se connecter au serveur';
-          break;
-        case 400:
-          errorMessage = error.error?.message || 'Fichier invalide';
-          break;
-        case 413:
-          errorMessage = 'Fichier trop volumineux (max 5MB)';
-          break;
-        case 500:
-          errorMessage = 'Erreur serveur lors de l\'upload';
-          break;
-        default:
-          errorMessage = error.error?.message || `Erreur ${error.status}`;
-      }
-    }
-    
-    console.error('Upload Error:', error);
+    let errorMessage = "Erreur lors de l'upload";
+    if (error.status === 0) errorMessage = 'Impossible de se connecter au serveur';
+    else if (error.status === 413) errorMessage = 'Fichier trop volumineux (max 5MB)';
+    else if (error.error?.message) errorMessage = error.error.message;
     return throwError(() => new Error(errorMessage));
   }
 }
+
 

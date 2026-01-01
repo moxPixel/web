@@ -1,0 +1,157 @@
+<header class="ui-header">
+  <div #headerContainer class="ui-header__container">
+    <a class="ui-header__brand" routerLink="/" aria-label="Home" (click)="closeMobileMenu()">
+      <figure class="ui-header__logo-wrap" aria-hidden="true">
+        <img class="ui-logo" src="/assets/images/logo/logo-dark.png" alt="" width="28" height="28" />
+      </figure>
+    </a>
+
+    <nav class="ui-header__nav" aria-label="Primary">
+      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="ui-nav-link">
+        <app-tabler-icon class="ui-nav-link__icon" name="world" [size]="18"></app-tabler-icon>
+        <span class="ui-nav-link__label">Accueil</span>
+      </a>
+      <a routerLink="/about" routerLinkActive="is-active" class="ui-nav-link">
+        <app-tabler-icon class="ui-nav-link__icon" name="info-circle" [size]="18"></app-tabler-icon>
+        <span class="ui-nav-link__label">À propos</span>
+      </a>
+      <div #trainingsNavItem class="ui-nav-item" (pointerenter)="openMegaMenu()" (pointerleave)="scheduleCloseMegaMenu()">
+        <a
+          routerLink="/trainings"
+          routerLinkActive="is-active"
+          class="ui-nav-link ui-nav-link--with-icon"
+          aria-haspopup="true"
+          [attr.aria-expanded]="showMegaMenu"
+        >
+          <app-tabler-icon class="ui-nav-link__icon" name="graduation-cap" [size]="18"></app-tabler-icon>
+          <span class="ui-nav-link__label">Formations</span>
+          <app-tabler-icon class="ui-nav-link__chevron" name="chevron-down" [size]="16"></app-tabler-icon>
+        </a>
+
+        <div
+          class="ui-mega-menu"
+          [class.open]="showMegaMenu"
+          *ngIf="trainingsGrouped.length"
+          (pointerenter)="openMegaMenu()"
+          (pointerleave)="scheduleCloseMegaMenu()"
+        >
+          <div class="ui-mega-menu__inner">
+            <div class="ui-mega-grid">
+              <div class="ui-mega-group" *ngFor="let group of trainingsGrouped">
+                <p class="ui-mega-title">{{ group.category }}</p>
+                <ul class="ui-mega-list">
+                  <li *ngFor="let item of group.items">
+                    <a [routerLink]="['/trainings', item.slug]" class="ui-mega-link">
+                      <span class="ui-mega-link__text">{{ item.shortTitle || item.title }}</span>
+                      <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="ui-mega-cta">
+              <a routerLink="/trainings" class="ui-cta ui-cta--small">
+                <span>Voir toutes les formations</span>
+                <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="ui-nav-link ui-nav-link--with-icon" href="https://odyssee.life/" target="_blank" rel="noopener">
+        <app-tabler-icon class="ui-nav-link__icon" name="briefcase" [size]="18"></app-tabler-icon>
+        <span class="ui-nav-link__label">Besoin d'expert</span>
+        <app-tabler-icon class="ui-nav-link__chevron" name="external-link" [size]="16"></app-tabler-icon>
+      </a>
+      <a routerLink="/contact" routerLinkActive="is-active" class="ui-nav-link">
+        <app-tabler-icon class="ui-nav-link__icon" name="mail" [size]="18"></app-tabler-icon>
+        <span class="ui-nav-link__label">Contact</span>
+      </a>
+    </nav>
+
+    <div class="ui-header__actions">
+      <a class="ui-header__phone" href="tel:0187664184">
+        <app-tabler-icon name="phone" [size]="18"></app-tabler-icon>
+        <span class="ui-header__phone-label">01 87 66 41 84</span>
+      </a>
+
+      <div class="ui-header__divider" aria-hidden="true"></div>
+
+      <a [routerLink]="(auth.user$ | async) ? '/profile' : '/login'" class="ui-cta">
+        <app-tabler-icon class="ui-header__cta-icon" name="user" [size]="18"></app-tabler-icon>
+        <span class="ui-header__cta-label">{{ (auth.user$ | async) ? 'Mon profil' : 'Mon espace' }}</span>
+        <app-tabler-icon class="ui-header__cta-arrow" name="arrow-right" [size]="18"></app-tabler-icon>
+      </a>
+    </div>
+
+    <button type="button" class="ui-icon-button ui-header__hamburger" (click)="toggleMobileMenu()" aria-label="Menu">
+      <app-tabler-icon name="menu-2" [size]="20"></app-tabler-icon>
+    </button>
+  </div>
+
+  <div class="ui-mobile-overlay" [class.is-open]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+
+  <aside class="ui-mobile-drawer" [class.is-open]="isMobileMenuOpen" aria-label="Mobile menu">
+    <div>
+      <div class="ui-mobile-top">
+        <a routerLink="/" (click)="closeMobileMenu()">
+          <figure class="ui-header__logo-wrap">
+            <img class="ui-logo" src="/assets/images/logo/logo-dark.png" alt="" width="24" height="24" />
+          </figure>
+        </a>
+        <button type="button" class="ui-icon-button" (click)="closeMobileMenu()" aria-label="Close">
+          <app-tabler-icon name="x" [size]="20"></app-tabler-icon>
+        </button>
+      </div>
+
+      <nav class="ui-mobile-nav" aria-label="Mobile primary">
+      <ul>
+        <li>
+          <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="ui-mobile-link" (click)="closeMobileMenu()">Accueil</a>
+        </li>
+        <li>
+          <a routerLink="/about" routerLinkActive="is-active" class="ui-mobile-link" (click)="closeMobileMenu()">À propos</a>
+        </li>
+        <li>
+          <button type="button" class="ui-mobile-link ui-mobile-link--button" (click)="toggleMobileTrainings()">
+            <span>Formations</span>
+            <app-tabler-icon [name]="showMobileTrainings ? 'chevron-up' : 'chevron-down'" [size]="16"></app-tabler-icon>
+          </button>
+          <div *ngIf="showMobileTrainings" class="ui-mobile-sub">
+            <div class="ui-mobile-sub__group" *ngFor="let group of trainingsGrouped">
+              <p class="ui-mobile-sub__title">{{ group.category }}</p>
+              <ul>
+                <li *ngFor="let item of group.items">
+                  <a [routerLink]="['/trainings', item.slug]" class="ui-mobile-sub__link" (click)="closeMobileMenu()">
+                    <span>{{ item.shortTitle || item.title }}</span>
+                    <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <a routerLink="/trainings" class="ui-mobile-action ui-mobile-action--strong" (click)="closeMobileMenu()">
+              <span>Voir toutes les formations</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+          </div>
+        </li>
+        <li>
+          <a class="ui-mobile-link" href="https://odyssee.life/" target="_blank" rel="noopener" (click)="closeMobileMenu()">Besoin d'expert</a>
+        </li>
+        <li>
+          <a routerLink="/contact" routerLinkActive="is-active" class="ui-mobile-link" (click)="closeMobileMenu()">Contact</a>
+        </li>
+      </ul>
+
+      <div class="ui-mobile-actions">
+        <a [routerLink]="(auth.user$ | async) ? '/profile' : '/login'" class="ui-mobile-action" (click)="closeMobileMenu()">
+          <span>{{ (auth.user$ | async) ? 'Mon profil' : 'Mon espace' }}</span>
+          <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+        </a>
+      </div>
+    </nav>
+    </div>
+  </aside>
+</header>
+

@@ -1,0 +1,42 @@
+<section class="ui-training-suggestions ui-home-section" *ngIf="suggestions.length > 0">
+  <div class="ui-training-suggestions__container ui-home-container">
+    <header class="ui-training-suggestions__header ui-home-header">
+      <div class="ui-training-suggestions__pill ui-home-pill">Formations suggérées</div>
+      <h2 class="ui-training-suggestions__title ui-home-title">
+        D'autres <span class="ui-home-title-accent">formations</span> qui pourraient vous intéresser
+      </h2>
+    </header>
+
+    <div class="ui-training-suggestions__grid">
+      <a *ngFor="let training of suggestions" [routerLink]="['/trainings', training.slug]" class="ui-training-suggestions__card">
+        <div class="ui-training-suggestions__image">
+          <img [src]="getImageUrl(training.heroImage)" [alt]="training.shortTitle" loading="lazy" decoding="async" />
+          <div class="ui-training-suggestions__gradient"></div>
+        </div>
+
+        <div uiCard class="ui-training-suggestions__glass">
+          <div class="ui-training-suggestions__head">
+            <span class="ui-training-suggestions__badge">{{ training.category }}</span>
+            <span class="ui-training-suggestions__level">{{ training.level }}</span>
+          </div>
+          <h3 class="ui-training-suggestions__title-card">{{ training.shortTitle }}</h3>
+          <p class="ui-training-suggestions__tagline">{{ training.tagline }}</p>
+
+          <div class="ui-training-suggestions__meta">
+            <div><span class="k">Format :</span> {{ training.format }}</div>
+            <div class="sub">{{ training.nextSessionHighlight }}</div>
+          </div>
+
+          <div class="ui-training-suggestions__foot">
+            <div class="price">{{ training.priceFrom }} € HT</div>
+            <span class="cta">
+              Voir le détail
+              <app-tabler-icon name="arrow-right" [size]="14"></app-tabler-icon>
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+

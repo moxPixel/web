@@ -1,0 +1,76 @@
+:host {
+  display: block;
+}
+
+/* Reuse the exact same list-page layout/styles as Trainings (SSOT) */
+@import './backoffice-trainings.page.css';
+
+/* Filters popover content (projected, so styles apply here) */
+.ui-bo-filters__count {
+  margin-left: 0.25rem;
+  color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  font-weight: 650;
+}
+
+.ui-bo-filters-sheet {
+  padding: 0.95rem;
+}
+
+.ui-bo-filters-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--ui-border) 55%, transparent);
+}
+
+.ui-bo-filters-sheet__title {
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--ui-fg) 92%, transparent);
+}
+
+.ui-bo-filters-sheet__body {
+  padding-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.ui-bo-filters-sheet__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ui-bo-filters-sheet__label {
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--ui-fg) 75%, transparent);
+}
+
+.ui-bo-filters-sheet__foot {
+  padding-top: 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+/* Users-specific column layout */
+@media (min-width: 860px) {
+  .ui-bo-table__head--users {
+    grid-template-columns: 1.2fr 1.1fr 0.7fr 0.55fr 0.6fr auto;
+  }
+
+  .ui-bo-row--users {
+    grid-template-columns: 1.2fr 1.1fr 0.7fr 0.55fr 0.6fr auto;
+  }
+}
+
+/* Prevent the ID mono from stealing vertical space on small screens */
+.ui-bo-row--users .ui-bo-row__sub {
+  line-height: 1.35;
+}
+
+

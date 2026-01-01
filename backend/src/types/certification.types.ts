@@ -15,6 +15,7 @@ export interface CertificationQueryParams {
   limit?: number;
   search?: string;
   status?: 'active' | 'inactive';
+  type?: string;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
 }

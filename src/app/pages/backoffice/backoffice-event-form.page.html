@@ -1,0 +1,167 @@
+<section class="ui-bo-form">
+  <div class="ui-bo-form__hero ui-container">
+    <div class="ui-bo-form__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-form__back ui-icon-button" (click)="back()">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-form__head">
+      <div class="ui-bo-form__pill">Backoffice</div>
+      <div class="ui-bo-form__head-row">
+        <div>
+          <h1 class="ui-bo-form__h1">{{ isEdit ? "Modifier l'événement" : 'Nouvel événement' }}</h1>
+          <p class="ui-bo-form__p">Un événement publié apparaîtra sur le site (section Alternance).</p>
+        </div>
+        <div class="ui-bo-form__head-actions">
+          <button uiButton variant="primary" type="button" class="ui-bo-form__save" (click)="submit()" [loading]="saving" [disabled]="saving || !hydrated">
+            <span>Enregistrer</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <form class="ui-bo-form__form" [formGroup]="form">
+      <div uiCard class="ui-bo-form__card">
+        <div class="ui-bo-form__card-head">
+          <div>
+            <h2 class="ui-bo-form__h2">Informations</h2>
+            <p class="ui-bo-form__muted">Titre, slug, statut, type et visibilité.</p>
+          </div>
+        </div>
+
+        <div class="ui-bo-form__grid">
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="title">Titre *</label>
+            <input uiInput id="title" type="text" formControlName="title" placeholder="Ex: Portes ouvertes Unlock" />
+          </div>
+
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="slug">Slug *</label>
+            <input uiInput id="slug" type="text" formControlName="slug" placeholder="portes-ouvertes-unlock" />
+            <div class="ui-bo-form__field-hint">Utilisé dans l’URL (minuscules + tirets).</div>
+          </div>
+        </div>
+
+        <div class="ui-bo-form__grid">
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label">Statut</label>
+            <app-ui-choice-group formControlName="status" [options]="statusOptions" ariaLabel="Statut" size="sm"></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label">Type</label>
+            <app-ui-choice-group formControlName="eventType" [options]="typeOptions" ariaLabel="Type" size="sm"></app-ui-choice-group>
+          </div>
+        </div>
+
+        <div class="ui-bo-form__grid">
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="highlight">Mise en avant</label>
+            <label class="ui-bo-event__check">
+              <input id="highlight" type="checkbox" formControlName="highlight" />
+              <span>Prioriser dans la liste</span>
+            </label>
+          </div>
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="isOnline">En ligne</label>
+            <label class="ui-bo-event__check">
+              <input id="isOnline" type="checkbox" formControlName="isOnline" />
+              <span>Événement online</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div uiCard class="ui-bo-form__card">
+        <div class="ui-bo-form__card-head">
+          <div>
+            <h2 class="ui-bo-form__h2">Dates & lieu</h2>
+            <p class="ui-bo-form__muted">Format datetime-local pour un contrôle simple.</p>
+          </div>
+        </div>
+
+        <div class="ui-bo-form__grid">
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="startDate">Début *</label>
+            <input uiInput id="startDate" type="datetime-local" formControlName="startDate" />
+          </div>
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="endDate">Fin</label>
+            <input uiInput id="endDate" type="datetime-local" formControlName="endDate" />
+          </div>
+        </div>
+
+        <div class="ui-bo-form__grid">
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="location">Lieu</label>
+            <input uiInput id="location" type="text" formControlName="location" placeholder="Paris / Campus Unlock / En ligne…" />
+            <div class="ui-bo-form__field-hint" *ngIf="isOnline">Optionnel (vous pouvez laisser vide si online).</div>
+          </div>
+          <div class="ui-bo-form__field">
+            <label class="ui-bo-form__label" for="registrationUrl">Lien d’inscription</label>
+            <input uiInput id="registrationUrl" type="text" formControlName="registrationUrl" placeholder="https://…" />
+          </div>
+        </div>
+      </div>
+
+      <div uiCard class="ui-bo-form__card">
+        <div class="ui-bo-form__card-head">
+          <div>
+            <h2 class="ui-bo-form__h2">Contenu</h2>
+            <p class="ui-bo-form__muted">Résumé court + description complète.</p>
+          </div>
+        </div>
+
+        <div class="ui-bo-form__field ui-bo-form__field--full">
+          <label class="ui-bo-form__label" for="excerpt">Résumé (excerpt)</label>
+          <input uiInput id="excerpt" type="text" formControlName="excerpt" placeholder="1 phrase claire (max ~140 caractères)" />
+        </div>
+
+        <div class="ui-bo-form__field ui-bo-form__field--full">
+          <label class="ui-bo-form__label" for="description">Description</label>
+          <textarea class="ui-bo-event__textarea" id="description" rows="8" formControlName="description" placeholder="Détails, agenda, speakers, objectifs…"></textarea>
+        </div>
+      </div>
+
+      <div uiCard class="ui-bo-form__card">
+        <div class="ui-bo-form__card-head">
+          <div>
+            <h2 class="ui-bo-form__h2">Image</h2>
+            <p class="ui-bo-form__muted">Upload via /api/upload/image (admin).</p>
+          </div>
+        </div>
+
+        <div class="ui-bo-event__media">
+          <div class="ui-bo-event__preview" [class.is-empty]="!coverPreview">
+            <img *ngIf="coverPreview" [src]="coverPreview" alt="Aperçu" />
+            <div *ngIf="!coverPreview" class="ui-bo-event__preview-empty">Aucune image</div>
+          </div>
+
+          <div class="ui-bo-event__media-actions">
+            <label class="ui-bo-event__upload" uiButton type="button">
+              <input
+                type="file"
+                accept="image/*"
+                [disabled]="coverUploading"
+                (change)="onCoverSelected(($any($event.target).files?.[0]) || null)"
+              />
+              <app-tabler-icon name="send" [size]="18"></app-tabler-icon>
+              <span>{{ coverUploading ? ('Upload… ' + coverUploadProgress + '%') : 'Uploader une image' }}</span>
+            </label>
+
+            <button uiButton variant="ghost" type="button" (click)="clearCover()" [disabled]="coverUploading || !form.get('coverImage')?.value">
+              <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+              <span>Retirer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+

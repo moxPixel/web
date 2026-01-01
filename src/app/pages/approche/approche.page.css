@@ -1,0 +1,407 @@
+:host {
+  display: block;
+}
+
+.ui-approche-page {
+  margin-top: 0.75rem;
+  position: relative;
+  padding: 0 var(--ui-gutter-x) var(--ui-page-pad-bottom);
+  min-height: calc(100vh - 120px);
+}
+
+.ui-approche-page__hero-wrap {
+  max-width: 1920px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.ui-approche-page__hero-spheres {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.ui-approche-page__sphere {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(56px);
+  opacity: 0.95;
+}
+
+.approche-sphere-1 {
+  width: 280px;
+  height: 280px;
+  top: 5%;
+  right: 15%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-accent) 80%, transparent) 0%, transparent 70%);
+}
+.approche-sphere-2 {
+  width: 350px;
+  height: 350px;
+  top: 25%;
+  right: 10%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-secondary) 75%, transparent) 0%, transparent 70%);
+}
+.approche-sphere-3 {
+  width: 240px;
+  height: 240px;
+  top: 50%;
+  right: 18%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-teal) 70%, transparent) 0%, transparent 70%);
+}
+
+.ui-approche-page__hero-card {
+  position: relative;
+  z-index: 10;
+  border-radius: 28px;
+  overflow: hidden;
+  background: url('/assets/images/home-page-14/hero-bg-dark.svg') center / cover no-repeat;
+  margin-bottom: var(--ui-hero-card-margin-bottom);
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 65%, transparent);
+}
+
+.ui-approche-page__hero-inner {
+  position: relative;
+  z-index: 10;
+  padding: var(--ui-hero-inner-padding-y) var(--ui-gutter-x);
+}
+
+.ui-approche-page__back-row {
+  margin-bottom: var(--ui-back-row-margin-bottom);
+}
+
+.ui-approche-page__back {
+  margin-left: var(--ui-back-button-margin-left);
+}
+
+.ui-approche-page__hero-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .ui-approche-page__hero-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
+
+.ui-approche-page__hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ui-approche-page__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.ui-approche-page__badge {
+  display: inline-flex;
+  align-items: center;
+  height: 2.1rem;
+  padding: 0 1rem;
+  line-height: 1;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ui-text-muted);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 20%, transparent);
+  border-radius: 999px;
+}
+
+.ui-approche-page__h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ui-text);
+  margin: 0;
+}
+
+.ui-approche-page__h1-accent {
+  color: var(--ui-nebula-accent);
+}
+
+.ui-approche-page__p {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+
+.ui-approche-page__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.ui-approche-page__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ui-approche-page__hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.ui-approche-page__stat-card {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ui-approche-page__stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ui-accent, var(--ui-nebula-accent)) 12%, transparent);
+  color: var(--ui-accent, var(--ui-nebula-accent));
+  flex-shrink: 0;
+}
+
+.ui-approche-page__stat-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ui-text);
+  margin: 0;
+}
+
+.ui-approche-page__stat-text {
+  font-size: 0.875rem;
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+
+.ui-approche-page__body {
+  max-width: var(--ui-container-max);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) 0;
+}
+
+.ui-approche-page__layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .ui-approche-page__layout {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+}
+
+.ui-approche-page__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ui-approche-page__block {
+  padding: clamp(1.25rem, 2.6vw, 1.75rem);
+}
+
+.ui-approche-page__block h2 {
+  font-size: 1.5rem;
+  font-weight: 650;
+  color: var(--ui-text);
+  margin: 0 0 0.85rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.ui-approche-page__h2-icon {
+  flex-shrink: 0;
+  color: var(--ui-accent, var(--ui-nebula-accent));
+}
+
+.ui-approche-page__block p {
+  margin: 0 0 1rem;
+  line-height: 1.7;
+  color: var(--ui-text-muted);
+}
+
+.ui-approche-page__block ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--ui-text-muted);
+}
+
+.ui-approche-page__block li {
+  margin-bottom: 0.5rem;
+}
+
+.ui-approche-page__block strong {
+  font-weight: 650;
+  color: var(--ui-text);
+}
+
+.ui-approche-page__formats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.ui-approche-page__format-card {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ui-approche-page__format-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ui-accent, var(--ui-nebula-accent)) 12%, transparent);
+  color: var(--ui-accent, var(--ui-nebula-accent));
+  flex-shrink: 0;
+}
+
+.ui-approche-page__format-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ui-text);
+  margin: 0;
+}
+
+.ui-approche-page__format-text {
+  font-size: 0.875rem;
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+
+.ui-approche-page__audience-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .ui-approche-page__audience-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ui-approche-page__audience-grid h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ui-text);
+  margin: 0 0 0.75rem;
+}
+
+.ui-approche-page__audience-grid p {
+  margin: 0 0 1rem;
+}
+
+.ui-approche-page__audience-grid ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.ui-approche-page__audience-grid li {
+  margin-bottom: 0.5rem;
+}
+
+.ui-approche-page__side {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .ui-approche-page__side {
+    display: block;
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+}
+
+.ui-approche-page__side-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ui-approche-page__side-image {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.ui-approche-page__side-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ui-approche-page__side-card > .ui-approche-page__side-title {
+  padding: 1.25rem 1.25rem 0.5rem;
+}
+
+.ui-approche-page__side-title {
+  margin: 0 0 0.75rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--ui-text);
+}
+
+.ui-approche-page__toc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0 1.25rem;
+}
+
+.ui-approche-page__toc-link {
+  color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border-radius: 12px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.ui-approche-page__toc-link:hover {
+  background: color-mix(in srgb, var(--ui-btn-bg) 28%, transparent);
+  color: var(--ui-fg);
+}
+
+.ui-approche-page__side-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.ui-approche-page__side-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+

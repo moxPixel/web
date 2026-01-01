@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+/* Reuse the exact same list-page layout/styles as Trainings (SSOT) */
+@import './backoffice-trainings.page.css';
+
+

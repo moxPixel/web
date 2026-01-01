@@ -1,0 +1,104 @@
+:host {
+  display: block;
+}
+
+.ui-bo {
+  margin-top: 0.75rem;
+  position: relative;
+  padding: 0 var(--ui-gutter-x) var(--ui-page-pad-bottom);
+  min-height: calc(100vh - 120px);
+}
+
+.ui-bo__wrap {
+  max-width: 1920px;
+  margin: 0 auto;
+  position: relative;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.ui-bo__spheres {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.ui-bo__sphere {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(56px);
+  opacity: 0.9;
+}
+
+.ui-bo__sphere--1 {
+  width: 280px;
+  height: 280px;
+  top: 8%;
+  right: 18%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-accent) 80%, transparent) 0%, transparent 70%);
+}
+.ui-bo__sphere--2 {
+  width: 360px;
+  height: 360px;
+  top: 22%;
+  right: 10%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-secondary) 70%, transparent) 0%, transparent 70%);
+}
+.ui-bo__sphere--3 {
+  width: 240px;
+  height: 240px;
+  top: 50%;
+  right: 18%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-teal) 60%, transparent) 0%, transparent 70%);
+}
+
+.ui-bo__header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.ui-bo__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.1rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-nebula-accent) 25%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 70%, transparent);
+  color: color-mix(in srgb, var(--ui-nebula-accent) 75%, var(--ui-fg));
+  font-size: 0.85rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.ui-bo__title {
+  margin: 0.85rem 0 0;
+  font-size: clamp(1.4rem, 1.05rem + 1.6vw, 2.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  font-weight: var(--ui-weight-semibold);
+  color: var(--ui-fg);
+}
+
+.ui-bo__title-accent {
+  color: color-mix(in srgb, var(--ui-nebula-accent) 90%, var(--ui-fg));
+}
+
+.ui-bo__lede {
+  margin: 0.85rem auto 0;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+

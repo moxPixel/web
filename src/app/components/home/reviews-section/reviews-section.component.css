@@ -1,2 +1,230 @@
-/* Pas de styles supplémentaires pour l’instant : tout est en Tailwind dans le template */
+/* ============================================
+   REVIEWS SECTION - Moderne & Premium
+   ============================================ */
+
+.ui-reviews {
+  position: relative;
+  z-index: 2;
+  /* Match About/Business spacing model */
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+  padding-top: clamp(0rem, 0.5vw, 0.5rem);
+  padding-bottom: clamp(5rem, 8vw, 7rem);
+}
+
+.ui-reviews__container {
+  max-width: var(--ui-container-max);
+  margin-inline: auto;
+  padding: 0 var(--ui-gutter-x);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.ui-reviews__header {
+  text-align: center;
+  max-width: 900px;
+  margin-inline: auto;
+  margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.ui-reviews__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.1rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: var(--ui-hairline) solid var(--ui-border);
+  background: color-mix(in srgb, var(--ui-surface) 40%, transparent);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+.ui-reviews__title {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.9rem, 1.35rem + 2.2vw, 3.15rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+  color: var(--ui-fg);
+}
+
+.ui-reviews__title-accent {
+  color: var(--ui-accent, var(--ui-fg));
+}
+
+.ui-reviews__lede {
+  margin: 1.25rem auto 0;
+  color: var(--ui-muted);
+  line-height: 1.8;
+  max-width: 75ch;
+  font-size: clamp(1.02rem, 0.97rem + 0.4vw, 1.12rem);
+}
+
+/* ============================================
+   GRID (Visual + List)
+   ============================================ */
+
+.ui-reviews__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .ui-reviews__grid {
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: clamp(3rem, 6vw, 4.5rem);
+  }
+}
+
+.ui-reviews__visual {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .ui-reviews__visual {
+    position: sticky;
+    top: 140px;
+    align-self: start;
+  }
+}
+
+.ui-reviews__visual-frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 560px;
+  border-radius: var(--ui-radius-card);
+  overflow: clip;
+  /* visual removed: this is a target for the Three morph */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* ============================================
+   REVIEWS LIST
+   ============================================ */
+
+.ui-reviews__list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.ui-reviews__item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2rem) 0;
+}
+
+@media (min-width: 768px) {
+  .ui-reviews__item {
+    grid-template-columns: 2fr 3fr;
+    gap: 2rem;
+  }
+}
+
+.ui-reviews__item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ui-reviews__item-author {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: var(--ui-weight-semibold);
+  color: var(--ui-fg);
+  line-height: var(--ui-leading-normal);
+}
+
+.ui-reviews__item-date {
+  font-size: clamp(0.875rem, 1.5vw, 0.9375rem);
+  color: var(--ui-fg-subtle);
+  line-height: var(--ui-leading-normal);
+}
+
+.ui-reviews__item-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.ui-reviews__star {
+  color: #fbbf24;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.ui-reviews__item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ui-reviews__item-title {
+  font-size: clamp(1.125rem, 2.2vw, 1.25rem);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-normal);
+  color: var(--ui-fg);
+  letter-spacing: var(--ui-tracking-normal);
+}
+
+.ui-reviews__item-text {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: var(--ui-leading-relaxed);
+  color: var(--ui-fg-subtle);
+  font-style: italic;
+}
+
+.ui-reviews__divider {
+  height: 1px;
+  background: var(--ui-glass-border);
+  width: 100%;
+}
+
+.ui-reviews__cta {
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .ui-reviews {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+  }
+
+  .ui-reviews__header {
+    margin-bottom: clamp(3.5rem, 7vw, 5rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .ui-reviews {
+    padding: clamp(3rem, 6vw, 4rem) 0;
+  }
+
+  .ui-reviews__header {
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .ui-reviews__item {
+    padding: 1.5rem 0;
+  }
+}
 

@@ -1,0 +1,59 @@
+<section class="ui-legal">
+  <!-- HERO (consistent with other pages) -->
+  <div class="ui-legal__hero-wrap">
+    <div class="ui-legal__hero-spheres" aria-hidden="true">
+      <div class="ui-legal__sphere legal-sphere-1"></div>
+      <div class="ui-legal__sphere legal-sphere-2"></div>
+      <div class="ui-legal__sphere legal-sphere-3"></div>
+    </div>
+
+    <div class="ui-legal__hero-card">
+      <div class="ui-legal__hero-inner">
+        <div class="ui-legal__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-legal__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-legal__hero-grid">
+          <div class="ui-legal__hero-copy">
+            <div class="ui-legal__badge-row">
+              <span class="ui-legal__badge">Légal</span>
+            </div>
+
+            <h1 class="ui-legal__h1">
+              Conditions générales <span class="ui-legal__h1-accent">de vente</span>
+            </h1>
+
+            <p class="ui-legal__p">
+              Retrouvez les conditions générales de vente d'Unlock Formation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="ui-legal__body ui-container">
+    <div uiCard class="ui-legal__card">
+      <div class="ui-legal__content">
+        <p>
+          Les conditions générales de vente sont disponibles en consultation dans le document PDF officiel.
+        </p>
+        <a
+          href="/assets/files/CGV-Unlock-Formation.pdf"
+          target="_blank"
+          rel="noopener"
+          uiButton
+          variant="outline"
+          class="ui-legal__download-btn"
+        >
+          <app-tabler-icon name="download" [size]="18"></app-tabler-icon>
+          <span>Télécharger les CGV</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+

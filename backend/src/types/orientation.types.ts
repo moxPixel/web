@@ -27,6 +27,25 @@ export interface SoftSkillsInput {
   techComfort: number;
 }
 
+export type QuizChoice = 'a' | 'b' | 'c' | 'd';
+
+export interface QuizAnswer {
+  id: string;
+  choice: QuizChoice;
+}
+
+export interface OrientationAssessmentInput {
+  logic?: {
+    answers: QuizAnswer[];
+  };
+  technical?: {
+    answers: QuizAnswer[];
+  };
+  personality?: {
+    answers: QuizAnswer[];
+  };
+}
+
 export interface BaseProfileAnswers {
   age?: number;
   digitalComfort?: number;
@@ -74,6 +93,7 @@ export interface OrientationRequestDto {
   digitalComfort: number;
   profile: ProfileAnswers;
   softSkills: SoftSkillsInput;
+  assessment?: OrientationAssessmentInput;
   objectives?: string[];
   notes?: string;
 }
@@ -88,6 +108,9 @@ export interface OrientationKpiResult {
   digitalScore: number;
   softSkillsScore: number;
   motivationScore: number;
+  logicExerciseScore: number;
+  technicalExerciseScore: number;
+  personalitySignalScore: number;
   alternanceEligibility: AlternanceEligibility;
   jobReadinessScore: number;
 }

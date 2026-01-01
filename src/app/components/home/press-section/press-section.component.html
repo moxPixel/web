@@ -1,63 +1,60 @@
-<section class="main-container py-14 md:py-16 lg:py-20 xl:py-24">
-  <div class="space-y-12 md:space-y-16">
-    <!-- Titre de section -->
-    <div class="text-center mb-12 lg:mb-16">
-      <div class="space-y-4 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
-        <span class="badge badge-green mb-5 inline-block">Presse</span>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto">
-          Ils <span class="text-primary-500 dark:text-ns-green-light">parlent de nous</span>
-        </h2>
-      </div>
-    </div>
+<section class="ui-press ui-home-section" data-ui-section="press">
+  <div class="ui-press__container ui-home-container">
+    <!-- Header -->
+    <header class="ui-press__header ui-home-header">
+      <div class="ui-press__pill ui-home-pill">Presse</div>
+      <h2 class="ui-press__title ui-home-title">
+        Ils <span class="ui-press__title-accent ui-home-title-accent">parlent de nous</span>
+      </h2>
+    </header>
 
-    <!-- Article layout -->
-    <div class="max-w-5xl mx-auto w-full lg:max-w-full max-w-[90%] lg:mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 items-start">
-        <!-- Logo à gauche avec fond subtil -->
-        <div class="flex items-center justify-center lg:justify-start">
-          <div class="bg-white dark:bg-background-6 rounded-2xl p-6 md:p-8 border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light transition-all duration-300 group">
+    <!-- Article layout compact -->
+    <div class="ui-press__article">
+      <div class="ui-press__logo-wrapper">
+        <div class="ui-press__logo">
+          <span class="ui-press__logo-ring">
             <img 
               [src]="pressArticle.logo" 
               [alt]="'Article Unlock Formation dans ' + pressArticle.title"
               loading="lazy"
-              width="280"
-              height="160"
-              class="w-full h-auto rounded-xl transition-transform duration-500 group-hover:scale-105"
+              decoding="async"
             />
-          </div>
+          </span>
         </div>
+        
+        <!-- Image supplémentaire en dessous -->
+        <div class="ui-press__logo-secondary">
+          <span class="ui-press__logo-ring">
+            <img 
+              src="/assets/images/img/g0.png" 
+              alt="Unlock Formation"
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+        </div>
+      </div>
 
-        <!-- Contenu à droite -->
-        <div class="space-y-6 w-full">
-          <div class="relative pl-4 border-l-4 border-primary-500 dark:border-ns-green-light transition-all duration-300 hover:pl-6 hover:border-l-8">
-            <p class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed transition-all duration-300" [innerHTML]="pressArticle.excerpt"></p>
-          </div>
-          <div class="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed space-y-3">
-            <p>
-              <strong>Investissements et objectifs ambitieux :</strong> le président Macron vise un leadership européen de l’IA, avec 400 M€ supplémentaires et 100 000 personnes formées par an. Unlock s’inscrit dans cette dynamique en alignant ses programmes sur les besoins réels du marché.
-            </p>
-            <p>
-              <strong>Pratique au cœur de l’enseignement :</strong> 8 modules IA, 510h en centre et 235h en entreprise, pour garantir une immersion professionnelle. Les formateurs sont sélectionnés pour leur excellence technique et leur pédagogie.
-            </p>
-            <p>
-              <strong>Accompagnement personnalisé :</strong> petits groupes (12 apprenants), suivi individualisé, indicateurs de résultats et dispositifs de soutien pour maximiser l’employabilité.
-            </p>
-            <p>
-              <strong>Flexibilité et accessibilité :</strong> présentiel et distanciel pour s’adapter aux contraintes des apprenants, avec des webinaires et un accompagnement continu.
-            </p>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="h-px flex-1 bg-gradient-to-r from-stroke-2 dark:from-stroke-6 to-transparent"></div>
-            <a
-              [href]="pressArticle.link"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-lg px-8 h-12 flex items-center justify-center gap-2 border-2 border-secondary dark:border-white text-secondary dark:text-white hover:bg-secondary hover:text-white dark:hover:bg-white dark:hover:text-secondary transition-all"
-            >
-              <span>Lire l'article</span>
-              <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
-            </a>
-          </div>
+      <div class="ui-press__content">
+        <div class="ui-press__excerpt" [innerHTML]="pressArticle.excerpt"></div>
+        
+        <ul class="ui-press__points">
+          <li class="ui-press__point" *ngFor="let point of pressArticle.points">
+            <strong class="ui-press__point-title">{{ point.title }} :</strong>
+            <span class="ui-press__point-text">{{ point.text }}</span>
+          </li>
+        </ul>
+
+        <div class="ui-press__cta">
+          <a
+            [href]="pressArticle.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ui-button ui-button--outline"
+          >
+            <span>Lire l'article</span>
+            <app-tabler-icon name="external-link" [size]="18"></app-tabler-icon>
+          </a>
         </div>
       </div>
     </div>

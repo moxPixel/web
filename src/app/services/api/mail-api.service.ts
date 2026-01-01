@@ -1,41 +1,45 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { map, timeout } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, timeout } from 'rxjs/operators';
+
+import { ApiResponse } from '../../interfaces/api.interface';
+import { getApiBaseUrl } from '../../shared/config/api-url';
 
 export interface SendMailPayload {
   to: string;
   cc?: string;
   subject: string;
   message: string;
-  attachments?: {
+  attachments?: Array<{
     filename: string;
     content: string;
     contentType?: string;
-  }[];
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
+  }>;
 }
 
 @Injectable({ providedIn: 'root' })
 export class MailApiService {
-  private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/mail`;
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${getApiBaseUrl()}/mail`;
 
-  send(payload: SendMailPayload) {
+  send(payload: SendMailPayload): Observable<void> {
     return this.http.post<ApiResponse<void>>(`${this.apiUrl}/send`, payload).pipe(
       timeout(15000),
       map((res) => {
-        if (!res.success) {
-          throw new Error(res.message || 'Erreur lors de l’envoi du mail');
-        }
-        return;
-      })
+        if (!res.success) throw new Error(res.message || "Erreur lors de l'envoi du mail");
+        return undefined;
+      }),
+      catchError(this.handleError),
     );
   }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = "Erreur lors de l'envoi du mail";
+    if (error.status === 0) errorMessage = 'Impossible de se connecter au serveur.';
+    else if (error.error?.message) errorMessage = error.error.message;
+    return throwError(() => new Error(errorMessage));
+  }
 }
+
 

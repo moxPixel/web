@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  padding-top: 6.25rem;
+  position: relative;
+}
+
+/* Backoffice: no top header, but a fixed bottom nav → adjust paddings */
+:host.is-backoffice {
+  padding-top: 0;
+  padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
+}
+
+/* Ensure app content is always above the global background + body tint overlay */
+.ui-app-shell {
+  position: relative;
+  z-index: 2;
+}
+
+.router-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+}
+
+.router-wrapper > * {
+  display: block;
+  width: 100%;
+  position: relative;
+}

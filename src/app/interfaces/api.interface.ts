@@ -1,4 +1,4 @@
-// Interfaces partagées pour la communication avec l'API backend
+// Shared interfaces for backend API responses (mirrors `web/`).
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -16,11 +16,4 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
   };
 }
 
-export interface QueryParams {
-  page?: number;
-  limit?: number;
-  sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
-  search?: string;
-}
 

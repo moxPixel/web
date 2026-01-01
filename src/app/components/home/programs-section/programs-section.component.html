@@ -1,96 +1,187 @@
-<section id="programs" class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible">
-  <div class="max-w-[1920px] mx-auto relative">
-    <!-- Sphères lumineuses derrière la card -->
-    <div class="absolute inset-0 pointer-events-none z-0 overflow-visible programs-hero-spheres" aria-hidden="true">
-      <div class="absolute rounded-full pointer-events-none w-[200px] h-[200px] top-[5%] right-[25%] opacity-100 blur-[35px] lg:w-[280px] lg:h-[280px] lg:right-[15%] lg:blur-[50px] programs-hero-sphere-1"></div>
-      <div class="absolute rounded-full pointer-events-none w-[250px] h-[250px] top-[25%] right-[20%] opacity-100 blur-[40px] lg:w-[350px] lg:h-[350px] lg:right-[10%] lg:blur-[60px] programs-hero-sphere-2"></div>
-      <div class="absolute rounded-full pointer-events-none w-[180px] h-[180px] top-[50%] right-[30%] opacity-95 blur-[35px] lg:w-[240px] lg:h-[240px] lg:right-[18%] lg:blur-[45px] programs-hero-sphere-3"></div>
+<section id="programs" class="ui-programs ui-home-section">
+  <div #parallax class="ui-programs__container ui-home-container">
+    <!-- Header -->
+    <header class="ui-programs__header ui-home-header">
+      <div class="ui-programs__pill ui-home-pill">Catalogue</div>
+      <h2 class="ui-programs__title ui-home-title">
+        Des formations qui vous <span class="ui-home-title-accent">révèlent</span>
+      </h2>
+      <p class="ui-programs__lede ui-home-lede">
+        Bootcamps intensifs, parcours diplômants ou alternance : des programmes pensés pour vous faire progresser à votre rythme,
+        avec des formateurs passionnés et <strong>EVA</strong> pour personnaliser votre apprentissage.
+      </p>
+    </header>
   </div>
 
-    <div
-      #programsHeroParallax
-      class="relative z-10 bg-[url('/assets/images/home-page-14/hero-bg.svg')] dark:bg-[url('/assets/images/home-page-14/hero-bg-dark.svg')] rounded-[12px] md:rounded-[20px] lg:rounded-[40px] bg-cover bg-no-repeat mb-16 md:mb-[100px] overflow-hidden"
-    >
-      <div class="main-container relative z-10 py-10 lg:py-16">
-    <!-- Header Section -->
-        <div class="space-y-14 text-center mb-[60px]">
-      <div class="space-y-4 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
-        <span class="badge badge-green mb-5 inline-block"> Catalogue </span>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto">
-          Des formations <span class="text-primary-500 dark:text-ns-green-light">prêtes pour le marché</span>
-        </h2>
-        <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Bootcamps intensifs, parcours diplômants ou alternance : nos programmes <strong>IA et data</strong>, <strong>développement full stack</strong>, <strong>cybersécurité</strong>, <strong>cloud et infrastructure</strong> sont calibrés sur les besoins réels des entreprises et animés par des professionnels en activité.
-        </p>
-      </div>
-    </div>
-  </div>
-
-      <!-- Galerie horizontale scrollable en spirale décalée -->
-      <div
-        class="carousel-wrapper w-full max-w-full px-0 overflow-hidden"
-      >
-        <div class="carousel-track-spiral">
-          <ng-container *ngFor="let slide of slides; let i = index; trackBy: trackByIndex">
-            <figure class="carousel-slide-spiral" [ngClass]="[slide.height, slide.width]">
-              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light transition-all duration-300">
-                <img [src]="slide.img" [alt]="slide.alt" class="carousel-image" />
-                <div class="carousel-overlay"></div>
-                <div class="carousel-title"><h3>{{ slide.title }}</h3></div>
-        </a>
-      </figure>
-          </ng-container>
-          <!-- duplication pour boucle infinie -->
-          <ng-container *ngFor="let slide of slides; let i = index; trackBy: trackByIndex">
-            <figure class="carousel-slide-spiral" [ngClass]="[slide.height, slide.width]">
-              <a [routerLink]="slide.link" class="block relative w-full h-full rounded-xl overflow-hidden group cursor-pointer border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light transition-all duration-300">
-                <img [src]="slide.img" [alt]="slide.alt" class="carousel-image" />
-                <div class="carousel-overlay"></div>
-                <div class="carousel-title"><h3>{{ slide.title }}</h3></div>
-        </a>
-      </figure>
-          </ng-container>
-    </div>
-  </div>
-
-  <!-- Section Textes Rassurants avec Image -->
-  <div class="main-container pt-16 pb-12">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-      <!-- Image -->
-      <div class="order-2 lg:order-1">
-        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-xl">
-          <img
-            src="/assets/images/img/p8.jpg"
-            alt="Formation IT & IA Unlock Formation - Experts reconnus et assistant IA EVA"
-            loading="lazy"
-            width="800"
-            height="600"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+  <!-- Steps Progress Horizontal -->
+  <div class="ui-programs__container ui-home-container">
+    <div class="ui-programs__steps" #stepsContainer>
+      <div class="ui-programs__step" data-step="1">
+        <div class="ui-programs__step-header">
+          <div class="ui-programs__step-circle-wrapper">
+            <div class="ui-programs__step-circle-rotating"></div>
+            <div class="ui-programs__step-circle">
+              <span class="ui-programs__step-number">1</span>
+            </div>
+          </div>
+        </div>
+        <div class="ui-programs__step-content">
+          <h3 class="ui-programs__step-title">Demande d'inscription</h3>
+          <p class="ui-programs__step-text">Remplissez votre demande et sélectionnez votre formation.</p>
+          <a routerLink="/trainings" class="ui-programs__step-link">Voir les formations →</a>
         </div>
       </div>
 
-      <!-- Texte -->
-      <div class="order-1 lg:order-2 space-y-6 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
-        <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          Chaque programme est construit autour de projets réels : pipelines de données, architectures applicatives, audits de sécurité, déploiements cloud. Vous apprenez sur les mêmes outils et contextes que ceux utilisés en production dans les entreprises tech.
+      <div class="ui-programs__step" data-step="2">
+        <div class="ui-programs__step-header">
+          <div class="ui-programs__step-circle-wrapper">
+            <div class="ui-programs__step-circle-rotating"></div>
+            <div class="ui-programs__step-circle">
+              <span class="ui-programs__step-number">2</span>
+            </div>
+            <div class="ui-programs__step-glow"></div>
+          </div>
+        </div>
+        <div class="ui-programs__step-content">
+          <h3 class="ui-programs__step-title">Prise de contact</h3>
+          <p class="ui-programs__step-text">Notre équipe vous contacte sous 48h.</p>
+        </div>
+      </div>
+
+      <div class="ui-programs__step" data-step="3">
+        <div class="ui-programs__step-header">
+          <div class="ui-programs__step-circle-wrapper">
+            <div class="ui-programs__step-circle-rotating"></div>
+            <div class="ui-programs__step-circle">
+              <span class="ui-programs__step-number">3</span>
+            </div>
+            <div class="ui-programs__step-glow"></div>
+          </div>
+        </div>
+        <div class="ui-programs__step-content">
+          <h3 class="ui-programs__step-title">Étude de votre projet</h3>
+          <p class="ui-programs__step-text">Nous analysons votre profil pour définir le parcours adapté.</p>
+        </div>
+      </div>
+
+      <div class="ui-programs__step" data-step="4">
+        <div class="ui-programs__step-header">
+          <div class="ui-programs__step-circle-wrapper">
+            <div class="ui-programs__step-circle-rotating"></div>
+            <div class="ui-programs__step-circle">
+              <span class="ui-programs__step-number">4</span>
+            </div>
+            <div class="ui-programs__step-glow"></div>
+          </div>
+        </div>
+        <div class="ui-programs__step-content">
+          <h3 class="ui-programs__step-title">La rentrée en classe</h3>
+          <p class="ui-programs__step-text">Démarrage de la formation et accompagnement personnalisé.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carousel full-width (outside container) -->
+  <div class="ui-programs__carousel" aria-label="Catalogue de formations">
+    <div class="ui-programs__track">
+      <ng-container *ngFor="let s of slides; let i = index; trackBy: trackByIndex">
+        <a class="ui-programs__slide ui-programs__slide--orb" [routerLink]="s.link" [attr.aria-label]="s.title">
+          <span class="ui-programs__orb" aria-hidden="true">
+            <span class="ui-programs__orb-core">
+              <img class="ui-programs__orb-img" [src]="s.img" [alt]="s.alt" loading="lazy" decoding="async" />
+              <span class="ui-programs__orb-shade"></span>
+              <span class="ui-programs__orb-shine"></span>
+            </span>
+            <span class="ui-programs__orb-rim"></span>
+          </span>
+          <span class="ui-programs__orb-label">{{ s.title }}</span>
+        </a>
+      </ng-container>
+
+      <!-- Duplicate for seamless loop -->
+      <ng-container *ngFor="let s of slides; let i = index; trackBy: trackByIndex">
+        <a class="ui-programs__slide ui-programs__slide--orb" [routerLink]="s.link" [attr.aria-label]="s.title">
+          <span class="ui-programs__orb" aria-hidden="true">
+            <span class="ui-programs__orb-core">
+              <img class="ui-programs__orb-img" [src]="s.img" [alt]="s.alt" loading="lazy" decoding="async" />
+              <span class="ui-programs__orb-shade"></span>
+              <span class="ui-programs__orb-shine"></span>
+            </span>
+            <span class="ui-programs__orb-rim"></span>
+          </span>
+          <span class="ui-programs__orb-label">{{ s.title }}</span>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="ui-programs__container ui-home-container">
+    <!-- Split bloc avec meilleur équilibre -->
+    <div class="ui-programs__split">
+      <div class="ui-programs__copy">
+        <div class="ui-programs__chips" aria-label="Piliers">
+          <span class="ui-programs__chip">IA & Data</span>
+          <span class="ui-programs__chip">Sécurité</span>
+          <span class="ui-programs__chip">Cloud</span>
+        </div>
+
+        <h3 class="ui-programs__subtitle">Apprendre en créant, progresser en pratiquant</h3>
+
+        <p class="ui-programs__p">
+          Chaque formation vous fait travailler sur des projets concrets créer des applications, analyser des données,
+          sécuriser des systèmes, déployer dans le cloud. Vous apprenez avec les outils utilisés par les professionnels,
+          dans un environnement bienveillant et stimulant.
         </p>
-        <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          Formats flexibles (<strong>présentiel</strong>, <strong>distanciel</strong>, <strong>alternance</strong>) et niveaux progressifs. Nos formateurs partagent leurs retours d'expérience directs. <strong>EVA</strong>, votre copilote IA, clarifie les concepts, corrige vos codes et accélère votre progression.
+        <p class="ui-programs__p">
+          Formats adaptés à votre vie (<strong>présentiel</strong>, <strong>distanciel</strong>, <strong>alternance</strong>), progression personnalisée et
+          accompagnement continu. <strong>EVA</strong> vous guide, répond à vos questions et s'adapte à votre manière d'apprendre.
         </p>
-        <div class="pt-2">
-          <a
-                routerLink="/trainings"
-            matRipple
-            [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
-            class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center gap-2"
-          >
+
+        <div class="ui-programs__cta">
+          <a class="ui-button ui-button--primary" routerLink="/trainings">
             <span>Consulter le catalogue</span>
-            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
           </a>
         </div>
+
+        <div class="ui-programs__media ui-programs__cta-media" aria-hidden="true">
+          <span class="ui-programs__media-ring">
+            <img
+              class="ui-programs__media-img"
+              src="/assets/images/img/g7.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+        </div>
       </div>
+
+      <div class="ui-programs__media">
+        <span class="ui-programs__media-ring">
+          <img
+            class="ui-programs__media-img"
+            src="/assets/images/img/g10.webp"
+            alt="Formation Unlock - projets réels et outils de production"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+        
+        <!-- E-campus info -->
+        <div class="ui-programs__ecampus">
+          <div class="ui-programs__ecampus-header">
+            <app-tabler-icon name="monitor" [size]="18"></app-tabler-icon>
+            <h4 class="ui-programs__ecampus-title">E-campus</h4>
+          </div>
+          <p class="ui-programs__ecampus-text">
+            Accédez 24/7 à notre plateforme d'apprentissage en ligne : cours animés par des experts en activité, ressources pédagogiques interactives, exercices pratiques, projets corrigés et suivi de progression personnalisé.
+          </p>
+          <div class="ui-programs__orientation-hint">
+            <span class="ui-programs__orientation-text">Pas certain de votre choix ?</span>
+            <a routerLink="/orientation" class="ui-programs__orientation-link">Faire le test d'orientation</a>
+          </div>
         </div>
       </div>
     </div>

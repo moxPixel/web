@@ -60,6 +60,7 @@ class Training extends Model<
   declare priceFrom?: number;
   declare currency?: string;
   declare nextSessionHighlight?: string;
+  declare fundingOptions?: string[];
   declare heroImage?: string;
   declare watermarkLogo?: string;
   declare status: CreationOptional<'draft' | 'published' | 'archived'>;
@@ -159,6 +160,13 @@ Training.init(
     priceFrom: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
+      // Sequelize DECIMAL often serializes to string; ensure API returns a number (front expects number).
+      get() {
+        const raw = this.getDataValue('priceFrom') as unknown as string | number | null;
+        if (raw === null || raw === undefined) return null;
+        const n = typeof raw === 'number' ? raw : Number(raw);
+        return Number.isFinite(n) ? n : null;
+      },
     },
     currency: {
       type: DataTypes.STRING(3),
@@ -168,6 +176,11 @@ Training.init(
     nextSessionHighlight: {
       type: DataTypes.STRING(200),
       allowNull: true,
+    },
+    fundingOptions: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [],
     },
     heroImage: {
       type: DataTypes.STRING(500),

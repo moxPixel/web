@@ -1,5 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'api',
+  // Same-origin reverse-proxy (recommended in prod)
+  apiUrl: '/api',
+  siteUrl: 'https://www.unlock-formation.fr',
 };
 

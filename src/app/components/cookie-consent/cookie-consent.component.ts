@@ -1,151 +1,112 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { MatRippleModule } from '@angular/material/core';
-import { NotificationService } from '../../services/notification.service';
-import { PageLoaderInlineService } from '../../services/page-loader-inline.service';
-import { getRippleColorAuto } from '../../utils/ripple.util';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
+import { TablerIconComponent } from '../../shared/icons/tabler-icon/tabler-icon.component';
+import { NotificationService } from '../../shared/services/notifications/notification.service';
+import { UiButtonDirective } from '../../ui/ui-button.directive';
+import { UiCardDirective } from '../../ui/ui-card.directive';
 
 const CONSENT_KEY = 'cookie-consent';
 const WELCOME_KEY = 'welcome-shown';
 const STORAGE_TTL_DAYS = 365;
 
+type ConsentStatus = 'accepted' | 'rejected';
+
 @Component({
   selector: 'app-cookie-consent',
   standalone: true,
-  imports: [CommonModule, MatRippleModule],
+  imports: [CommonModule, RouterModule, TablerIconComponent, UiButtonDirective, UiCardDirective],
   templateUrl: './cookie-consent.component.html',
   styleUrl: './cookie-consent.component.css'
 })
 export class CookieConsentComponent implements OnInit, OnDestroy {
   isVisible = false;
   isHiding = false;
-  private destroy$ = new Subject<void>();
 
-  get rippleColor(): string {
-    return getRippleColorAuto();
-  }
+  private showTimerId: number | null = null;
+  private hideTimerId: number | null = null;
 
-  constructor(
-    private notificationService: NotificationService,
-    private pageLoaderInline: PageLoaderInlineService,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
+  constructor(private notifications: NotificationService) {}
 
   ngOnInit(): void {
     const consent = this.getStoredValue(CONSENT_KEY);
     if (!consent) {
-      // Attendre que le loader soit complètement disparu avant d'afficher le cookie consent
-      // Utiliser le service centralisé pour une détection fiable à 100%
-      this.pageLoaderInline.loaderHidden$.pipe(
-        takeUntil(this.destroy$)
-      ).subscribe((isHidden) => {
-        if (isHidden) {
-          // Attendre un délai supplémentaire après la disparition du loader pour une transition fluide
-          setTimeout(() => {
-            this.isVisible = true;
-            this.blockInteractions();
-          }, 600);
-        }
-      });
+      // Keep it subtle: show shortly after first paint.
+      if (this.isBrowser()) {
+        this.showTimerId = window.setTimeout(() => {
+          this.isVisible = true;
+        }, 700);
+      }
     } else {
-      this.showWelcomeNotification();
+      this.showWelcomeNotificationOnce();
     }
   }
 
   ngOnDestroy(): void {
-    this.unblockInteractions();
-    this.destroy$.next();
-    this.destroy$.complete();
+    if (this.showTimerId !== null && this.isBrowser()) window.clearTimeout(this.showTimerId);
+    if (this.hideTimerId !== null && this.isBrowser()) window.clearTimeout(this.hideTimerId);
   }
 
   accept(): void {
     this.persist(CONSENT_KEY, 'accepted');
     this.dispatchConsentChange('accepted');
     this.hidePopup();
-    this.showWelcomeNotification();
+    this.showWelcomeNotificationOnce();
   }
 
   reject(): void {
     this.persist(CONSENT_KEY, 'rejected');
     this.dispatchConsentChange('rejected');
     this.hidePopup();
-    this.showWelcomeNotification();
+    this.showWelcomeNotificationOnce();
+  }
+
+  private showWelcomeNotificationOnce(): void {
+    if (!this.isBrowser()) return;
+    const alreadyShown = this.getStoredValue(WELCOME_KEY);
+    if (alreadyShown) return;
+
+    window.setTimeout(() => {
+      this.notifications.info(
+        'Bienvenue sur Unlock',
+        'Nous utilisons des cookies pour améliorer l’expérience et mesurer l’audience.'
+      );
+      this.persist(WELCOME_KEY, 'true');
+    }, 650);
   }
 
   private hidePopup(): void {
     this.isHiding = true;
-    this.unblockInteractions();
-    setTimeout(() => {
+    if (!this.isBrowser()) return;
+
+    this.hideTimerId = window.setTimeout(() => {
       this.isVisible = false;
       this.isHiding = false;
-    }, 500);
+    }, 380);
   }
 
-  private blockInteractions(): void {
-    if (!this.isBrowser()) {
-      return;
-    }
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('cookie-consent-active');
-  }
-
-  private unblockInteractions(): void {
-    if (!this.isBrowser()) {
-      return;
-    }
-    document.body.style.overflow = '';
-    document.body.classList.remove('cookie-consent-active');
-  }
-
-  private showWelcomeNotification(): void {
-    const alreadyShown = this.getStoredValue(WELCOME_KEY);
-    if (alreadyShown || !this.isBrowser()) {
-      return;
-    }
-
-    setTimeout(() => {
-      this.notificationService.info(
-        'Bienvenue sur Unlock',
-        'Nous utilisons des cookies pour offrir une expérience immersive digne des meilleurs SaaS.'
-      );
-      this.persist(WELCOME_KEY, 'true');
-    }, 800);
-  }
-
-  private dispatchConsentChange(status: 'accepted' | 'rejected'): void {
-    if (!this.isBrowser()) {
-      return;
-    }
-
-    const event = new CustomEvent('cookieConsentChanged', {
-      detail: { status }
-    });
+  private dispatchConsentChange(status: ConsentStatus): void {
+    if (!this.isBrowser()) return;
+    const event = new CustomEvent('cookieConsentChanged', { detail: { status } });
     document.dispatchEvent(event);
   }
 
   private persist(key: string, value: string): void {
-    if (!this.isBrowser()) {
-      return;
-    }
-
+    if (!this.isBrowser()) return;
     try {
       const payload = {
         value,
         expires: Date.now() + STORAGE_TTL_DAYS * 24 * 60 * 60 * 1000
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch (error) {
-      console.warn('Impossible de stocker la préférence cookie', error);
+    } catch {
+      // ignore
     }
   }
 
   private getStoredValue(key: string): string | null {
-    if (!this.isBrowser()) {
-      return null;
-    }
-
+    if (!this.isBrowser()) return null;
     try {
       const raw = localStorage.getItem(key);
       if (!raw) return null;

@@ -1,0 +1,284 @@
+<section class="ui-bo-sub">
+  <div class="ui-bo-sub__hero ui-container">
+    <div class="ui-bo-sub__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-sub__back ui-icon-button" [routerLink]="['/backoffice']">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-sub__head">
+      <div class="ui-bo-sub__pill">Backoffice</div>
+      <div class="ui-bo-sub__head-row">
+        <div>
+      <h1 class="ui-bo-sub__h1">Contacts</h1>
+          <p class="ui-bo-sub__p">Demandes et messages. Total : {{ total || 0 }}</p>
+        </div>
+        <div class="ui-bo-sub__head-actions">
+          <button uiButton variant="primary" type="button" #newMailBtn (click)="openNewMail(newMailBtn)">
+            <app-tabler-icon name="mail" [size]="18"></app-tabler-icon>
+            <span>Nouveau message</span>
+          </button>
+          <button uiButton variant="ghost" type="button" (click)="load()">Actualiser</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div class="ui-bo-sub__toolbar">
+      <div class="ui-bo-filterbar">
+        <!-- Recherche (ligne 1) -->
+        <div class="ui-bo-filterbar__search">
+          <label class="ui-bo-sub__label" for="bo-contact-search">Recherche</label>
+          <input
+            uiInput
+            id="bo-contact-search"
+            type="text"
+            [(ngModel)]="search"
+            placeholder="Email, nom, entreprise…"
+            (ngModelChange)="scheduleLoad()"
+            (keyup.enter)="load()"
+          />
+        </div>
+
+        <!-- Actions (ligne 2) -->
+        <div class="ui-bo-filterbar__row" aria-label="Actions filtres contacts">
+          <div class="ui-bo-filterbar__actions">
+            <button
+              uiButton
+              variant="ghost"
+              type="button"
+              #filtersBtn
+              (click)="toggleFilters(filtersBtn)"
+              aria-haspopup="dialog"
+              [attr.aria-expanded]="filtersOpen"
+            >
+              <app-tabler-icon name="stack" [size]="18"></app-tabler-icon>
+              <span>Filtres</span>
+              <span *ngIf="activeFiltersCount()" class="ui-bo-filters__count">({{ activeFiltersCount() }})</span>
+            </button>
+            <button uiButton variant="ghost" type="button" class="ui-bo-sub__clear" (click)="clearFilters()" [disabled]="!activeFiltersCount() && !search">
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filters popover -->
+    <app-anchored-panel
+      [open]="filtersOpen"
+      [anchor]="filtersAnchor"
+      [width]="520"
+      preferredPlacement="bottom-end"
+      panelClass="ui-anchored-panel__panel--sheet"
+      (backdropClick)="closeFilters()"
+      (escapeKey)="closeFilters()"
+    >
+      <div class="ui-bo-filters-sheet">
+        <div class="ui-bo-filters-sheet__head">
+          <div class="ui-bo-filters-sheet__title">Filtres</div>
+          <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="closeFilters()" aria-label="Fermer">
+            <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-bo-filters-sheet__body">
+          <div class="ui-bo-filters-sheet__group">
+            <div class="ui-bo-filters-sheet__label">Statut</div>
+            <app-ui-choice-group [(ngModel)]="status" (ngModelChange)="scheduleLoad()" name="bo-contact-status" [options]="statusOptions" ariaLabel="Filtre statut" size="sm"></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filters-sheet__group">
+            <div class="ui-bo-filters-sheet__label">Profil</div>
+            <app-ui-choice-group [(ngModel)]="contactType" (ngModelChange)="scheduleLoad()" name="bo-contact-type" [options]="contactTypeOptions" ariaLabel="Filtre profil" size="sm"></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filters-sheet__group">
+            <div class="ui-bo-filters-sheet__label">Demande</div>
+            <app-ui-choice-group [(ngModel)]="requestType" (ngModelChange)="scheduleLoad()" name="bo-contact-request" [options]="requestTypeOptions" ariaLabel="Filtre demande" size="sm"></app-ui-choice-group>
+          </div>
+        </div>
+
+        <div class="ui-bo-filters-sheet__foot">
+          <button uiButton variant="ghost" type="button" (click)="clearFilters(); closeFilters()" [disabled]="!activeFiltersCount() && !search">
+            Réinitialiser
+          </button>
+          <button uiButton variant="primary" type="button" (click)="closeFilters()">OK</button>
+        </div>
+      </div>
+    </app-anchored-panel>
+
+    <!-- Reply modal (centered, email composer only) -->
+    <div class="ui-bo-mail-modal" *ngIf="replyOpen" role="dialog" aria-modal="true" aria-label="Répondre">
+      <div uiCard class="ui-bo-mail-modal__panel" *ngIf="selectedContact as c">
+        <div class="ui-bo-mail-modal__head">
+          <div class="ui-bo-mail-modal__title">Répondre</div>
+          <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="closeReply()" aria-label="Fermer">
+            <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+
+        <app-email-composer
+          [to]="c.email"
+          [editableTo]="false"
+          [subject]="replySubjectFor(c)"
+          [initialMessage]="''"
+          (cancel)="closeReply()"
+          (sent)="onEmailSent($event)"
+        ></app-email-composer>
+      </div>
+    </div>
+
+    <!-- New message modal (centered like web) -->
+    <div class="ui-bo-mail-modal" *ngIf="newMailOpen" role="dialog" aria-modal="true" aria-label="Nouveau message">
+      <div uiCard class="ui-bo-mail-modal__panel">
+        <div class="ui-bo-mail-modal__head">
+          <div class="ui-bo-mail-modal__title">Nouveau message</div>
+          <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="closeNewMail()" aria-label="Fermer">
+            <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+
+        <app-email-composer
+          to=""
+          [editableTo]="true"
+          subject=""
+          initialMessage=""
+          (cancel)="closeNewMail()"
+          (sent)="onNewMailSent($event)"
+        ></app-email-composer>
+      </div>
+    </div>
+
+    <div class="ui-bo-sub__list-wrap">
+      <div *ngIf="hasLoaded && !contacts.length" class="ui-bo-sub__empty">
+        <div class="ui-bo-sub__muted">Aucune demande trouvée.</div>
+      </div>
+
+      <div class="ui-bo-table" *ngIf="contacts.length">
+        <div class="ui-bo-table__head ui-bo-table__head--contacts" aria-hidden="true">
+          <div class="ui-bo-table__col ui-bo-table__col--main">Contact</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Profil</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Demande</div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">Statut</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Date</div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions"></div>
+        </div>
+
+        <div class="ui-bo-row-wrap" *ngFor="let c of contacts">
+          <div
+            class="ui-bo-row ui-bo-row--contacts ui-bo-row--accordion"
+            role="button"
+            tabindex="0"
+            [attr.aria-expanded]="isExpanded(c)"
+            [attr.aria-controls]="'bo-contact-acc-' + c.id"
+            (click)="toggleRow(c)"
+            (keydown.enter)="toggleRow(c)"
+            (keydown.space)="$event.preventDefault(); toggleRow(c)"
+          >
+            <div class="ui-bo-table__col ui-bo-table__col--main">
+              <div class="ui-bo-row__title ui-bo-row__title--with-caret">
+                <span>{{ displayName(c) }}</span>
+                <app-tabler-icon [name]="isExpanded(c) ? 'chevron-up' : 'chevron-down'" [size]="18"></app-tabler-icon>
+              </div>
+              <div class="ui-bo-row__sub">{{ c.email }}</div>
+            </div>
+            <div class="ui-bo-table__col ui-bo-table__col--meta">
+              <div class="ui-bo-row__sub">{{ c.contactType }}</div>
+            </div>
+            <div class="ui-bo-table__col ui-bo-table__col--meta">
+              <div class="ui-bo-row__sub">{{ c.requestType }}</div>
+            </div>
+            <div class="ui-bo-table__col ui-bo-table__col--status">
+              <span class="ui-bo-sub__status" [class.is-draft]="statusClass(c.status)==='is-draft'" [class.is-archived]="statusClass(c.status)==='is-archived'">
+                {{ badgeStatus(c.status) }}
+              </span>
+            </div>
+            <div class="ui-bo-table__col ui-bo-table__col--meta">
+              <div class="ui-bo-row__mono">{{ fmtDateTime(c.createdAt) }}</div>
+            </div>
+            <div class="ui-bo-table__col ui-bo-table__col--actions ui-bo-row__actions" (click)="$event.stopPropagation()">
+              <button uiButton variant="ghost" type="button" class="ui-icon-button" #replyBtn (click)="openReply(c, replyBtn)" aria-label="Répondre" title="Répondre">
+                <app-tabler-icon name="mail" [size]="18"></app-tabler-icon>
+              </button>
+              <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="deleteContact(c)" aria-label="Supprimer" title="Supprimer">
+                <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="ui-bo-contact-acc"
+            [id]="'bo-contact-acc-' + c.id"
+            [class.is-open]="isExpanded(c)"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="ui-bo-contact-acc__inner">
+              <div class="ui-bo-contact-acc__grid">
+                <div class="ui-bo-contact-acc__block">
+                  <div class="ui-bo-contact-acc__label">Message</div>
+                  <div class="ui-bo-contact-acc__text">{{ c.message }}</div>
+                </div>
+
+                <div class="ui-bo-contact-acc__block" *ngIf="c.response">
+                  <div class="ui-bo-contact-acc__label">Réponse envoyée</div>
+                  <div class="ui-bo-contact-acc__text">{{ c.response }}</div>
+                </div>
+
+                <div class="ui-bo-contact-acc__meta">
+                  <div class="ui-bo-contact-acc__kv">
+                    <div class="k">Nom</div>
+                    <div class="v">{{ displayName(c) }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="c.phone">
+                    <div class="k">Téléphone</div>
+                    <div class="v">{{ c.phone }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv">
+                    <div class="k">Catégorie</div>
+                    <div class="v">{{ c.subjectCategory }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="c.respondedAt">
+                    <div class="k">Répondu</div>
+                    <div class="v">{{ fmtDateTime(c.respondedAt) }}</div>
+                  </div>
+                  <div class="ui-bo-contact-acc__kv" *ngIf="responderLabel(c)">
+                    <div class="k">Par</div>
+                    <div class="v">{{ responderLabel(c) }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui-bo-contact-acc__footer">
+                <div class="ui-bo-contact-acc__status">
+                  <div class="ui-bo-contact-acc__label">Statut</div>
+                  <app-ui-choice-group
+                    [ngModel]="c.status"
+                    (ngModelChange)="setContactStatus(c, $event)"
+                    name="bo-contact-status-{{ c.id }}"
+                    [options]="manageStatusOptions"
+                    ariaLabel="Statut contact"
+                    size="sm"
+                  ></app-ui-choice-group>
+                  <div class="ui-bo-contact-acc__hint" *ngIf="updatingStatusId === c.id">Mise à jour…</div>
+                </div>
+
+                <div class="ui-bo-contact-acc__actions">
+                  <button uiButton variant="ghost" type="button" (click)="toggleRow(c)">Fermer</button>
+                  <button uiButton variant="primary" type="button" #replyBtn2 (click)="openReply(c, replyBtn2)">
+                    <app-tabler-icon name="mail" [size]="18"></app-tabler-icon>
+                    <span>Répondre</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

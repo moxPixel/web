@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+@import './backoffice-trainings.page.css';
+
+

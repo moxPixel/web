@@ -1,0 +1,121 @@
+<section class="ui-bo-sub">
+  <div class="ui-bo-sub__hero ui-container">
+    <div class="ui-bo-sub__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-sub__back ui-icon-button" [routerLink]="['/backoffice']">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-sub__head">
+      <div class="ui-bo-sub__pill">Backoffice</div>
+      <div class="ui-bo-sub__head-row">
+        <div>
+          <h1 class="ui-bo-sub__h1">Événements</h1>
+          <p class="ui-bo-sub__p">Créer, publier et afficher les événements sur le site.</p>
+        </div>
+        <div class="ui-bo-sub__head-actions">
+          <button uiButton variant="primary" type="button" class="ui-bo-sub__create" (click)="create()">
+            <span>Nouvel événement</span>
+            <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div class="ui-bo-sub__toolbar">
+      <div class="ui-bo-filterbar">
+        <div class="ui-bo-filterbar__search">
+          <label class="ui-bo-sub__label" for="bo-search">Recherche</label>
+          <input
+            uiInput
+            id="bo-search"
+            type="text"
+            [(ngModel)]="search"
+            placeholder="Titre, slug…"
+            (ngModelChange)="scheduleLoad()"
+            (keyup.enter)="load()"
+          />
+        </div>
+
+        <div class="ui-bo-filterbar__row" aria-label="Filtres événements">
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label" for="bo-status">Statut</label>
+            <app-ui-choice-group
+              [(ngModel)]="status"
+              (ngModelChange)="scheduleLoad()"
+              name="bo-status"
+              [options]="statusOptions"
+              ariaLabel="Filtre statut"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label" for="bo-type">Type</label>
+            <app-ui-choice-group
+              [(ngModel)]="eventType"
+              (ngModelChange)="scheduleLoad()"
+              name="bo-type"
+              [options]="typeOptions"
+              ariaLabel="Filtre type"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__actions">
+            <button uiButton type="button" class="ui-bo-sub__apply" (click)="load()">Appliquer</button>
+            <button uiButton variant="ghost" type="button" class="ui-bo-sub__clear" (click)="clearFilters()">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-bo-sub__list-wrap">
+      <div *ngIf="hasLoaded && !events.length" class="ui-bo-sub__empty">
+        <div class="ui-bo-sub__muted">Aucun événement trouvé.</div>
+      </div>
+
+      <div class="ui-bo-table" *ngIf="events.length">
+        <div class="ui-bo-table__head" aria-hidden="true">
+          <div class="ui-bo-table__col ui-bo-table__col--main">Événement</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Slug</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Date</div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">Statut</div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions"></div>
+        </div>
+
+        <div class="ui-bo-row" *ngFor="let e of events" (click)="edit(e.id)" role="button" tabindex="0">
+          <div class="ui-bo-table__col ui-bo-table__col--main">
+            <div class="ui-bo-row__title">{{ e.title }}</div>
+            <div class="ui-bo-row__sub">{{ e.eventType || '—' }} • {{ e.isOnline ? 'En ligne' : (e.location || 'Sur place') }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ e.slug }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ fmtDate(e.startDate) }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">
+            <span class="ui-bo-sub__status" [class.is-draft]="e.status === 'draft'" [class.is-archived]="e.status === 'archived'">
+              {{ badgeForStatus(e.status) }}
+            </span>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions ui-bo-row__actions" (click)="$event.stopPropagation()">
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="edit(e.id)" aria-label="Modifier">
+              <app-tabler-icon name="pencil" [size]="18"></app-tabler-icon>
+            </button>
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="delete(e.id)" aria-label="Supprimer">
+              <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

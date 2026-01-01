@@ -261,13 +261,12 @@ export class AuthService {
   /**
    * Demande de réinitialisation de mot de passe
    */
-  async requestPasswordReset(email: string): Promise<void> {
+  async requestPasswordReset(email: string): Promise<{ exists: boolean }> {
     logger.info(`Password reset requested for: ${email}`);
     const user = await User.findOne({ where: { email: email.toLowerCase() } });
     if (!user) {
-      // Ne pas révéler l'absence d'utilisateur
       logger.info(`Password reset: user not found for ${email}`);
-      return;
+      return { exists: false };
     }
 
     logger.info(`Password reset: user found, generating token for ${user.id}`);
@@ -306,10 +305,13 @@ export class AuthService {
           header: 'Réinitialisation du mot de passe',
           greeting: `Bonjour${user.firstName ? ` ${user.firstName}` : ''},`,
           mainMessage:
-            'Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe.',
+            `Vous avez demandé à réinitialiser votre mot de passe.\n` +
+            `Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe (lien valable 1 heure).`,
           buttonUrl: resetUrl,
           buttonText: 'Réinitialiser mon mot de passe',
-          warning: "Ce lien est valide 1 heure. Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.",
+          warning:
+            `Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.\n` +
+            `Par sécurité, nous vous recommandons de vérifier l’activité de votre compte.`,
           signature: "L'équipe Unlock",
         },
       });
@@ -318,6 +320,8 @@ export class AuthService {
       logger.error(`❌ Failed to send password reset email to ${user.email}:`, error);
       throw error;
     }
+
+    return { exists: true };
   }
 
   /**
@@ -369,7 +373,13 @@ export class AuthService {
         templateData: {
           header: 'Mot de passe mis à jour',
           greeting: `Bonjour${user.firstName ? ` ${user.firstName}` : ''},`,
-          mainMessage: 'Votre mot de passe a été mis à jour avec succès.',
+          mainMessage:
+            `Votre mot de passe a été mis à jour avec succès.\n` +
+            `Si vous n’êtes pas à l’origine de ce changement, contactez-nous immédiatement.`,
+          linkInfo: {
+            label: 'Accéder à la connexion',
+            url: `${(env.allowedOrigins || 'http://localhost:4200').split(',')[0].replace(/\/$/, '')}/login`,
+          },
           signature: "L'équipe Unlock",
         },
       });

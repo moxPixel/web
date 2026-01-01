@@ -1,10 +1,13 @@
-export interface Certification {
+export type CertificationStatus = 'active' | 'inactive';
+export type CertificationType = 'RNCP' | 'RS' | 'Other' | (string & {});
+
+export interface CertificationApi {
   id: string;
-  type: string;
+  type: CertificationType;
   code: string;
   title: string;
   level?: string;
-  status: 'active' | 'inactive';
+  status: CertificationStatus;
   issuer?: string;
   description?: string;
   createdAt: string;
@@ -16,7 +19,7 @@ export interface CreateCertificationDto {
   code: string;
   title: string;
   level?: string;
-  status?: 'active' | 'inactive';
+  status?: CertificationStatus;
   issuer?: string;
   description?: string;
 }
@@ -27,8 +30,10 @@ export interface CertificationQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  status?: 'active' | 'inactive';
+  status?: CertificationStatus;
+  type?: string;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
 }
+
 

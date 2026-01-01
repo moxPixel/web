@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+/* Reuse the exact same form layout/styles as Training (SSOT) */
+@import './backoffice-training-form.page.css';
+
+

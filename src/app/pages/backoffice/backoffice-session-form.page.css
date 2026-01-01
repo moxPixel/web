@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+@import './backoffice-training-form.page.css';
+
+/* Location type selector */
+.ui-bo-form__location-types {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+
+.ui-bo-form__location-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--ui-border) 50%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 78%, transparent);
+  color: color-mix(in srgb, var(--ui-fg) 85%, transparent);
+  font-size: 0.9rem;
+  font-weight: 550;
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.ui-bo-form__location-option:hover {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 8%, var(--ui-bg));
+  color: color-mix(in srgb, var(--ui-fg) 95%, transparent);
+}
+
+.ui-bo-form__location-option.is-selected {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 50%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 14%, var(--ui-bg));
+  color: color-mix(in srgb, var(--ui-fg) 98%, transparent);
+  font-weight: 650;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--ui-nebula-accent) 15%, transparent);
+}
+
+.ui-bo-form__location-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ui-nebula-accent);
+  cursor: pointer;
+  margin: 0;
+}
+
+

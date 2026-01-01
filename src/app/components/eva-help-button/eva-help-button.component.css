@@ -1,0 +1,81 @@
+.ui-eva-help-button {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 9999;
+  
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  
+  color: var(--ui-fg);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 15%, var(--ui-glass-bg));
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-nebula-accent) 35%, transparent);
+  border-radius: 999px;
+  
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 0 0 1px color-mix(in srgb, var(--ui-nebula-accent) 8%, transparent),
+    0 0 24px color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent);
+  
+  cursor: pointer;
+  text-decoration: none;
+  transition: 
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  will-change: transform, opacity;
+}
+
+.ui-eva-help-button:hover {
+  background: color-mix(in srgb, var(--ui-nebula-accent) 22%, var(--ui-glass-bg));
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 50%, transparent);
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.16),
+    0 0 0 1px color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent),
+    0 0 32px color-mix(in srgb, var(--ui-nebula-accent) 18%, transparent);
+  transform: translateY(-1px);
+}
+
+.ui-eva-help-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.ui-eva-help-button app-tabler-icon {
+  color: var(--ui-nebula-accent);
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .ui-eva-help-button {
+    bottom: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+  
+  .ui-eva-help-button span {
+    display: none;
+  }
+  
+  .ui-eva-help-button {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    justify-content: center;
+    border-radius: 999px;
+  }
+}
+

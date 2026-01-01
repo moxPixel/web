@@ -1,54 +1,144 @@
-<section class="mt-3 relative px-4 sm:px-6 md:px-8 lg:px-12 overflow-visible">
-  <div class="max-w-[1920px] mx-auto relative">
-    <div class="main-container py-12 md:py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      <div class="space-y-4">
-        <span class="badge badge-green">Qualité & Certification</span>
-        <h2 class="text-3xl md:text-4xl font-bold">
-          Conformité <span class="text-primary-500 dark:text-ns-green-light">Qualiopi</span> et financement facilité
-        </h2>
-        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-          Organisme certifié <strong>Qualiopi</strong> : processus audités, indicateurs de satisfaction publiés, éligibilité CPF et OPCO garantie. Vous financez votre formation via les dispositifs légaux, nous gérons l'administratif.
-        </p>
-        <ul class="space-y-4 list-none">
-          <li class="flex items-start gap-4 group cursor-default">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
-            </div>
-            <div class="text-gray-700 dark:text-gray-200 leading-relaxed">
-              <strong>Processus audités</strong> : chaque module est documenté, évalué et amélioré selon les retours terrain. Suivi individuel systématique, progression mesurée à chaque jalon, amélioration continue de nos contenus.
-            </div>
-          </li>
-          <li class="flex items-start gap-4 group cursor-default">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
-            </div>
-            <div class="text-gray-700 dark:text-gray-200 leading-relaxed">
-              <strong>Indicateurs publics</strong> : taux de réussite aux certifications, taux de placement en emploi, satisfaction apprenants et entreprises. Pas de chiffres gonflés, juste la réalité de nos résultats.
-            </div>
-          </li>
-          <li class="flex items-start gap-4 group cursor-default">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
-            </div>
-            <div class="text-gray-700 dark:text-gray-200 leading-relaxed">
-              <strong>Financement simplifié</strong> : CPF activable en ligne, OPCO pour les entreprises, accompagnement complet des dossiers. Certification Qualiopi = éligibilité garantie aux prises en charge publiques et privées.
-            </div>
-          </li>
-        </ul>
-      </div>
+<section class="ui-quality ui-home-section" data-ui-section="quality">
+  <div class="ui-quality__container ui-home-container">
+    <!-- Header compact -->
+    <header class="ui-quality__header">
+      <div class="ui-quality__pill ui-home-pill">Qualité & Certification</div>
+      <h2 class="ui-quality__title ui-home-title">
+        Indicateurs <span class="ui-quality__title-accent ui-home-title-accent">Qualiopi</span> 2024
+      </h2>
+      <p class="ui-quality__subtitle">
+        La certification qualité a été délivrée au titre des catégories suivantes : actions de formation, bilans de compétences, VAE, apprentissage. Données mises à jour annuellement.
+      </p>
+    </header>
 
-      <div class="w-full flex justify-center">
-        <div class="w-full max-w-lg rounded-2xl border border-stroke-2 dark:border-stroke-6 hover:border-primary-500 dark:hover:border-ns-green-light bg-white dark:bg-background-6 overflow-hidden p-6 transition-all duration-300 group">
-          <img
-            src="/assets/images/logo/qualiopi.png"
-            alt="Certification Qualiopi - Unlock Formation organisme de formation certifié"
-            loading="lazy"
-            width="400"
-            height="300"
-            class="w-full h-auto rounded-xl transition-transform duration-500 group-hover:scale-105"
-          />
+    <!-- Indicateurs Qualiopi obligatoires -->
+    <div class="ui-quality__indicators" #indicatorsSection>
+      <div class="ui-quality__indicators-grid">
+        <div class="ui-quality__indicator">
+          <div class="ui-quality__indicator-circle">
+            <svg class="ui-quality__indicator-svg" viewBox="0 0 100 100">
+              <circle
+                class="ui-quality__indicator-bg"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+              />
+              <circle
+                class="ui-quality__indicator-progress"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+                stroke-dasharray="276.46"
+                stroke-dashoffset="13.823"
+                data-value="95"
+              />
+            </svg>
+            <div class="ui-quality__indicator-value">95%</div>
+          </div>
+          <div class="ui-quality__indicator-content">
+            <h4 class="ui-quality__indicator-label">Taux de satisfaction</h4>
+            <p class="ui-quality__indicator-desc">Bénéficiaires satisfaits en 2024</p>
+          </div>
+        </div>
+
+        <div class="ui-quality__indicator">
+          <div class="ui-quality__indicator-circle">
+            <svg class="ui-quality__indicator-svg" viewBox="0 0 100 100">
+              <circle
+                class="ui-quality__indicator-bg"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+              />
+              <circle
+                class="ui-quality__indicator-progress"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+                stroke-dasharray="276.46"
+                stroke-dashoffset="27.646"
+                data-value="90"
+              />
+            </svg>
+            <div class="ui-quality__indicator-value">90%</div>
+          </div>
+          <div class="ui-quality__indicator-content">
+            <h4 class="ui-quality__indicator-label">Obtention certifications</h4>
+            <p class="ui-quality__indicator-desc">Taux de réussite aux examens</p>
+          </div>
+        </div>
+
+        <div class="ui-quality__indicator">
+          <div class="ui-quality__indicator-circle">
+            <svg class="ui-quality__indicator-svg" viewBox="0 0 100 100">
+              <circle
+                class="ui-quality__indicator-bg"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+              />
+              <circle
+                class="ui-quality__indicator-progress"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+                stroke-dasharray="276.46"
+                stroke-dashoffset="22.117"
+                data-value="92"
+              />
+            </svg>
+            <div class="ui-quality__indicator-value">92%</div>
+          </div>
+          <div class="ui-quality__indicator-content">
+            <h4 class="ui-quality__indicator-label">Achèvement formations</h4>
+            <p class="ui-quality__indicator-desc">Taux d'achèvement des parcours</p>
+          </div>
+        </div>
+
+        <div class="ui-quality__indicator">
+          <div class="ui-quality__indicator-circle">
+            <svg class="ui-quality__indicator-svg" viewBox="0 0 100 100">
+              <circle
+                class="ui-quality__indicator-bg"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+              />
+              <circle
+                class="ui-quality__indicator-progress"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke-width="6"
+                stroke-dasharray="276.46"
+                stroke-dashoffset="41.469"
+                data-value="85"
+              />
+            </svg>
+            <div class="ui-quality__indicator-value">85%</div>
+          </div>
+          <div class="ui-quality__indicator-content">
+            <h4 class="ui-quality__indicator-label">Insertion professionnelle</h4>
+            <p class="ui-quality__indicator-desc">Taux d'insertion 6 mois après</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+

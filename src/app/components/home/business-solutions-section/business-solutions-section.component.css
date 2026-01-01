@@ -1,46 +1,307 @@
-/* Business solutions section styles modernisés */
+/* ============================================
+   BUSINESS SOLUTIONS SECTION - Moderne & Premium
+   ============================================ */
 
-/* Images superposées avec effets hover */
-.business-solutions-section img {
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+.ui-business-solutions {
+  position: relative;
+  z-index: 2;
+  /* Match About spacing model: section provides vertical rhythm, container handles horizontal padding */
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+  padding-top: clamp(0rem, 0.5vw, 0.5rem);
+  padding-bottom: clamp(5rem, 8vw, 7rem);
 }
 
-.business-solutions-section .relative:hover img {
-  transform: scale(1.05);
+.ui-business-solutions__container {
+  max-width: var(--ui-container-max);
+  margin-inline: auto;
+  padding: 0 var(--ui-gutter-x);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3.5rem, 7vw, 5.5rem);
 }
 
-/* Liste des bénéfices avec animations */
-.business-solutions-section li {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.ui-business-solutions__header {
+  text-align: center;
+  max-width: 900px;
+  margin-inline: auto;
+  margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
 }
 
-.business-solutions-section li:hover {
+.ui-business-solutions__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.1rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: var(--ui-hairline) solid var(--ui-border);
+  background: color-mix(in srgb, var(--ui-surface) 40%, transparent);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+.ui-business-solutions__title {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.9rem, 1.35rem + 2.2vw, 3.15rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+  color: var(--ui-fg);
+}
+
+.ui-business-solutions__title-accent {
+  color: var(--ui-accent, var(--ui-fg));
+}
+
+.ui-business-solutions__lede {
+  margin: 1.25rem auto 0;
+  color: var(--ui-muted);
+  line-height: 1.8;
+  max-width: 75ch;
+  font-size: clamp(1.02rem, 0.97rem + 0.4vw, 1.12rem);
+}
+
+.ui-business-solutions__lede strong {
+  color: var(--ui-fg);
+  font-weight: 650;
+}
+
+/* ============================================
+   MAIN GRID
+   ============================================ */
+
+.ui-business-solutions__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .ui-business-solutions__grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(3rem, 6vw, 4.5rem);
+  }
+}
+
+/* ============================================
+   VISUAL COLUMN (Images superposées)
+   ============================================ */
+
+.ui-business-solutions__visual {
+  position: relative;
+  order: 2; /* model/visual on the right by default */
+}
+
+@media (min-width: 1024px) {
+  .ui-business-solutions__visual {
+    order: 2; /* keep model/visual on the right on desktop too */
+  }
+}
+
+.ui-business-solutions__image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 600px;
+}
+
+/* Image principale (en arrière, décalée à droite) */
+.ui-business-solutions__image-main {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--ui-radius-card);
+  overflow: clip;
+  /* Visual removed: this is a transparent target area for the Three morph */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Overlay removed (Three morph occupies the visual slot) */
+.ui-business-solutions__image-overlay {
+  display: none;
+}
+
+/* ============================================
+   CONTENT COLUMN
+   ============================================ */
+
+.ui-business-solutions__content {
+  max-width: 68ch;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  order: 1; /* text on the left */
+}
+
+/* keep content on the left on desktop */
+
+.ui-business-solutions__intro-block {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: var(--ui-hairline) solid var(--ui-border);
+}
+
+.ui-business-solutions__subtitle {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.2rem + 0.9vw, 1.85rem);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  color: var(--ui-fg);
+}
+
+.ui-business-solutions__subtitle-accent {
+  color: var(--ui-accent, var(--ui-fg));
+}
+
+.ui-business-solutions__intro-text {
+  margin: 0;
+  color: var(--ui-muted);
+  line-height: 1.9;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.1rem);
+}
+
+.ui-business-solutions__intro-text strong {
+  color: var(--ui-fg);
+  font-weight: 650;
+}
+
+/* Benefits List */
+.ui-business-solutions__benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ui-business-solutions__benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  transition: transform var(--ui-dur-2) var(--ui-ease-out);
+  cursor: default;
+}
+
+.ui-business-solutions__benefit-item:hover {
   transform: translateX(8px);
 }
 
-/* Bulles avec effet pulse */
-.business-solutions-section .flex-shrink-0 {
-  transition: all 0.3s ease;
+.ui-business-solutions__benefit-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--ui-glass-bg-strong);
+  border: var(--ui-hairline) solid var(--ui-glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.25rem;
+  transition: all var(--ui-dur-2) var(--ui-ease-out);
+  position: relative;
 }
 
-.business-solutions-section li:hover .flex-shrink-0 {
+.ui-business-solutions__benefit-icon::before {
+  content: '';
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--ui-fg);
+  transition: all var(--ui-dur-2) var(--ui-ease-out);
+}
+
+.ui-business-solutions__benefit-item:hover .ui-business-solutions__benefit-icon {
+  background: var(--ui-glass-bg-strong);
+  border-color: var(--ui-accent, var(--ui-glass-border-strong));
   transform: scale(1.2);
-  background: rgba(37, 99, 235, 0.1) !important;
 }
 
-.dark .business-solutions-section li:hover .flex-shrink-0 {
-  background: rgba(232, 251, 198, 0.15) !important;
+.ui-business-solutions__benefit-item:hover .ui-business-solutions__benefit-icon::before {
+  transform: scale(1.25);
+  background: var(--ui-accent, var(--ui-fg));
 }
 
-/* Images avec effet parallax au scroll */
-.business-solutions-section .absolute {
-  transition: transform 0.5s ease;
+.ui-business-solutions__benefit-content {
+  flex: 1;
 }
 
-.business-solutions-section .relative:hover .absolute.top-0 {
-  transform: translateY(-8px);
+.ui-business-solutions__benefit-title {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.1rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ui-fg);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
 }
 
-.business-solutions-section .relative:hover .absolute.bottom-0 {
-  transform: translateY(8px);
+.ui-business-solutions__benefit-text {
+  margin: 0;
+  color: var(--ui-muted);
+  line-height: 1.9;
+  font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.05rem);
 }
+
+.ui-business-solutions__benefit-text strong {
+  color: var(--ui-fg);
+  font-weight: 650;
+}
+
+/* CTA Block */
+.ui-business-solutions__cta {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .ui-business-solutions {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+  }
+
+  .ui-business-solutions__header {
+    margin-bottom: clamp(3.5rem, 7vw, 5rem);
+  }
+
+  .ui-business-solutions__visual {
+    margin-bottom: 3rem;
+  }
+
+  .ui-business-solutions__image-wrapper {
+    aspect-ratio: 4 / 3;
+    max-height: 480px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ui-business-solutions {
+    padding: clamp(3rem, 6vw, 4rem) 0;
+  }
+
+  .ui-business-solutions__header {
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .ui-business-solutions__benefits {
+    gap: 1.5rem;
+  }
+}
+

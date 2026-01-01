@@ -1,7 +1,11 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, timeout, catchError, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Observable, throwError } from 'rxjs';
+import { TimeoutError } from 'rxjs';
+import { catchError, map, timeout } from 'rxjs/operators';
+
+import { ApiResponse } from '../../interfaces/api.interface';
+import { getApiBaseUrl } from '../../shared/config/api-url';
 
 export type FieldAssistantAction = 'improve' | 'correct' | 'suggest' | 'complete';
 
@@ -24,50 +28,40 @@ export interface FieldAssistantOutput {
   explanation?: string;
 }
 
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
-
-/**
- * Service pour l'assistance IA sur les champs
- */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AiFieldAssistantApiService {
-  private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/ai`;
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${getApiBaseUrl()}/ai`;
 
   /**
-   * Demander l'assistance IA pour un champ
+   * POST /api/ai/assist-field
    */
   assistField(input: FieldAssistantInput): Observable<FieldAssistantOutput> {
-    return this.http
-      .post<ApiResponse<FieldAssistantOutput>>(`${this.apiUrl}/assist-field`, input, {
-        // Ajouter un signal d'annulation si nécessaire
-      })
-      .pipe(
-        timeout(20000), // Réduit à 20 secondes (plus raisonnable)
-        map(response => {
-          if (!response.success || !response.data) {
-            throw new Error(response.message || 'Erreur lors de l\'assistance IA');
-          }
-          return response.data;
-        }),
-        catchError((error) => {
-          // Ne pas logger les erreurs d'annulation
-          if (error.name !== 'TimeoutError' && !error.message?.includes('canceled')) {
-            console.error('AI Field Assistant error:', error);
-          }
-          // Transformer les erreurs pour un meilleur feedback
-          if (error.name === 'TimeoutError') {
-            throw new Error('La requête a pris trop de temps. Veuillez réessayer.');
-          }
-          throw error;
-        })
-      );
+    return this.http.post<ApiResponse<FieldAssistantOutput>>(`${this.apiUrl}/assist-field`, input).pipe(
+      timeout(20000),
+      map((res) => {
+        if (!res.success || !res.data) throw new Error(res.message || "Erreur lors de l'assistance IA");
+        return res.data;
+      }),
+      catchError(this.handleError),
+    );
+  }
+
+  private handleError(error: unknown): Observable<never> {
+    let errorMessage = "Une erreur est survenue lors de l'assistance IA";
+
+    if (error instanceof TimeoutError) {
+      errorMessage = 'La requête a pris trop de temps. Veuillez réessayer.';
+    } else if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) errorMessage = 'Impossible de se connecter au serveur.';
+      else if ((error.error as any)?.message) errorMessage = (error.error as any).message;
+    } else if (typeof error === 'object' && error && 'message' in error) {
+      const msg = (error as any).message;
+      if (typeof msg === 'string' && msg.trim()) errorMessage = msg;
+    }
+
+    return throwError(() => new Error(errorMessage));
   }
 }
+
 

@@ -44,11 +44,20 @@ export class CertificationsService {
         limit = 10,
         search,
         status,
+        type,
         sortBy = 'createdAt',
         sortOrder = 'DESC',
       } = query;
 
-      const offset = (page - 1) * limit;
+      // Sécuriser les valeurs numériques (évite LIMIT '200' qui casse MySQL)
+      const safeLimit = Math.max(1, Math.min(500, Number(limit) || 10));
+      const safePage = Math.max(1, Number(page) || 1);
+      const offset = (safePage - 1) * safeLimit;
+
+      // Whitelist sort fields to prevent invalid SQL / injection
+      const allowedSortFields = new Set<string>(['createdAt', 'updatedAt', 'title', 'code', 'type', 'status', 'level', 'issuer']);
+      const safeSortBy = allowedSortFields.has(String(sortBy)) ? String(sortBy) : 'updatedAt';
+      const safeSortOrder = String(sortOrder).toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
       const where: Record<string, unknown> = {};
 
       // Filtres
@@ -61,21 +70,22 @@ export class CertificationsService {
       }
 
       if (status) where.status = status;
+      if (type) where.type = type;
 
       const { count, rows } = await Certification.findAndCountAll({
         where,
-        limit,
+        limit: safeLimit,
         offset,
-        order: [[sortBy, sortOrder]],
+        order: [[safeSortBy, safeSortOrder]],
       });
 
       return {
         data: rows,
         pagination: {
-          page,
-          limit,
+          page: safePage,
+          limit: safeLimit,
           total: count,
-          totalPages: Math.ceil(count / limit),
+          totalPages: Math.ceil(count / safeLimit),
         },
       };
     } catch (error) {

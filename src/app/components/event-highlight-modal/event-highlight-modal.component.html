@@ -1,0 +1,55 @@
+<div
+  class="ui-ehm"
+  *ngIf="isMounted && event as e"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Événement mis en avant"
+  [class.ui-ehm--visible]="isVisible"
+  [class.ui-ehm--hiding]="isHiding"
+>
+  <div class="ui-ehm__card">
+    <button uiButton variant="ghost" type="button" class="ui-ehm__close ui-icon-button" (click)="close()" aria-label="Fermer">
+      <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+    </button>
+
+    <div class="ui-ehm__grid">
+      <div class="ui-ehm__media" aria-hidden="true">
+        <span class="ui-ehm__ring">
+          <img class="ui-ehm__img ui-ehm__img--bg" [src]="coverUrl(e)" [alt]="e.title" decoding="async" />
+          <img class="ui-ehm__img ui-ehm__img--main" [src]="coverUrl(e)" [alt]="e.title" decoding="async" />
+        </span>
+        <div class="ui-ehm__badge" [class.is-highlight]="e.highlight">
+          <app-tabler-icon name="calendar-event" [size]="14"></app-tabler-icon>
+          <span>{{ typeLabel(e) }}</span>
+        </div>
+      </div>
+
+      <div class="ui-ehm__content">
+        <div class="ui-ehm__kicker">Événement mis en avant</div>
+        <div class="ui-ehm__title">{{ e.title }}</div>
+
+        <div class="ui-ehm__meta">
+          <span class="ui-ehm__meta-item">
+            <app-tabler-icon name="clock" [size]="14"></app-tabler-icon>
+            <span>{{ dateLabel(e) }} <span class="ui-ehm__meta-time" *ngIf="timeLabel(e)">• {{ timeLabel(e) }}</span></span>
+          </span>
+          <span class="ui-ehm__meta-item">
+            <app-tabler-icon name="map-pin" [size]="14"></app-tabler-icon>
+            <span>{{ placeLabel(e) }}</span>
+          </span>
+        </div>
+
+        <div class="ui-ehm__excerpt" *ngIf="e.excerpt">{{ e.excerpt }}</div>
+
+        <div class="ui-ehm__actions">
+          <button uiButton variant="primary" type="button" (click)="openRegistration()" class="ui-ehm__btn-primary">
+            <span>{{ primaryCtaLabel(e) }}</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

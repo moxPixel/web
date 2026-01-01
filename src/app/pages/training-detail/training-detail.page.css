@@ -1,0 +1,474 @@
+:host {
+  display: block;
+}
+
+.ui-training-detail {
+  margin-top: 0.75rem;
+  position: relative;
+  padding: 0 var(--ui-gutter-x) var(--ui-page-pad-bottom);
+  min-height: calc(100vh - 120px);
+}
+
+.ui-training-detail__hero-wrap {
+  max-width: 1920px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.ui-training-detail__hero-spheres {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.ui-training-detail__sphere {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(56px);
+  opacity: 0.95;
+}
+
+.training-detail-sphere-1 {
+  width: 280px;
+  height: 280px;
+  top: 5%;
+  right: 15%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-accent) 80%, transparent) 0%, transparent 70%);
+}
+.training-detail-sphere-2 {
+  width: 350px;
+  height: 350px;
+  top: 25%;
+  right: 10%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-secondary) 75%, transparent) 0%, transparent 70%);
+}
+.training-detail-sphere-3 {
+  width: 240px;
+  height: 240px;
+  top: 50%;
+  right: 18%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-teal) 70%, transparent) 0%, transparent 70%);
+}
+
+.ui-training-detail__hero-card {
+  position: relative;
+  z-index: 10;
+  border-radius: 28px;
+  overflow: hidden;
+  background: url('/assets/images/home-page-14/hero-bg-dark.svg') center / cover no-repeat;
+  margin-bottom: var(--ui-hero-card-margin-bottom);
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 65%, transparent);
+}
+
+.ui-training-detail__hero-inner {
+  position: relative;
+  z-index: 10;
+  padding: var(--ui-hero-inner-padding-y) var(--ui-gutter-x);
+}
+
+.ui-training-detail__back-row {
+  margin-bottom: var(--ui-back-row-margin-bottom);
+}
+
+.ui-training-detail__back {
+  /* size is controlled by `.ui-icon-button` in primitives */
+  margin-left: var(--ui-back-button-margin-left);
+}
+
+.ui-training-detail__hero-grid {
+  display: flex;
+  align-items: center;
+  min-height: 320px;
+}
+
+.ui-training-detail__hero-copy {
+  width: 100%;
+  max-width: 860px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .ui-training-detail__hero-copy {
+    text-align: left;
+    margin: 0;
+    max-width: 820px;
+  }
+  .ui-training-detail__hero-grid {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-detail__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+@media (min-width: 1024px) {
+  .ui-training-detail__badge-row {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-detail__badge {
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--ui-nebula-accent) 75%, var(--ui-fg));
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-nebula-accent) 35%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 70%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+}
+
+.ui-training-detail__tags {
+  color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  font-size: 0.95rem;
+}
+
+.ui-training-detail__orientation-hint {
+  margin-top: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .ui-training-detail__orientation-hint {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-detail__orientation-text {
+  color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  font-size: 0.875rem;
+}
+
+.ui-training-detail__orientation-link {
+  color: var(--ui-accent, var(--ui-nebula-accent));
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all var(--ui-dur-2) var(--ui-ease-out);
+  white-space: nowrap;
+}
+
+.ui-training-detail__orientation-link:hover {
+  color: var(--ui-accent, var(--ui-nebula-accent));
+  border-bottom-color: var(--ui-accent, var(--ui-nebula-accent));
+}
+
+.ui-training-detail__h1 {
+  font-size: clamp(1.35rem, 1.05rem + 1.5vw, 2.1rem);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  font-weight: var(--ui-weight-semibold);
+}
+
+.ui-training-detail__p {
+  margin-top: 0.85rem;
+  max-width: 800px;
+  color: color-mix(in srgb, var(--ui-fg) 78%, transparent);
+  line-height: 1.7;
+}
+
+.ui-training-detail__cta {
+  margin-top: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  width: min(520px, 100%);
+}
+
+@media (min-width: 640px) {
+  .ui-training-detail__cta {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+@media (min-width: 1024px) {
+  .ui-training-detail__cta {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-detail__timer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+}
+
+.ui-training-detail__timer-icon {
+  flex-shrink: 0;
+  color: color-mix(in srgb, var(--ui-nebula-accent) 75%, var(--ui-fg));
+}
+
+@media (min-width: 1024px) {
+  .ui-training-detail__timer {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-detail__timer-accent {
+  color: color-mix(in srgb, var(--ui-nebula-accent) 86%, var(--ui-fg));
+  font-weight: var(--ui-weight-semibold);
+}
+
+.ui-training-detail__grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1020px) {
+  .ui-training-detail__grid {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 1.5rem;
+    /* Sticky sidebar needs its grid area to have height (not collapse to content). */
+    align-items: stretch;
+  }
+}
+
+@media (min-width: 1020px) {
+  .ui-training-detail__main {
+    align-self: start;
+  }
+
+  .ui-training-detail__side {
+    align-self: stretch;
+  }
+}
+
+.ui-training-detail__section {
+  margin-top: 1.25rem;
+}
+
+.ui-training-detail__h2 {
+  font-weight: var(--ui-weight-semibold);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.ui-training-detail__h2-icon {
+  flex-shrink: 0;
+  color: var(--ui-accent, var(--ui-nebula-accent));
+}
+
+.ui-training-detail__h3 {
+  font-weight: var(--ui-weight-semibold);
+  letter-spacing: -0.01em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ui-training-detail__h3-icon {
+  flex-shrink: 0;
+  color: var(--ui-accent, var(--ui-nebula-accent));
+}
+
+.ui-training-detail__p {
+  margin-top: 0.6rem;
+  color: color-mix(in srgb, var(--ui-fg) 78%, transparent);
+  line-height: 1.75;
+}
+
+.ui-training-detail__list {
+  margin-top: 0.6rem;
+  padding-left: 1.15rem;
+  color: color-mix(in srgb, var(--ui-fg) 78%, transparent);
+  line-height: 1.7;
+}
+
+.ui-training-detail__split {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.ui-training-detail__section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ui-training-detail__pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.ui-training-detail__pdf-btn app-tabler-icon {
+  opacity: 0.9;
+}
+
+.ui-training-detail__muted {
+  color: color-mix(in srgb, var(--ui-fg) 55%, transparent);
+}
+
+.ui-training-detail__modules {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.ui-training-detail__eva-list {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ui-training-detail__eva-list li {
+  padding-left: 1.5rem;
+  position: relative;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+  line-height: 1.7;
+  font-size: 0.9375rem;
+}
+
+.ui-training-detail__eva-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--ui-fg);
+  font-weight: 650;
+}
+
+.ui-training-detail__eva-list li strong {
+  color: var(--ui-fg);
+  font-weight: 650;
+}
+
+.ui-training-detail__module {
+  border-radius: 22px;
+}
+
+.ui-training-detail__module-k {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ui-fg) 55%, transparent);
+}
+
+.ui-training-detail__module-t {
+  margin-top: 0.25rem;
+  font-weight: var(--ui-weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.ui-training-detail__module-sub {
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ui-fg) 58%, transparent);
+}
+
+.ui-training-detail__topics {
+  margin-top: 0.6rem;
+  padding-left: 1.15rem;
+  color: color-mix(in srgb, var(--ui-fg) 75%, transparent);
+  line-height: 1.7;
+}
+
+.ui-training-detail__side-sticky {
+  position: sticky;
+  top: 110px;
+}
+
+.ui-training-detail__image {
+  border-radius: 22px;
+  overflow: hidden;
+  border: var(--ui-hairline) solid var(--ui-glass-border);
+  height: 180px;
+}
+
+.ui-training-detail__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ui-training-detail__price-card {
+  margin-top: -18px;
+  border-radius: 22px;
+}
+
+.ui-training-detail__price-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ui-training-detail__price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 0.15rem;
+}
+
+.ui-training-detail__pill {
+  border-radius: 999px;
+  border: var(--ui-hairline) solid var(--ui-glass-border);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 62%, transparent);
+  padding: 0.25rem 0.55rem;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+}
+
+.ui-training-detail__kv {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 70%, transparent);
+}
+
+.ui-training-detail__kv-v {
+  margin-top: 0.25rem;
+  color: color-mix(in srgb, var(--ui-fg) 82%, transparent);
+  line-height: 1.5;
+}
+
+.ui-training-detail__mini-list {
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+  line-height: 1.6;
+}
+
+.ui-training-detail__side-actions {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.ui-training-detail__notfound h1 {
+  margin: 0 0 0.5rem;
+}
+.ui-training-detail__notfound p {
+  margin: 0 0 0.9rem;
+  color: var(--ui-muted);
+}
+
+

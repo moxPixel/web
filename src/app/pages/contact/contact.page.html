@@ -1,0 +1,232 @@
+<section class="ui-contact">
+  <!-- HERO (consistent with trainings/detail/orientation) -->
+  <div class="ui-contact__hero-wrap">
+    <div class="ui-contact__hero-spheres" aria-hidden="true">
+      <div class="ui-contact__sphere contact-sphere-1"></div>
+      <div class="ui-contact__sphere contact-sphere-2"></div>
+      <div class="ui-contact__sphere contact-sphere-3"></div>
+    </div>
+
+    <div class="ui-contact__hero-card">
+      <div class="ui-contact__hero-inner">
+        <div class="ui-contact__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-contact__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-contact__hero-grid">
+          <div class="ui-contact__hero-copy">
+            <div class="ui-contact__badge-row">
+              <span class="ui-contact__badge">Contact</span>
+              <span class="ui-contact__tags">Réponse sous 24–48h • Conseillers disponibles</span>
+            </div>
+
+            <h1 class="ui-contact__h1">
+              Une question ? Un projet ? <span class="ui-contact__h1-accent">On est là pour vous</span>
+            </h1>
+
+            <p class="ui-contact__p">
+              Remplissez le formulaire en quelques étapes, et on revient vers vous rapidement avec des réponses concrètes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-contact__body ui-container">
+    <div uiCard class="ui-contact__card" [class.is-submitting]="submitting">
+      <div class="ui-contact__card-head">
+        <div>
+          <h2 class="ui-contact__h2">Contactez‑nous</h2>
+          <p class="ui-contact__muted">Parcourez les étapes et envoyez‑nous votre demande.</p>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Stepper -->
+        <div class="ui-contact__stepper" aria-label="Progression du formulaire">
+          <div class="ui-contact__steps">
+            <div class="ui-contact__step" [class.is-active]="step >= 1" [class.is-done]="step > 1">
+              <div class="ui-contact__step-dot">
+                <span *ngIf="step <= 1">1</span>
+                <svg *ngIf="step > 1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <div class="ui-contact__step-label">Profil</div>
+            </div>
+            <div class="ui-contact__line" [class.is-done]="step > 1"></div>
+            <div class="ui-contact__step" [class.is-active]="step >= 2" [class.is-done]="step > 2">
+              <div class="ui-contact__step-dot">
+                <span *ngIf="step <= 2">2</span>
+                <svg *ngIf="step > 2" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <div class="ui-contact__step-label">Coordonnées</div>
+            </div>
+            <div class="ui-contact__line" [class.is-done]="step > 2"></div>
+            <div class="ui-contact__step" [class.is-active]="step >= 3" [class.is-done]="step > 3">
+              <div class="ui-contact__step-dot">
+                <span *ngIf="step <= 3">3</span>
+                <svg *ngIf="step > 3" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <div class="ui-contact__step-label">Besoin</div>
+            </div>
+            <div class="ui-contact__line" [class.is-done]="step > 3"></div>
+            <div class="ui-contact__step" [class.is-active]="step >= 4" [class.is-done]="step > 4">
+              <div class="ui-contact__step-dot">
+                <span *ngIf="step <= 4">4</span>
+                <svg *ngIf="step > 4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <div class="ui-contact__step-label">Message</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="ui-contact__panel" *ngIf="step === 1">
+          <p class="ui-contact__label">Vous êtes...</p>
+          <p class="ui-contact__help">Choisissez le profil qui vous correspond le mieux.</p>
+
+          <div class="ui-contact__profile-grid">
+            <label class="ui-contact__profile" *ngFor="let t of contactTypes" [class.is-selected]="form.value.contactType === t.value">
+              <input class="ui-contact__radio" type="radio" [value]="t.value" formControlName="contactType" />
+              <div class="ui-contact__profile-inner">
+                <div class="ui-contact__profile-icon" aria-hidden="true">
+                  <app-tabler-icon [name]="t.icon" [size]="18"></app-tabler-icon>
+                </div>
+                <div class="ui-contact__profile-text">
+                  <div class="ui-contact__profile-title">{{ t.label }}</div>
+                  <div class="ui-contact__profile-desc">{{ t.desc }}</div>
+                </div>
+                <div class="ui-contact__profile-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="ui-contact__actions">
+            <button uiButton variant="primary" type="button" (click)="nextStep()" [disabled]="!canGoNext()">Suivant</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="ui-contact__panel" *ngIf="step === 2">
+          <p class="ui-contact__label">Vos coordonnées</p>
+          <p class="ui-contact__help">On utilise ces infos uniquement pour vous répondre. Promis.</p>
+
+          <div class="ui-contact__row" *ngIf="form.value.contactType !== 'entreprise'">
+            <div class="ui-contact__field">
+              <label>Prénom *</label>
+              <input uiInput formControlName="firstName" placeholder="Votre prénom" />
+            </div>
+            <div class="ui-contact__field">
+              <label>Nom *</label>
+              <input uiInput formControlName="lastName" placeholder="Votre nom" />
+            </div>
+          </div>
+
+          <div class="ui-contact__field" *ngIf="form.value.contactType === 'entreprise'">
+            <label>Nom de l'entreprise *</label>
+            <input uiInput formControlName="companyName" placeholder="Nom de votre entreprise" />
+          </div>
+
+          <div class="ui-contact__row">
+            <div class="ui-contact__field">
+              <label>Email *</label>
+              <input uiInput type="email" formControlName="email" placeholder="vous@exemple.com" autocomplete="email" />
+            </div>
+            <div class="ui-contact__field">
+              <label>Téléphone (optionnel)</label>
+              <input uiInput type="tel" formControlName="phone" placeholder="+33…" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="ui-contact__actions ui-contact__actions--split">
+            <button uiButton type="button" (click)="previousStep()">Précédent</button>
+            <button uiButton variant="primary" type="button" (click)="nextStep()" [disabled]="!canGoNext()">Suivant</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="ui-contact__panel" *ngIf="step === 3">
+          <p class="ui-contact__label">Votre besoin</p>
+          <p class="ui-contact__help">Dites‑nous ce que vous cherchez, on vous oriente vers la bonne solution.</p>
+
+          <div class="ui-contact__field">
+            <label>Type de demande</label>
+            <div class="ui-contact__chips">
+              <label class="ui-contact__chip" *ngFor="let r of requestTypes">
+                <input class="ui-contact__radio" type="radio" [value]="r.value" formControlName="requestType" />
+                <span>{{ r.label }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ui-contact__field">
+            <label>Catégorie</label>
+            <div class="ui-contact__chips">
+              <label class="ui-contact__chip" *ngFor="let c of subjectCategories">
+                <input class="ui-contact__radio" type="radio" [value]="c.value" formControlName="subjectCategory" />
+                <span>{{ c.label }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ui-contact__actions ui-contact__actions--split">
+            <button uiButton type="button" (click)="previousStep()">Précédent</button>
+            <button uiButton variant="primary" type="button" (click)="nextStep()" [disabled]="!canGoNext()">Suivant</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="ui-contact__panel" *ngIf="step === 4">
+          <p class="ui-contact__label">Votre message</p>
+          <p class="ui-contact__help">Plus vous nous donnez de détails, plus on pourra vous aider rapidement.</p>
+
+          <div class="ui-contact__field">
+            <label>Message *</label>
+            <textarea uiInput rows="6" formControlName="message" placeholder="Décrivez votre demande en détail…"></textarea>
+          </div>
+
+          <label class="ui-contact__consent">
+            <input class="ui-contact__checkbox" type="checkbox" formControlName="consent" />
+            <span>J'accepte que mes données soient utilisées pour répondre à ma demande.</span>
+          </label>
+
+          <div class="ui-contact__actions ui-contact__actions--split">
+            <button uiButton type="button" (click)="previousStep()">Précédent</button>
+            <button uiButton variant="primary" type="submit" [loading]="submitting" [disabled]="!canGoNext() || submitting || submitted">
+              <span>Envoyer</span>
+              <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div uiCard class="ui-contact__notice">
+      <span class="ui-contact__notice-pill">
+        <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+        EVA AI
+      </span>
+      <p class="ui-contact__notice-text">
+        Pas sûr de quelle formation choisir ? EVA peut analyser votre profil et vous orienter vers le parcours qui vous correspond le mieux.
+      </p>
+      <div class="ui-contact__notice-cta">
+        <button uiButton type="button" [routerLink]="['/orientation']">Faire le test d'orientation</button>
+        <button uiButton variant="primary" type="button" [routerLink]="['/trainings']">Voir les formations</button>
+      </div>
+    </div>
+  </div>
+</section>

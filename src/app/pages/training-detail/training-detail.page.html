@@ -1,0 +1,251 @@
+<section class="ui-training-detail">
+  <ng-container *ngIf="vm$ | async as vm">
+    <ng-container *ngIf="vm.state === 'ready' && vm.training as training">
+    <!-- HERO (same structure as trainings) -->
+    <div class="ui-training-detail__hero-wrap">
+      <div class="ui-training-detail__hero-spheres" aria-hidden="true">
+        <div class="ui-training-detail__sphere training-detail-sphere-1"></div>
+        <div class="ui-training-detail__sphere training-detail-sphere-2"></div>
+        <div class="ui-training-detail__sphere training-detail-sphere-3"></div>
+      </div>
+
+      <div class="ui-training-detail__hero-card">
+        <div class="ui-training-detail__hero-inner">
+          <div class="ui-training-detail__back-row">
+            <button
+              uiButton
+              variant="ghost"
+              class="ui-training-detail__back ui-icon-button"
+              [routerLink]="['/trainings']"
+              type="button"
+            >
+              <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+            </button>
+          </div>
+
+          <div class="ui-training-detail__hero-grid">
+            <div class="ui-training-detail__hero-copy">
+              <div class="ui-training-detail__badge-row">
+                <span class="ui-training-detail__badge">{{ training.category }}</span>
+                <span class="ui-training-detail__tags">{{ training.level }} • {{ training.durationDays }} jours · {{ training.durationHours }} h</span>
+              </div>
+
+              <h1 class="ui-training-detail__h1">
+                {{ training.title }}
+              </h1>
+
+              <p class="ui-training-detail__p">
+                {{ training.tagline }}
+              </p>
+
+              <div class="ui-training-detail__orientation-hint">
+                <span class="ui-training-detail__orientation-text">Pas certain de votre choix ?</span>
+                <a routerLink="/orientation" class="ui-training-detail__orientation-link">Faire le test d'orientation</a>
+              </div>
+
+              <div class="ui-training-detail__cta">
+                <button uiButton variant="primary" type="button" [routerLink]="['/trainings', training.slug, 'register']">S'inscrire</button>
+                <button uiButton type="button" [routerLink]="['/contact']">Être rappelé</button>
+              </div>
+
+              <div class="ui-training-detail__timer">
+                <app-tabler-icon name="calendar" [size]="18" class="ui-training-detail__timer-icon"></app-tabler-icon>
+                <span>Prochaine session</span>
+                <span class="ui-training-detail__timer-accent">{{ getNextSessionLabel(training) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-training-detail__grid ui-container">
+      <div class="ui-training-detail__main">
+        <section class="ui-training-detail__section">
+          <h2 class="ui-training-detail__h2">Présentation</h2>
+          <p class="ui-training-detail__p">
+            Ce parcours est conçu pour vous donner une vision complète et opérationnelle. Chaque module combine cadre,
+            cas concrets, et application immédiate.
+          </p>
+        </section>
+
+        <section class="ui-training-detail__section">
+          <h2 class="ui-training-detail__h2">
+            <app-tabler-icon name="circle-check" [size]="18" class="ui-training-detail__h2-icon"></app-tabler-icon>
+            <span>Objectifs</span>
+          </h2>
+          <ul class="ui-training-detail__list">
+            <li *ngFor="let obj of training.objectives">{{ obj }}</li>
+          </ul>
+        </section>
+
+        <section class="ui-training-detail__split">
+          <div class="ui-training-detail__section">
+            <h3 class="ui-training-detail__h3">
+              <app-tabler-icon name="users" [size]="16" class="ui-training-detail__h3-icon"></app-tabler-icon>
+              <span>Public cible</span>
+            </h3>
+            <ul class="ui-training-detail__list">
+              <li *ngFor="let item of training.targetAudience">{{ item }}</li>
+            </ul>
+          </div>
+          <div class="ui-training-detail__section">
+            <h3 class="ui-training-detail__h3">
+              <app-tabler-icon name="checklist" [size]="16" class="ui-training-detail__h3-icon"></app-tabler-icon>
+              <span>Prérequis</span>
+            </h3>
+            <ul class="ui-training-detail__list">
+              <li *ngFor="let pre of training.prerequisites">{{ pre }}</li>
+            </ul>
+          </div>
+          <div class="ui-training-detail__section">
+            <h3 class="ui-training-detail__h3">
+              <app-tabler-icon name="star" [size]="16" class="ui-training-detail__h3-icon"></app-tabler-icon>
+              <span>À l'issue</span>
+            </h3>
+            <ul class="ui-training-detail__list">
+              <li *ngFor="let out of training.outcomes">{{ out }}</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="ui-training-detail__section">
+          <div class="ui-training-detail__section-head">
+            <h2 class="ui-training-detail__h2">Programme détaillé</h2>
+            <button
+              uiButton
+              type="button"
+              variant="ghost"
+              (click)="downloadProgramPdf(training)"
+              class="ui-training-detail__pdf-btn"
+            >
+              <app-tabler-icon name="download" [size]="18"></app-tabler-icon>
+              Télécharger le programme (PDF)
+            </button>
+          </div>
+
+          <div class="ui-training-detail__modules">
+            <div uiCard *ngFor="let m of training.program; let i = index" class="ui-training-detail__module">
+              <div class="ui-training-detail__module-top">
+                <div class="ui-training-detail__module-k">Module {{ i + 1 }}</div>
+                <div class="ui-training-detail__module-t">{{ m.title }}</div>
+                <div class="ui-training-detail__module-sub">~ {{ m.durationHours }}h</div>
+              </div>
+              <ul class="ui-training-detail__topics">
+                <li *ngFor="let topic of m.topics">{{ topic }}</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Accompagnement & outils EVA -->
+        <section class="ui-training-detail__section">
+          <h2 class="ui-training-detail__h2">
+            <app-tabler-icon name="sparkles" [size]="18" class="ui-training-detail__h2-icon"></app-tabler-icon>
+            <span>EVA, votre copilote tout au long du parcours</span>
+          </h2>
+
+          <p class="ui-training-detail__p">
+            Cette formation est pensée comme un <strong>parcours complet</strong> où vous n'êtes
+            jamais seul·e : l'IA EVA vous accompagne avant, pendant et après les sessions
+            pour transformer l'apprentissage en véritable <strong>révolution dans votre pratique</strong>.
+          </p>
+
+          <ul class="ui-training-detail__eva-list">
+            <li>
+              Avant chaque module, EVA vous aide à <strong>préparer vos cas d'usage réels</strong> pour
+              que chaque session soit directement connectée à vos enjeux terrain.
+            </li>
+            <li>
+              Entre les sessions, vous avez accès à un <strong>assistant EVA dédié</strong> pour tester
+              des idées, clarifier un concept ou itérer sur vos scénarios d'automatisation.
+            </li>
+            <li>
+              Vous débloquez une bibliothèque premium de <strong>prompts, canevas et playbooks</strong>
+              inspirés de missions réelles pour accélérer vos premiers déploiements IA.
+            </li>
+            <li>
+              Après la formation, EVA reste votre <strong>copilote de progression</strong> pour
+              challenger vos nouveaux projets, affiner vos offres et suivre l'impact dans le temps.
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <aside class="ui-training-detail__side">
+        <div class="ui-training-detail__side-sticky">
+          <div class="ui-training-detail__image">
+            <img [src]="getImageUrl(training.heroImage)" [alt]="training.shortTitle" loading="lazy" />
+          </div>
+
+          <div uiCard class="ui-training-detail__price-card">
+            <div class="ui-training-detail__price-top">
+              <div>
+                <div class="ui-training-detail__muted">Tarif indicatif</div>
+                <div class="ui-training-detail__price">{{ training.priceFrom }} € HT</div>
+                <div class="ui-training-detail__muted">par participant</div>
+              </div>
+              <span class="ui-training-detail__pill">{{ training.category }}</span>
+            </div>
+
+            <div class="ui-training-detail__kv">
+              <div class="ui-training-detail__muted">Prochaine session</div>
+              <div class="ui-training-detail__kv-v">{{ getNextSessionLabel(training) }}</div>
+            </div>
+
+            <div class="ui-training-detail__kv">
+              <div class="ui-training-detail__muted">Financement</div>
+              <ul class="ui-training-detail__mini-list">
+                <ng-container *ngIf="training.fundingOptions?.length; else fundingFallback">
+                  <li *ngFor="let f of training.fundingOptions">• {{ f }}</li>
+                </ng-container>
+                <ng-template #fundingFallback>
+                  <li>• Entreprise (OPCO) / plan de développement des compétences</li>
+                  <li>• CPF ou dispositifs publics selon profil</li>
+                  <li>• Paiement en plusieurs fois possible (sur étude)</li>
+                </ng-template>
+              </ul>
+            </div>
+
+            <div class="ui-training-detail__side-actions">
+              <button uiButton variant="primary" type="button" [routerLink]="['/trainings', training.slug, 'register']">S'inscrire</button>
+              <button uiButton type="button" [routerLink]="['/contact']">Me rappeler</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+    </ng-container>
+
+    <!-- Don't show "not found" until we know (no loader UI) -->
+    <ng-container *ngIf="vm.state === 'not_found'; else loadingOrError">
+      <ng-container [ngTemplateOutlet]="notFound"></ng-container>
+    </ng-container>
+    <ng-template #loadingOrError>
+      <ng-container *ngIf="vm.state === 'error'; else nothing">
+        <ng-container [ngTemplateOutlet]="notFound"></ng-container>
+      </ng-container>
+      <ng-template #nothing></ng-template>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #notFound>
+    <div uiCard class="ui-training-detail__notfound">
+      <h1>Formation introuvable</h1>
+      <p>La formation demandée n'existe pas ou n'est plus disponible.</p>
+      <button uiButton type="button" [routerLink]="['/trainings']">Voir toutes les formations</button>
+    </div>
+  </ng-template>
+
+  <!-- Quality Section -->
+  <ng-container *ngIf="(vm$ | async)?.state === 'ready'">
+    <app-quality-section></app-quality-section>
+  </ng-container>
+
+  <!-- Training Suggestions -->
+  <ng-container *ngIf="(vm$ | async)?.state === 'ready' && (vm$ | async)?.training as training">
+    <app-training-suggestions [currentTraining]="training" [excludeSlug]="training.slug"></app-training-suggestions>
+  </ng-container>
+</section>
+
+

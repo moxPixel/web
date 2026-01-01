@@ -73,6 +73,25 @@ const profileValidation = [
   }),
 ];
 
+const assessmentValidation = [
+  body('assessment').optional().isObject().withMessage('assessment doit être un objet'),
+
+  body('assessment.logic').optional().isObject(),
+  body('assessment.logic.answers').optional().isArray().withMessage('assessment.logic.answers doit être un tableau'),
+  body('assessment.logic.answers.*.id').optional().isString().trim(),
+  body('assessment.logic.answers.*.choice').optional().isIn(['a', 'b', 'c', 'd']).withMessage('choice invalide'),
+
+  body('assessment.technical').optional().isObject(),
+  body('assessment.technical.answers').optional().isArray().withMessage('assessment.technical.answers doit être un tableau'),
+  body('assessment.technical.answers.*.id').optional().isString().trim(),
+  body('assessment.technical.answers.*.choice').optional().isIn(['a', 'b', 'c', 'd']).withMessage('choice invalide'),
+
+  body('assessment.personality').optional().isObject(),
+  body('assessment.personality.answers').optional().isArray().withMessage('assessment.personality.answers doit être un tableau'),
+  body('assessment.personality.answers.*.id').optional().isString().trim(),
+  body('assessment.personality.answers.*.choice').optional().isIn(['a', 'b', 'c', 'd']).withMessage('choice invalide'),
+];
+
 const orientationValidation = [
   body('profileType')
     .isIn(['particulier', 'etudiant', 'entreprise', 'porteur-projet', 'etranger'])
@@ -80,6 +99,7 @@ const orientationValidation = [
   body('digitalComfort').isInt({ min: 1, max: 5 }).withMessage('digitalComfort doit être entre 1 et 5'),
   ...softSkillsValidation,
   ...profileValidation,
+  ...assessmentValidation,
   validate,
 ];
 

@@ -1,0 +1,867 @@
+@layer components {
+  /* Layout helpers for the demo shell (not a component library) */
+  .ui-page {
+    min-height: 100%;
+    padding: clamp(1.25rem, 2.5vw, 2.25rem);
+  }
+
+  .ui-container {
+    max-width: var(--ui-container-max);
+    margin-inline: auto;
+  }
+
+  /* Narrow container when needed (forms / dense admin layouts) */
+  .ui-container--narrow {
+    max-width: var(--ui-container-max-narrow);
+  }
+
+  .ui-h1 {
+    font-size: clamp(1.75rem, 1.25rem + 1.25vw, 2.35rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 650;
+  }
+
+  .ui-lede {
+    margin-top: 0.65rem;
+    color: var(--ui-muted);
+    max-width: 72ch;
+  }
+
+  .ui-row {
+    display: flex;
+    gap: var(--ui-space-3);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .ui-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-6);
+  }
+
+  .ui-stack--tight {
+    gap: var(--ui-space-3);
+  }
+
+  .ui-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--ui-space-4);
+  }
+
+  .ui-col-6 {
+    grid-column: span 12;
+  }
+
+  @media (min-width: 880px) {
+    .ui-col-6 {
+      grid-column: span 6;
+    }
+  }
+
+  .ui-section {
+    margin-top: var(--ui-space-4);
+  }
+
+  /* ============================================
+     HOME SECTIONS (SSOT) - Shared structure
+     Use these classes across Home sections (except Hero)
+     ============================================ */
+  .ui-home-section {
+    position: relative;
+    z-index: 2;
+    padding: clamp(2.5rem, 5vw, 4rem) 0;
+    padding-top: clamp(0rem, 0.5vw, 0.5rem);
+    padding-bottom: clamp(5rem, 8vw, 7rem);
+  }
+
+  .ui-home-container {
+    max-width: var(--ui-container-max);
+    margin-inline: auto;
+    padding: 0 var(--ui-gutter-x);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .ui-home-header {
+    text-align: center;
+    max-width: 900px;
+    margin-inline: auto;
+    margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  /* Left-aligned variant (for content-first sections like Quality) */
+  .ui-home-header--left {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    max-width: 68ch;
+  }
+
+  .ui-home-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.1rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    border: var(--ui-hairline) solid var(--ui-border);
+    background: color-mix(in srgb, var(--ui-surface) 40%, transparent);
+    color: var(--ui-muted);
+    font-size: var(--ui-text-sm);
+    font-weight: var(--ui-weight-medium);
+    letter-spacing: -0.01em;
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    width: fit-content;
+  }
+
+  .ui-home-title {
+    margin: 1.25rem 0 0;
+    font-size: clamp(1.9rem, 1.35rem + 2.2vw, 3.15rem);
+    line-height: 1.05;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+    color: var(--ui-fg);
+  }
+
+  .ui-home-title-accent {
+    color: var(--ui-accent, var(--ui-fg));
+  }
+
+  .ui-home-lede {
+    margin: 1.25rem auto 0;
+    color: var(--ui-muted);
+    line-height: 1.8;
+    max-width: 75ch;
+    font-size: clamp(1.02rem, 0.97rem + 0.4vw, 1.12rem);
+  }
+
+  .ui-home-lede strong {
+    color: var(--ui-fg);
+    font-weight: 650;
+  }
+
+  .ui-kbd {
+    font-family: var(--ui-font-mono);
+    font-size: 0.8125rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    border: 1px solid var(--ui-border);
+    background: color-mix(in srgb, var(--ui-surface-2) 70%, transparent);
+  }
+
+  /* ============================================
+     CARD - Glassmorphism Premium
+     ============================================ */
+  .ui-card {
+    border-radius: var(--ui-radius-card);
+    background: var(--ui-glass-bg);
+    border: var(--ui-hairline) solid var(--ui-glass-border);
+    box-shadow: var(--ui-shadow-1);
+    backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+    -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+    overflow: clip;
+    transition: 
+      background var(--ui-dur-2) var(--ui-ease-out),
+      border-color var(--ui-dur-2) var(--ui-ease-out),
+      box-shadow var(--ui-dur-2) var(--ui-ease-out);
+  }
+  
+  .ui-card:hover {
+    background: var(--ui-glass-bg-strong);
+    border-color: var(--ui-glass-border-strong);
+  }
+
+  .ui-card--padded {
+    padding: clamp(1rem, 1rem + 0.6vw, 1.4rem);
+  }
+
+  .ui-card__title {
+    font-size: var(--ui-text-sm);
+    font-weight: var(--ui-weight-medium);
+    color: var(--ui-fg);
+  }
+
+  .ui-card__hint {
+    margin-top: 0.25rem;
+    font-size: var(--ui-text-sm);
+    color: var(--ui-muted);
+  }
+
+  /* ============================================
+     AUTH PAGES (SSOT) - Minimal layout (no hero)
+     Back button aligned like other pages + centered form.
+     ============================================ */
+  .ui-auth-page {
+    margin-top: 0.75rem;
+    position: relative;
+    padding: 0 var(--ui-gutter-x) var(--ui-page-pad-bottom);
+    min-height: calc(100vh - 120px);
+  }
+
+  .ui-auth-page__wrap {
+    max-width: var(--ui-container-max);
+    margin: 0 auto;
+    padding-top: clamp(1.25rem, 2.2vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.2vw, 1.75rem);
+  }
+
+  .ui-auth-page__back-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .ui-auth-page__back {
+    /* match other pages */
+    margin-left: 0.25rem;
+  }
+
+  .ui-auth-page__center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .ui-auth-page__panel {
+    width: 100%;
+    max-width: 560px;
+    border-radius: 28px;
+    padding: clamp(1.25rem, 2.6vw, 2rem);
+    border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 55%, transparent);
+    background: color-mix(in srgb, var(--ui-glass-bg) 82%, transparent);
+    backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+    -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  }
+
+  .ui-auth-page__panel-back-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .ui-auth-page__panel-back-row .ui-auth-page__back {
+    margin-left: 0.25rem;
+  }
+
+  .ui-auth-page__head {
+    text-align: center;
+    margin-bottom: 1.15rem;
+  }
+
+  .ui-auth-page__title {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    font-weight: var(--ui-weight-semibold);
+    color: var(--ui-fg);
+  }
+
+  .ui-auth-page__subtitle {
+    margin: 0.35rem 0 0;
+    color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+    line-height: 1.6;
+  }
+
+  .ui-auth-page__alert {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 0.9rem;
+    border-radius: 16px;
+    color: color-mix(in srgb, var(--ui-fg) 85%, transparent);
+  }
+
+  .ui-auth-page__alert--error {
+    border: 1px solid color-mix(in srgb, var(--ui-nebula-tertiary) 28%, transparent);
+    background: color-mix(in srgb, var(--ui-nebula-tertiary) 12%, transparent);
+  }
+
+  .ui-auth-page__alert--success {
+    border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent);
+  }
+
+  .ui-auth-page__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .ui-auth-page__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ui-auth-page__label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .ui-auth-page__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--ui-fg) 90%, transparent);
+  }
+
+  .ui-auth-page__link {
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--ui-nebula-accent) 85%, var(--ui-fg));
+    text-decoration: none;
+  }
+
+  .ui-auth-page__link:hover {
+    text-decoration: underline;
+  }
+
+  .ui-auth-page__checkbox-row {
+    margin-top: 0.25rem;
+  }
+
+  .ui-auth-page__checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .ui-auth-page__checkbox {
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: color-mix(in srgb, var(--ui-nebula-accent) 90%, var(--ui-fg));
+  }
+
+  .ui-auth-page__checkbox-text {
+    font-size: 0.95rem;
+    color: color-mix(in srgb, var(--ui-fg) 80%, transparent);
+  }
+
+  .ui-auth-page__submit {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .ui-auth-page__foot {
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 40%, transparent);
+    text-align: center;
+    color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+  }
+
+  .ui-auth-page__strength {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: color-mix(in srgb, var(--ui-glass-bg) 72%, transparent);
+    border-radius: 0.75rem;
+    border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 40%, transparent);
+  }
+
+  .ui-auth-page__strength-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .ui-auth-page__strength-label {
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  }
+
+  .ui-auth-page__strength-value {
+    font-size: 0.75rem;
+    font-weight: 650;
+  }
+
+  .ui-auth-page__strength-bar {
+    height: 0.5rem;
+    background: color-mix(in srgb, var(--ui-border) 35%, transparent);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .ui-auth-page__strength-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.3s ease;
+    background: color-mix(in srgb, var(--ui-nebula-accent) 75%, transparent);
+  }
+
+  .ui-auth-page__reqs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ui-auth-page__req {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  }
+
+  .ui-auth-page__req.is-valid {
+    color: color-mix(in srgb, var(--ui-nebula-accent) 85%, var(--ui-fg));
+  }
+
+  .ui-auth-page__match {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .ui-auth-page__match.is-ok {
+    color: color-mix(in srgb, var(--ui-nebula-accent) 85%, var(--ui-fg));
+  }
+
+  .ui-auth-page__match.is-bad {
+    color: color-mix(in srgb, var(--ui-nebula-tertiary) 85%, var(--ui-fg));
+  }
+
+  /* ============================================
+     BUTTON - Corporate Solid Style
+     ============================================ */
+  .ui-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    min-height: 2.875rem;
+    border-radius: var(--ui-radius-control);
+    border: var(--ui-hairline) solid var(--ui-btn-border);
+    background: var(--ui-btn-bg);
+    color: var(--ui-btn-fg);
+    font-size: var(--ui-text-sm);
+    font-weight: var(--ui-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--ui-tracking-normal);
+    transition:
+      background var(--ui-dur-2) var(--ui-ease-out),
+      border-color var(--ui-dur-2) var(--ui-ease-out),
+      transform var(--ui-dur-1) var(--ui-ease-out),
+      box-shadow var(--ui-dur-2) var(--ui-ease-out);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .ui-button:hover {
+    border-color: var(--ui-btn-border-hover);
+    background: var(--ui-btn-bg-hover);
+    transform: translateY(-1px);
+  }
+
+  .ui-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  .ui-button:disabled,
+  .ui-button[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  /* Loading state: spinner integrated (SSOT) - NO LAYOUT SHIFT */
+  @keyframes ui-spin-left {
+    from {
+      transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+      transform: translateY(-50%) rotate(360deg);
+    }
+  }
+
+  @keyframes ui-spin-center {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  @keyframes ui-spin-right {
+    from {
+      transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+      transform: translateY(-50%) rotate(360deg);
+    }
+  }
+
+  .ui-button--loading {
+    position: relative;
+    cursor: progress;
+  }
+
+  /* Spinner overlay: absolute, doesn't affect layout */
+  .ui-button--loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Buttons with icon: spinner remplace l'icône (position à droite) */
+  .ui-button--loading:has(app-tabler-icon)::after {
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: ui-spin-right 0.75s linear infinite;
+  }
+
+  /* Text buttons without icon: spinner à gauche, à côté du texte */
+  .ui-button--loading:not(.ui-icon-button):not(:has(app-tabler-icon))::after {
+    left: 1rem;
+    top: 50%;
+    animation: ui-spin-left 0.75s linear infinite;
+  }
+
+  /* Icon buttons: spinner centré, remplace l'icône */
+  .ui-button.ui-icon-button.ui-button--loading::after {
+    left: 50%;
+    top: 50%;
+    animation: ui-spin-center 0.75s linear infinite;
+  }
+
+  /* Hide icon when loading (spinner replaces it) */
+  .ui-button--loading app-tabler-icon {
+    opacity: 0;
+    transition: opacity var(--ui-dur-2) var(--ui-ease-out);
+  }
+
+  /* Text stays visible but dimmed when loading */
+  .ui-button--loading > span {
+    opacity: 0.4;
+    transition: opacity var(--ui-dur-2) var(--ui-ease-out);
+  }
+
+  /* Icon buttons: hide all content when loading */
+  .ui-button.ui-icon-button.ui-button--loading > * {
+    opacity: 0;
+    transition: opacity var(--ui-dur-2) var(--ui-ease-out);
+  }
+
+  /* Slightly less dim than regular disabled so the spinner remains readable */
+  .ui-button--loading:disabled {
+    opacity: 0.85;
+  }
+
+  /* ============================================
+     MEDIA RING (SSOT) - for images/visuals
+     Usage: wrap your <img> with <div class="ui-media-ring">...</div>
+     ============================================ */
+  .ui-media-ring {
+    display: inline-block;
+    padding: 10px; /* spacing between image and ring */
+    border-radius: calc(var(--ui-radius-xl) + 10px);
+    border: 1px solid color-mix(in srgb, var(--ui-accent) 42%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-accent) 10%, transparent);
+    background: color-mix(in srgb, var(--ui-glass-bg) 45%, transparent);
+    backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+    -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  }
+
+  .ui-media-ring > img,
+  .ui-media-ring > picture,
+  .ui-media-ring > video,
+  .ui-media-ring > canvas {
+    display: block;
+    border-radius: var(--ui-radius-xl);
+  }
+
+  .ui-button--ghost {
+    background: transparent;
+    border-color: var(--ui-border);
+  }
+
+  .ui-button--ghost:hover {
+    background: color-mix(in srgb, var(--ui-control-bg-hover) 55%, transparent);
+    border-color: var(--ui-border-strong);
+  }
+
+  /* Icon-only circular button (for back buttons, etc.) */
+  .ui-button.ui-icon-button {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 999px;
+    gap: 0;
+  }
+
+  /*
+    PRIMARY is still neutral by default.
+    Accent only appears when html[data-accent="primary"] is present.
+  */
+  .ui-button--primary {
+    background: var(--ui-btn-strong-bg);
+    color: var(--ui-btn-strong-fg);
+    border-color: var(--ui-btn-strong-border);
+  }
+
+  html[data-accent="primary"] .ui-button--primary:hover {
+    background: var(--ui-btn-strong-bg-hover);
+    border-color: color-mix(in srgb, var(--ui-accent) 45%, var(--ui-btn-strong-border-hover));
+  }
+
+  .ui-button--primary:hover {
+    background: var(--ui-btn-strong-bg-hover);
+    border-color: var(--ui-btn-strong-border-hover);
+  }
+
+  /*
+    Accent behaviour for primary button (explicitly enabled):
+    Keep the black/white fill, add a subtle accent keyline.
+  */
+  html[data-accent="primary"] .ui-button--primary {
+    box-shadow: none;
+  }
+
+  .ui-button--outline {
+    background: transparent;
+    color: var(--ui-fg);
+    /* Match Hero outline behavior (no fill, accent on hover) */
+    border: 2px solid var(--ui-btn-strong-border);
+  }
+
+  .ui-button--outline:hover {
+    background: transparent;
+    border-color: var(--ui-accent);
+    color: var(--ui-accent);
+  }
+
+  /* Pill/hero-like button shape */
+  .ui-button--pill {
+    border-radius: 999px;
+  }
+
+  .ui-button--lg {
+    padding: 1rem 2rem;
+    min-height: 3rem;
+    font-size: var(--ui-text-base);
+  }
+
+  /* ============================================
+     INPUT - Clean & Modern
+     ============================================ */
+  .ui-input {
+    width: 100%;
+    min-height: 2.875rem;
+    padding: 0.75rem 1.125rem;
+    border-radius: var(--ui-radius-control);
+    border: var(--ui-hairline) solid var(--ui-control-border);
+    background: var(--ui-control-bg);
+    color: var(--ui-fg);
+    font-size: var(--ui-text-sm);
+    font-weight: var(--ui-weight-regular);
+    line-height: 1.5;
+    letter-spacing: var(--ui-tracking-normal);
+    transition:
+      border-color var(--ui-dur-2) var(--ui-ease-out),
+      background var(--ui-dur-2) var(--ui-ease-out),
+      box-shadow var(--ui-dur-2) var(--ui-ease-out);
+    outline: none;
+  }
+
+  .ui-input::placeholder {
+    color: var(--ui-subtle);
+  }
+
+  .ui-input:hover {
+    border-color: var(--ui-control-border-hover);
+    background: var(--ui-control-bg-hover);
+  }
+
+  .ui-input:focus-visible {
+    background: var(--ui-control-bg-hover);
+    border-color: color-mix(in srgb, var(--ui-accent) 55%, var(--ui-control-border));
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--ui-accent) 14%, transparent),
+      0 18px 45px rgba(0, 0, 0, 0.18);
+  }
+
+  .ui-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Angular forms: invalid field feedback (subtle, no layout shift) */
+  .ui-input.ng-touched.ng-invalid {
+    border-color: color-mix(in srgb, #ff6b6b 55%, var(--ui-control-border));
+  }
+
+  /* Textareas should NOT look like pills */
+  textarea.ui-input {
+    border-radius: var(--ui-radius-md);
+    min-height: 9.5rem;
+    padding: 0.9rem 1.1rem;
+    resize: vertical;
+  }
+
+  /* Selects: match input styling, with a subtle caret */
+  select.ui-input {
+    padding-right: 2.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, color-mix(in srgb, var(--ui-fg) 55%, transparent) 50%),
+      linear-gradient(135deg, color-mix(in srgb, var(--ui-fg) 55%, transparent) 50%, transparent 50%),
+      linear-gradient(to right, transparent, transparent);
+    background-position:
+      calc(100% - 1.15rem) 50%,
+      calc(100% - 0.85rem) 50%,
+      calc(100% - 2.5rem) 50%;
+    background-size:
+      6px 6px,
+      6px 6px,
+      1px 1.4rem;
+    background-repeat: no-repeat;
+  }
+
+  /* SLIDER */
+  input[type="range"].ui-slider {
+    width: 100%;
+    height: 2.4rem;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    --ui-slider-pct: 50%;
+    --ui-slider-track: color-mix(in srgb, var(--ui-control-bg) 86%, var(--ui-fg) 3%);
+    --ui-slider-fill: color-mix(in srgb, var(--ui-fg) 18%, transparent);
+  }
+
+  html[data-accent="primary"] input[type="range"].ui-slider {
+    --ui-slider-fill: color-mix(in srgb, var(--ui-accent) 88%, var(--ui-control-bg));
+  }
+
+  input[type="range"].ui-slider::-webkit-slider-runnable-track {
+    height: 0.5rem;
+    background:
+      var(--ui-slider-fill) 0 0 / var(--ui-slider-pct) 100% no-repeat,
+      var(--ui-slider-track);
+    border: var(--ui-hairline) solid var(--ui-control-border);
+    border-radius: 999px;
+  }
+
+  input[type="range"].ui-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    background: var(--ui-control-bg-hover);
+    border: var(--ui-hairline) solid var(--ui-control-border-hover);
+    box-shadow: none;
+    margin-top: calc((0.5rem - 1.15rem) / 2);
+  }
+
+  input[type="range"].ui-slider::-moz-range-track {
+    height: 0.5rem;
+    background: var(--ui-slider-track);
+    border: var(--ui-hairline) solid var(--ui-control-border);
+    border-radius: 999px;
+  }
+
+  input[type="range"].ui-slider::-moz-range-progress {
+    height: 0.5rem;
+    background: var(--ui-slider-fill);
+    border-radius: 999px;
+  }
+
+  input[type="range"].ui-slider::-moz-range-thumb {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    background: var(--ui-control-bg-hover);
+    border: var(--ui-hairline) solid var(--ui-control-border-hover);
+    box-shadow: none;
+  }
+
+  /* ============================================
+     PAGE LOADER (No cards)
+     ============================================ */
+  @keyframes ui-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .ui-page-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 2.25rem 1rem;
+    color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+  }
+
+  .ui-page-loader__spinner {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 2px solid color-mix(in srgb, var(--ui-fg) 18%, transparent);
+    border-top-color: color-mix(in srgb, var(--ui-accent) 70%, white);
+    animation: ui-spin 900ms linear infinite;
+  }
+
+  .ui-page-loader__text {
+    font-size: var(--ui-text-sm);
+    letter-spacing: var(--ui-tracking-normal);
+  }
+
+  input[type="range"].ui-slider:disabled {
+    opacity: 0.6;
+  }
+
+  /* ============================================
+     FOCUS STATES - Clean & Accessible
+     ============================================ */
+  :where(.ui-button, .ui-input, input[type="range"].ui-slider):focus-visible {
+    border-color: var(--ui-ring);
+    box-shadow: 0 0 0 var(--ui-ring-width) var(--ui-ring);
+    outline: none;
+  }
+
+  .ui-button:focus-visible {
+    border-color: var(--ui-ring-strong);
+    box-shadow: 0 0 0 var(--ui-ring-width) var(--ui-ring-strong);
+  }
+
+  .ui-button--primary:focus-visible {
+    border-color: var(--ui-ring-strong);
+    box-shadow: 0 0 0 var(--ui-ring-width) var(--ui-ring-strong);
+  }
+
+  /* Accent focus (only when explicitly enabled) */
+  html[data-accent="primary"]
+    :where(.ui-button, .ui-input, input[type="range"].ui-slider):focus-visible {
+    border-color: color-mix(in srgb, var(--ui-accent) 45%, var(--ui-control-border-hover));
+    box-shadow: 0 0 0 var(--ui-ring-width) color-mix(in srgb, var(--ui-accent) 60%, transparent);
+  }
+}
+
+

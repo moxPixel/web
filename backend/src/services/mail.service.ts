@@ -42,6 +42,60 @@ export interface SendEmailParams {
 export class MailService {
   private static transporter: nodemailer.Transporter | null = null;
 
+  private static escapeHtml(input: string): string {
+    return input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  private static textToSafeHtml(input: string): string {
+    // Escape everything, then reintroduce line breaks.
+    return this.escapeHtml(input).replace(/\r\n|\n|\r/g, '<br/>');
+  }
+
+  private static normalizeTemplateData(templateData: EmailTemplateData): EmailTemplateData {
+    const safe: EmailTemplateData = { ...templateData };
+
+    if (safe.greeting) safe.greeting = this.textToSafeHtml(String(safe.greeting));
+    if (safe.mainMessage) safe.mainMessage = this.textToSafeHtml(String(safe.mainMessage));
+    if (safe.additionalMessage) safe.additionalMessage = this.textToSafeHtml(String(safe.additionalMessage));
+    if (safe.messageBox) safe.messageBox = this.textToSafeHtml(String(safe.messageBox));
+    if (safe.warning) safe.warning = this.textToSafeHtml(String(safe.warning));
+    if (safe.conclusion) safe.conclusion = this.textToSafeHtml(String(safe.conclusion));
+
+    if (safe.infoBox) {
+      safe.infoBox = {
+        title: this.escapeHtml(String(safe.infoBox.title || '')),
+        items: Array.isArray(safe.infoBox.items)
+          ? safe.infoBox.items.map((i) => this.escapeHtml(String(i)))
+          : undefined,
+        content: safe.infoBox.content ? this.textToSafeHtml(String(safe.infoBox.content)) : undefined,
+        details: Array.isArray(safe.infoBox.details)
+          ? safe.infoBox.details.map((d) => ({
+              label: this.escapeHtml(String(d.label)),
+              value: this.escapeHtml(String(d.value)),
+            }))
+          : undefined,
+      };
+    }
+
+    if (safe.linkInfo) {
+      safe.linkInfo = {
+        label: this.escapeHtml(String(safe.linkInfo.label)),
+        url: String(safe.linkInfo.url),
+      };
+    }
+
+    // Never allow HTML in these; keep plain.
+    if (safe.header) safe.header = this.escapeHtml(String(safe.header));
+    if (safe.signature) safe.signature = this.escapeHtml(String(safe.signature));
+
+    return safe;
+  }
+
   private static getTransporter(): nodemailer.Transporter {
     if (this.transporter) return this.transporter;
 
@@ -55,7 +109,17 @@ export class MailService {
       port,
       secure,
       auth: { user, pass: password },
+      // Improve reliability: avoid hanging requests
+      connectionTimeout: 12_000,
+      greetingTimeout: 12_000,
+      socketTimeout: 20_000,
     });
+
+    // Non-blocking verify (helps detect misconfig early, but won't break runtime if SMTP is temporarily down)
+    this.transporter
+      .verify()
+      .then(() => logger.info('✅ [MailService] SMTP transporter verified'))
+      .catch((err) => logger.warn('⚠️ [MailService] SMTP transporter verify failed', err));
 
     return this.transporter;
   }
@@ -67,7 +131,8 @@ export class MailService {
       const transporter = this.getTransporter();
       const emailConfig = env.email;
 
-      const html = this.renderTemplate(params.templateData);
+      const normalizedTemplateData = this.normalizeTemplateData(params.templateData);
+      const html = this.renderTemplate(normalizedTemplateData);
       const text = this.renderText(params.templateData);
 
       const attachments = params.attachments?.map((att) => {
@@ -106,6 +171,8 @@ export class MailService {
       logger.info(`✅ [MailService] Email sent successfully to ${params.to}${params.cc ? ` (Cc: ${params.cc})` : ''} - MessageID: ${result.messageId}`);
     } catch (error) {
       logger.error(`❌ [MailService] Failed to send email to ${params.to}:`, error);
+      // Reset transporter so next attempt recreates a fresh connection
+      this.transporter = null;
       throw error;
     }
   }
@@ -148,15 +215,64 @@ export class MailService {
   }
 
   private static renderText(templateData: EmailTemplateData): string {
-    const parts = [
-      templateData.header,
-      templateData.greeting,
-      templateData.mainMessage,
-      templateData.conclusion,
-      templateData.signature,
-    ].filter(Boolean) as string[];
+    const parts: string[] = [];
 
-    return parts.join('\n\n').replace(/<[^>]*>/g, '').trim();
+    if (templateData.header) {
+      parts.push(templateData.header);
+    }
+
+    if (templateData.greeting) {
+      parts.push(templateData.greeting.replace(/<[^>]*>/g, ''));
+    }
+
+    if (templateData.mainMessage) {
+      parts.push(templateData.mainMessage.replace(/<[^>]*>/g, ''));
+    }
+
+    if (templateData.infoBox) {
+      if (templateData.infoBox.title) {
+        parts.push(`\n${templateData.infoBox.title}`);
+      }
+      if (templateData.infoBox.items) {
+        parts.push(templateData.infoBox.items.map(item => `• ${item}`).join('\n'));
+      }
+      if (templateData.infoBox.content) {
+        parts.push(templateData.infoBox.content);
+      }
+      if (templateData.infoBox.details) {
+        parts.push(templateData.infoBox.details.map(d => `${d.label}: ${d.value}`).join('\n'));
+      }
+    }
+
+    if (templateData.additionalMessage) {
+      parts.push(templateData.additionalMessage.replace(/<[^>]*>/g, ''));
+    }
+
+    if (templateData.buttonUrl && templateData.buttonText) {
+      parts.push(`\n${templateData.buttonText}: ${templateData.buttonUrl}`);
+    }
+
+    if (templateData.messageBox) {
+      parts.push(templateData.messageBox.replace(/<[^>]*>/g, ''));
+    }
+
+    if (templateData.warning) {
+      parts.push(`⚠️ Important : ${templateData.warning}`);
+    }
+
+    if (templateData.linkInfo) {
+      parts.push(`${templateData.linkInfo.label}: ${templateData.linkInfo.url}`);
+    }
+
+    if (templateData.conclusion) {
+      parts.push(templateData.conclusion.replace(/<[^>]*>/g, ''));
+    }
+
+    if (templateData.signature) {
+      parts.push(`\n${templateData.signature}`);
+    }
+
+    return parts.join('\n\n').trim();
   }
 }
 

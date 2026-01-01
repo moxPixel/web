@@ -105,7 +105,11 @@ export class TrainingsService {
         where,
         limit: safeLimit,
         offset,
-        order: [[sortBy, sortOrder]],
+        // Whitelist sort fields to prevent invalid SQL / injection
+        order: [[
+          new Set<string>(['createdAt', 'updatedAt', 'title', 'shortTitle', 'status']).has(String(sortBy)) ? String(sortBy) : 'createdAt',
+          String(sortOrder).toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+        ]],
         include: [
           {
             model: TrainingModule,
@@ -123,10 +127,10 @@ export class TrainingsService {
       return {
         data: rows,
         pagination: {
-          page,
-          limit,
+          page: safePage,
+          limit: safeLimit,
           total: count,
-          totalPages: Math.ceil(count / limit),
+          totalPages: Math.ceil(count / safeLimit),
         },
       };
     } catch (error) {

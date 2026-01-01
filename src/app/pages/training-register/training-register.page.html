@@ -1,0 +1,230 @@
+<section class="ui-training-register">
+  <div class="ui-training-register__hero-wrap">
+    <div class="ui-training-register__hero-spheres" aria-hidden="true">
+      <div class="ui-training-register__sphere register-sphere-1"></div>
+      <div class="ui-training-register__sphere register-sphere-2"></div>
+      <div class="ui-training-register__sphere register-sphere-3"></div>
+    </div>
+
+    <div class="ui-training-register__hero-card">
+      <div class="ui-training-register__hero-inner">
+        <div class="ui-training-register__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-training-register__back ui-icon-button" (click)="back()">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <ng-container *ngIf="!loadFailed && training; else headerState">
+          <div class="ui-training-register__hero-grid">
+            <div class="ui-training-register__hero-copy">
+              <div class="ui-training-register__badge-row">
+                <span class="ui-training-register__badge">Inscription</span>
+                <span class="ui-training-register__tags">{{ training.category }} • {{ training.level }}</span>
+              </div>
+
+              <h1 class="ui-training-register__h1">
+                {{ training.shortTitle || training.title }}
+              </h1>
+              <p class="ui-training-register__p">Complétez ce formulaire pour réserver une place ou inscrire votre équipe.</p>
+
+              <div class="ui-training-register__orientation-hint">
+                <span class="ui-training-register__orientation-text">Pas certain de votre choix ?</span>
+                <a routerLink="/orientation" class="ui-training-register__orientation-link">Faire le test d'orientation</a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #headerState>
+          <div class="ui-training-register__hero-grid">
+            <div class="ui-training-register__hero-copy">
+              <div class="ui-training-register__badge-row">
+                <span class="ui-training-register__badge">Inscription</span>
+                <span class="ui-training-register__tags">Formation</span>
+              </div>
+              <h1 class="ui-training-register__h1">Formation</h1>
+              <p class="ui-training-register__p">Complétez ce formulaire pour réserver une place ou inscrire votre équipe.</p>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-training-register__body ui-container">
+    <div *ngIf="loadFailed" class="ui-training-register__error">
+      <div uiCard>
+        <div class="ui-training-register__actions">
+          <button uiButton variant="primary" type="button" [routerLink]="['/trainings']">Retour aux formations</button>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!loadFailed && training">
+      <div class="ui-training-register__grid">
+        <!-- Summary -->
+        <aside class="ui-training-register__aside">
+          <div uiCard class="ui-training-register__summary">
+            <div class="ui-training-register__summary-image">
+              <img [src]="getImageUrl(training.heroImage)" [alt]="training.shortTitle" loading="lazy" />
+              <div class="ui-training-register__summary-gradient" aria-hidden="true"></div>
+            </div>
+            <div class="ui-training-register__summary-body">
+              <div class="ui-training-register__summary-head">
+                <span class="ui-training-register__pill">{{ training.category }}</span>
+                <span class="ui-training-register__mini">{{ training.durationDays }} jours • {{ training.durationHours }} h</span>
+              </div>
+              <p class="ui-training-register__summary-title">{{ training.shortTitle }}</p>
+              <p class="ui-training-register__summary-muted">{{ training.locationTypes.join(' • ') }}</p>
+              <div class="ui-training-register__summary-price">
+                <span class="k">À partir de</span>
+                <span class="v">{{ training.priceFrom }} € HT</span>
+              </div>
+            </div>
+          </div>
+
+          <div uiCard class="ui-training-register__note">
+            <p class="ui-training-register__note-title">Ce que vous obtenez</p>
+            <ul class="ui-training-register__note-list">
+              <li>Réponse rapide sous 24–48h</li>
+              <li>Validation de la session & du format</li>
+              <li>Conseils financement (CPF / entreprise / OPCO)</li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- Form -->
+        <main class="ui-training-register__main">
+          <div uiCard class="ui-training-register__form-card" [class.is-submitting]="submitting">
+            <div class="ui-training-register__form-head">
+              <p class="ui-training-register__form-k">Formulaire</p>
+              <h2 class="ui-training-register__h2">Demande d’inscription</h2>
+              <p class="ui-training-register__muted">
+                Choisissez votre profil et complétez les informations nécessaires. Nous vous recontactons pour finaliser.
+              </p>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="ui-training-register__form">
+              <!-- Role -->
+              <div class="ui-training-register__roles">
+                <label
+                  class="ui-training-register__role"
+                  *ngFor="let r of roles"
+                  [class.is-selected]="form.value.role === r.value"
+                >
+                  <input class="ui-training-register__radio" type="radio" [value]="r.value" formControlName="role" />
+                  <div class="ui-training-register__role-inner">
+                    <div class="t">{{ r.label }}</div>
+                    <div class="d">{{ r.description }}</div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="ui-training-register__row">
+                <div class="ui-training-register__field">
+                  <label>Prénom *</label>
+                  <input uiInput formControlName="firstName" placeholder="Votre prénom" />
+                </div>
+                <div class="ui-training-register__field">
+                  <label>Nom *</label>
+                  <input uiInput formControlName="lastName" placeholder="Votre nom" />
+                </div>
+              </div>
+
+              <div class="ui-training-register__row">
+                <div class="ui-training-register__field">
+                  <label>Email *</label>
+                  <input uiInput type="email" formControlName="email" placeholder="vous@exemple.com" />
+                </div>
+                <div class="ui-training-register__field">
+                  <label>Téléphone</label>
+                  <input uiInput formControlName="phone" placeholder="+33…" />
+                </div>
+              </div>
+
+              <div class="ui-training-register__row" *ngIf="isCompany()">
+                <div class="ui-training-register__field">
+                  <label>Entreprise</label>
+                  <input uiInput formControlName="companyName" placeholder="Nom de votre société" />
+                </div>
+                <div class="ui-training-register__field">
+                  <label>SIRET (optionnel)</label>
+                  <input uiInput formControlName="siret" placeholder="SIRET" />
+                </div>
+              </div>
+
+              <div class="ui-training-register__row" *ngIf="isCompany()">
+                <div class="ui-training-register__field">
+                  <label>Poste / rôle</label>
+                  <input uiInput formControlName="jobTitle" placeholder="Ex: DRH, Manager…" />
+                </div>
+                <div class="ui-training-register__field">
+                  <label>Taille de l’équipe</label>
+                  <input uiInput formControlName="teamSize" placeholder="Ex: 5 personnes" />
+                </div>
+              </div>
+
+              <div class="ui-training-register__field" *ngIf="isTrainer()">
+                <label>Votre expérience (formateur)</label>
+                <textarea uiInput formControlName="message" rows="3" placeholder="Précisez votre expérience et vos attentes"></textarea>
+              </div>
+
+              <div class="ui-training-register__field" *ngIf="isIndividualOrCandidate()">
+                <label>Motivation / contexte</label>
+                <textarea uiInput formControlName="message" rows="3" placeholder="Expliquez votre besoin et vos objectifs"></textarea>
+              </div>
+
+              <div class="ui-training-register__row">
+                <div class="ui-training-register__field">
+                  <label>Format préféré</label>
+                  <app-ui-choice-group
+                    formControlName="preferredFormat"
+                    [options]="formats"
+                    ariaLabel="Format préféré"
+                    size="sm"
+                  ></app-ui-choice-group>
+                </div>
+                <div class="ui-training-register__field">
+                  <label>Date souhaitée (optionnel)</label>
+                  <input uiInput type="date" formControlName="desiredDate" />
+                </div>
+              </div>
+
+              <div class="ui-training-register__field" *ngIf="upcomingSessions.length">
+                <label>Choisir une session (optionnel)</label>
+                <div class="ui-training-register__sessions">
+                  <label
+                    class="ui-training-register__session"
+                    *ngFor="let s of upcomingSessions"
+                    [class.is-selected]="form.value.sessionId === s.id"
+                  >
+                    <input class="ui-training-register__radio" type="radio" [value]="s.id" formControlName="sessionId" />
+                    <span>{{ s.label }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="ui-training-register__field">
+                <label>Objectifs spécifiques</label>
+                <textarea uiInput formControlName="objectives" rows="3" placeholder="Vos objectifs précis pour cette formation"></textarea>
+              </div>
+
+              <div class="ui-training-register__foot">
+                <p class="ui-training-register__consent">
+                  En soumettant, vous acceptez d’être contacté pour finaliser votre inscription.
+                </p>
+
+                <button uiButton variant="primary" type="submit" [loading]="submitting" [disabled]="submitting">
+                  <span>Envoyer</span>
+                  <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+                </button>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+

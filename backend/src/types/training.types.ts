@@ -28,6 +28,7 @@ export interface CreateTrainingDto {
   priceFrom?: number;
   currency?: string;
   nextSessionHighlight?: string;
+  fundingOptions?: string[];
   heroImage?: string;
   watermarkLogo?: string;
   status?: 'draft' | 'published' | 'archived';

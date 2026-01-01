@@ -15,6 +15,7 @@ import Contact from './Contact';
 import TrainingEnrollment from './TrainingEnrollment';
 import PasswordReset from './PasswordReset';
 import OrientationResult from './OrientationResult';
+import Event from './Event';
 
 // Définir les associations
 const defineAssociations = (): void => {
@@ -89,6 +90,7 @@ export {
   Certification,
   TrainingSession,
   TrainingModule,
+  Event,
   User,
   Individual,
   Company,
@@ -105,6 +107,7 @@ export default {
   Certification,
   TrainingSession,
   TrainingModule,
+  Event,
   User,
   Individual,
   Company,

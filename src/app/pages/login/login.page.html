@@ -1,0 +1,70 @@
+<section class="ui-auth-page">
+  <div class="ui-auth-page__wrap">
+    <div class="ui-auth-page__center">
+      <div class="ui-auth-page__panel" role="region" aria-label="Formulaire de connexion">
+        <div class="ui-auth-page__panel-back-row">
+          <button uiButton variant="ghost" type="button" class="ui-auth-page__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-auth-page__head">
+          <h1 class="ui-auth-page__title">Connexion</h1>
+          <p class="ui-auth-page__subtitle">Connectez-vous à votre compte.</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="ui-auth-page__form">
+          <div class="ui-auth-page__group">
+            <label for="email" class="ui-auth-page__label">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              [disabled]="loading"
+              uiInput
+              placeholder="votre@email.com"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="ui-auth-page__group">
+            <div class="ui-auth-page__label-row">
+              <label for="password" class="ui-auth-page__label">Mot de passe</label>
+              <a routerLink="/forgot-password" class="ui-auth-page__link">Mot de passe oublié ?</a>
+            </div>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+              [disabled]="loading"
+              uiInput
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+          </div>
+
+          <div class="ui-auth-page__checkbox-row">
+            <label class="ui-auth-page__checkbox-label">
+              <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" [disabled]="loading" class="ui-auth-page__checkbox" />
+              <span class="ui-auth-page__checkbox-text">Se souvenir de moi</span>
+            </label>
+          </div>
+
+          <button type="submit" [loading]="loading" [disabled]="loading" uiButton variant="primary" class="ui-auth-page__submit">
+            <span>Se connecter</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+        </form>
+
+        <div class="ui-auth-page__foot">
+          Vous n’avez pas d’accès ?
+          <a routerLink="/contact" class="ui-auth-page__link">Demander un accès</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

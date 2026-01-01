@@ -1,0 +1,1032 @@
+<section class="ui-bo-form">
+  <div class="ui-bo-form__hero ui-container">
+    <div class="ui-bo-form__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-form__back ui-icon-button" (click)="back()">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-form__head">
+      <div class="ui-bo-form__pill">Backoffice</div>
+      <div class="ui-bo-form__head-row">
+        <div>
+          <h1 class="ui-bo-form__h1">{{ isEdit ? 'Modifier la formation' : 'Nouvelle formation' }}</h1>
+          <p class="ui-bo-form__p"> Remplissez les informations ci-dessous pour {{ isEdit ? 'modifier' : 'créer' }} une formation.</p>
+        </div>
+        <div class="ui-bo-form__head-actions">
+          <button *ngIf="!isEdit" uiButton type="button" class="ui-bo-form__ai" (click)="openAiGenerate()" [disabled]="saving || !hydrated">
+            <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+            <span>Générer avec l’IA</span>
+          </button>
+        <button uiButton variant="primary" type="button" class="ui-bo-form__save" (click)="submit()" [loading]="saving" [disabled]="saving || !hydrated">
+          <span>Enregistrer</span>
+          <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div>
+      <div class="ui-bo-form__tabs" role="tablist" aria-label="Sections">
+        <button uiButton type="button" class="ui-bo-form__tab" [class.is-active]="activeTab==='general'" (click)="setTab('general')">Général</button>
+        <button uiButton type="button" class="ui-bo-form__tab" [class.is-active]="activeTab==='content'" (click)="setTab('content')">Contenu</button>
+        <button uiButton type="button" class="ui-bo-form__tab" [class.is-active]="activeTab==='program'" (click)="setTab('program')">Programme</button>
+        <button uiButton type="button" class="ui-bo-form__tab" [class.is-active]="activeTab==='media'" (click)="setTab('media')">Médias</button>
+        <button uiButton type="button" class="ui-bo-form__tab" [class.is-active]="activeTab==='sessions'" (click)="setTab('sessions')">Sessions</button>
+      </div>
+
+      <form class="ui-bo-form__form" [formGroup]="form">
+        <!-- GENERAL -->
+        <div uiCard class="ui-bo-form__card" *ngIf="activeTab==='general'">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Informations générales</h2>
+              <p class="ui-bo-form__muted">Identité et catégorisation de la formation.</p>
+            </div>
+          </div>
+
+          <!-- Section: Identité -->
+          <div class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">
+              <app-tabler-icon name="graduation-cap" [size]="14"></app-tabler-icon>
+              <span>Identité</span>
+            </h3>
+          <div class="ui-bo-form__grid">
+            <div class="ui-bo-form__field">
+                <div class="ui-bo-form__label-row">
+                  <label class="ui-bo-form__label" for="title">
+                    <app-tabler-icon name="pencil" [size]="14"></app-tabler-icon>
+                    <span>Titre *</span>
+                  </label>
+                  <button
+                    *ngIf="hasFieldValue('title')"
+                    type="button"
+                    class="ui-ai-icon-btn"
+                    (click)="openAiPopover($event, 'title')"
+                    aria-label="Assistant IA"
+                    title="Assistant IA"
+                  >
+                    <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                  </button>
+                </div>
+              <input uiInput id="title" type="text" formControlName="title" placeholder="Ex: Architectures IA en production" />
+            </div>
+              
+            <div class="ui-bo-form__field">
+                <div class="ui-bo-form__label-row">
+                  <label class="ui-bo-form__label" for="shortTitle">
+                    <app-tabler-icon name="pencil" [size]="14"></app-tabler-icon>
+                    <span>Titre court *</span>
+                  </label>
+                  <button
+                    *ngIf="hasFieldValue('shortTitle')"
+                    type="button"
+                    class="ui-ai-icon-btn"
+                    (click)="openAiPopover($event, 'shortTitle')"
+                    aria-label="Assistant IA"
+                    title="Assistant IA"
+                  >
+                    <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                  </button>
+                </div>
+              <input uiInput id="shortTitle" type="text" formControlName="shortTitle" placeholder="Ex: IA en production" />
+            </div>
+              
+            <div class="ui-bo-form__field">
+                <div class="ui-bo-form__label-row">
+                  <label class="ui-bo-form__label" for="slug">
+                    <app-tabler-icon name="code" [size]="14"></app-tabler-icon>
+                    <span>Slug *</span>
+                  </label>
+                  <button
+                    *ngIf="hasFieldValue('slug')"
+                    type="button"
+                    class="ui-ai-icon-btn"
+                    (click)="openAiPopover($event, 'slug')"
+                    aria-label="Assistant IA"
+                    title="Assistant IA"
+                  >
+                    <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                  </button>
+                </div>
+              <input uiInput id="slug" type="text" formControlName="slug" placeholder="ia-en-production" />
+                <div class="ui-bo-form__field-hint">URL-friendly identifier</div>
+            </div>
+              
+            <div class="ui-bo-form__field">
+                <div class="ui-bo-form__label-row">
+                  <label class="ui-bo-form__label" for="category">
+                    <app-tabler-icon name="stack" [size]="14"></app-tabler-icon>
+                    <span>Catégorie</span>
+                  </label>
+                  <button
+                    *ngIf="hasFieldValue('category')"
+                    type="button"
+                    class="ui-ai-icon-btn"
+                    (click)="openAiPopover($event, 'category')"
+                    aria-label="Assistant IA"
+                    title="Assistant IA"
+                  >
+                    <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                  </button>
+                </div>
+              <input uiInput id="category" type="text" formControlName="category" placeholder="Ex: Data / IA" />
+              </div>
+            </div>
+            </div>
+
+          <!-- Section: Catégorisation -->
+          <div class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">
+              <app-tabler-icon name="stack" [size]="14"></app-tabler-icon>
+              <span>Catégorisation</span>
+            </h3>
+            <div class="ui-bo-form__grid">
+            <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="level">
+                  <app-tabler-icon name="chart-line" [size]="14"></app-tabler-icon>
+                  <span>Niveau</span>
+                </label>
+              <app-ui-choice-group
+                formControlName="level"
+                [options]="levelOptions"
+                ariaLabel="Niveau"
+                size="sm"
+              ></app-ui-choice-group>
+            </div>
+
+            <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="trainingType">
+                  <app-tabler-icon name="graduation-cap" [size]="14"></app-tabler-icon>
+                  <span>Type</span>
+                </label>
+              <app-ui-choice-group
+                formControlName="trainingType"
+                [options]="trainingTypeOptions"
+                ariaLabel="Type"
+                size="sm"
+              ></app-ui-choice-group>
+            </div>
+
+            <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="audienceType">
+                  <app-tabler-icon name="users" [size]="14"></app-tabler-icon>
+                  <span>Public</span>
+                </label>
+              <app-ui-choice-group
+                formControlName="audienceType"
+                [options]="audienceTypeOptions"
+                ariaLabel="Public"
+                size="sm"
+              ></app-ui-choice-group>
+            </div>
+
+            <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="status">
+                  <app-tabler-icon name="check" [size]="14"></app-tabler-icon>
+                  <span>Statut</span>
+                </label>
+              <app-ui-choice-group
+                formControlName="status"
+                [options]="statusOptions"
+                ariaLabel="Statut"
+                size="sm"
+              ></app-ui-choice-group>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div uiCard class="ui-bo-form__card" *ngIf="activeTab==='content'">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Contenu et présentation</h2>
+              <p class="ui-bo-form__muted">Description, objectifs, prérequis et informations pratiques.</p>
+            </div>
+          </div>
+
+          <!-- Section: Présentation -->
+          <div class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">Présentation</h3>
+          <div class="ui-bo-form__stack">
+            <div class="ui-bo-form__field">
+              <div class="ui-bo-form__label-row">
+              <label class="ui-bo-form__label" for="tagline">Tagline</label>
+                <button
+                  *ngIf="hasFieldValue('tagline')"
+                  type="button"
+                  class="ui-ai-icon-btn"
+                  (click)="openAiPopover($event, 'tagline')"
+                  aria-label="Assistant IA"
+                  title="Assistant IA"
+                >
+                  <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                </button>
+              </div>
+              <input uiInput id="tagline" type="text" formControlName="tagline" placeholder="Une formation orientée production et livrables." />
+            </div>
+
+            <div class="ui-bo-form__field">
+              <div class="ui-bo-form__label-row">
+              <label class="ui-bo-form__label" for="description">Description</label>
+                <button
+                  *ngIf="hasFieldValue('description')"
+                  type="button"
+                  class="ui-ai-icon-btn"
+                  (click)="openAiPopover($event, 'description')"
+                  aria-label="Assistant IA"
+                  title="Assistant IA"
+                >
+                  <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                </button>
+              </div>
+              <textarea uiInput id="description" rows="6" formControlName="description" placeholder="Décrivez la valeur, le format, les résultats…"></textarea>
+            </div>
+
+
+            </div>
+          </div>
+
+          <!-- Section: Informations pratiques -->
+          <div class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">Informations pratiques</h3>
+            <div class="ui-bo-form__stack">
+              <div class="ui-bo-form__field-row">
+                <div class="ui-bo-form__field">
+                  <label class="ui-bo-form__label" for="durationDays">Durée (jours)</label>
+                  <input uiInput id="durationDays" type="number" formControlName="durationDays" />
+                </div>
+                <div class="ui-bo-form__field">
+                  <label class="ui-bo-form__label" for="durationHours">Durée (heures)</label>
+                  <input uiInput id="durationHours" type="number" formControlName="durationHours" />
+                </div>
+                <div class="ui-bo-form__field">
+                  <div class="ui-bo-form__label-row">
+                    <label class="ui-bo-form__label" for="durationLabel">Label durée</label>
+                    <button
+                      *ngIf="hasFieldValue('durationLabel')"
+                      type="button"
+                      class="ui-ai-icon-btn"
+                      (click)="openAiPopover($event, 'durationLabel')"
+                      aria-label="Assistant IA"
+                      title="Assistant IA"
+                    >
+                      <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <input uiInput id="durationLabel" type="text" formControlName="durationLabel" placeholder="Ex: 5 jours (35h)" />
+                </div>
+              </div>
+
+              <div class="ui-bo-form__field-row">
+                <div class="ui-bo-form__field">
+                  <div class="ui-bo-form__label-row">
+                    <label class="ui-bo-form__label" for="format">Format</label>
+                    <button
+                      *ngIf="hasFieldValue('format')"
+                      type="button"
+                      class="ui-ai-icon-btn"
+                      (click)="openAiPopover($event, 'format')"
+                      aria-label="Assistant IA"
+                      title="Assistant IA"
+                    >
+                      <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <input uiInput id="format" type="text" formControlName="format" placeholder="Ex: ateliers + cas pratiques" />
+                </div>
+                <div class="ui-bo-form__field">
+                  <div class="ui-bo-form__label-row">
+                    <label class="ui-bo-form__label" for="pace">Rythme</label>
+                    <button
+                      *ngIf="hasFieldValue('pace')"
+                      type="button"
+                      class="ui-ai-icon-btn"
+                      (click)="openAiPopover($event, 'pace')"
+                      aria-label="Assistant IA"
+                      title="Assistant IA"
+                    >
+                      <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <input uiInput id="pace" type="text" formControlName="pace" placeholder="Ex: intensif / part-time" />
+                </div>
+                <div class="ui-bo-form__field">
+                  <div class="ui-bo-form__label-row">
+                    <label class="ui-bo-form__label" for="nextSessionHighlight">Prochaine session</label>
+                    <button
+                      *ngIf="hasFieldValue('nextSessionHighlight')"
+                      type="button"
+                      class="ui-ai-icon-btn"
+                      (click)="openAiPopover($event, 'nextSessionHighlight')"
+                      aria-label="Assistant IA"
+                      title="Assistant IA"
+                    >
+                      <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <input uiInput id="nextSessionHighlight" type="text" formControlName="nextSessionHighlight" placeholder="Ex: Prochaine session : mars 2026" />
+                </div>
+            </div>
+
+            <div class="ui-bo-form__field-row">
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label">Modalités</label>
+                <div class="ui-bo-form__checks">
+                  <label class="ui-bo-form__check">
+                    <input
+                      type="checkbox"
+                      [checked]="(form.value.locationTypes||[]).includes(LocationType.DISTANCIEL)"
+                      (change)="toggleLocationType(LocationType.DISTANCIEL)"
+                    />
+                    <span>Distanciel</span>
+                  </label>
+                  <label class="ui-bo-form__check">
+                    <input
+                      type="checkbox"
+                      [checked]="(form.value.locationTypes||[]).includes(LocationType.PRESENTIEL)"
+                      (change)="toggleLocationType(LocationType.PRESENTIEL)"
+                    />
+                    <span>Présentiel</span>
+                  </label>
+                  <label class="ui-bo-form__check">
+                    <input
+                      type="checkbox"
+                      [checked]="(form.value.locationTypes||[]).includes(LocationType.HYBRIDE)"
+                      (change)="toggleLocationType(LocationType.HYBRIDE)"
+                    />
+                    <span>Hybride</span>
+                  </label>
+                </div>
+              </div>
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="priceFrom">Prix à partir de</label>
+                <input uiInput id="priceFrom" type="number" formControlName="priceFrom" placeholder="Ex: 2400" />
+              </div>
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="currency">Devise</label>
+                <input uiInput id="currency" type="text" formControlName="currency" />
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Objectifs et publics -->
+          <div class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">Objectifs et publics</h3>
+            
+            <div class="ui-bo-form__tags-grid">
+              <!-- Objectifs -->
+              <div class="ui-bo-form__tag-group">
+                <label class="ui-bo-form__tag-label">
+                  <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+                  <span>Objectifs</span>
+                </label>
+                <div class="ui-bo-form__tag-list">
+                  <div class="ui-bo-form__tag" *ngFor="let c of objectives.controls; let i = index">
+                    <span class="ui-bo-form__tag-text">{{ c.value }}</span>
+                    <button type="button" class="ui-bo-form__tag-remove" (click)="removeChip(objectives, i)" aria-label="Retirer">
+                      <app-tabler-icon name="x" [size]="14"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <div class="ui-bo-form__tag-input-wrapper">
+                    <input 
+                      uiInput 
+                      #objInput 
+                      type="text" 
+                      class="ui-bo-form__tag-input"
+                      placeholder="Ajouter un objectif" 
+                      (keyup.enter)="addChip(objectives, objInput.value); objInput.value=''" 
+                    />
+                </div>
+                </div>
+              </div>
+
+              <!-- Public cible -->
+              <div class="ui-bo-form__tag-group">
+                <label class="ui-bo-form__tag-label">
+                  <app-tabler-icon name="users" [size]="16"></app-tabler-icon>
+                  <span>Public cible</span>
+                </label>
+                <div class="ui-bo-form__tag-list">
+                  <div class="ui-bo-form__tag" *ngFor="let c of targetAudience.controls; let i = index">
+                    <span class="ui-bo-form__tag-text">{{ c.value }}</span>
+                    <button type="button" class="ui-bo-form__tag-remove" (click)="removeChip(targetAudience, i)" aria-label="Retirer">
+                      <app-tabler-icon name="x" [size]="14"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <div class="ui-bo-form__tag-input-wrapper">
+                    <input 
+                      uiInput 
+                      #taInput 
+                      type="text" 
+                      class="ui-bo-form__tag-input"
+                      placeholder="Ajouter un public" 
+                      (keyup.enter)="addChip(targetAudience, taInput.value); taInput.value=''" 
+                    />
+                </div>
+                </div>
+              </div>
+
+              <!-- Prérequis -->
+              <div class="ui-bo-form__tag-group">
+                <label class="ui-bo-form__tag-label">
+                  <app-tabler-icon name="check" [size]="16"></app-tabler-icon>
+                  <span>Prérequis</span>
+                </label>
+                <div class="ui-bo-form__tag-list">
+                  <div class="ui-bo-form__tag" *ngFor="let c of prerequisites.controls; let i = index">
+                    <span class="ui-bo-form__tag-text">{{ c.value }}</span>
+                    <button type="button" class="ui-bo-form__tag-remove" (click)="removeChip(prerequisites, i)" aria-label="Retirer">
+                      <app-tabler-icon name="x" [size]="14"></app-tabler-icon>
+                    </button>
+            </div>
+                  <div class="ui-bo-form__tag-input-wrapper">
+                    <input 
+                      uiInput 
+                      #preInput 
+                      type="text" 
+                      class="ui-bo-form__tag-input"
+                      placeholder="Ajouter un prérequis" 
+                      (keyup.enter)="addChip(prerequisites, preInput.value); preInput.value=''" 
+                    />
+                </div>
+                </div>
+              </div>
+
+              <!-- Financement -->
+              <div class="ui-bo-form__tag-group">
+                <label class="ui-bo-form__tag-label">
+                  <app-tabler-icon name="currency-euro" [size]="16"></app-tabler-icon>
+                  <span>Financement</span>
+                </label>
+                <div class="ui-bo-form__tag-list">
+                  <div class="ui-bo-form__tag" *ngFor="let c of fundingOptions.controls; let i = index">
+                    <span class="ui-bo-form__tag-text">{{ c.value }}</span>
+                    <button type="button" class="ui-bo-form__tag-remove" (click)="removeChip(fundingOptions, i)" aria-label="Retirer">
+                      <app-tabler-icon name="x" [size]="14"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <div class="ui-bo-form__tag-input-wrapper">
+                    <input
+                      uiInput
+                      #fundInput
+                      type="text"
+                      class="ui-bo-form__tag-input"
+                      placeholder="Ex: OPCO / CPF / Paiement échelonné…"
+                      (keyup.enter)="addChip(fundingOptions, fundInput.value); fundInput.value=''"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- À l'issue -->
+              <div class="ui-bo-form__tag-group">
+                <label class="ui-bo-form__tag-label">
+                  <app-tabler-icon name="graduation-cap" [size]="16"></app-tabler-icon>
+                  <span>À l'issue</span>
+                </label>
+                <div class="ui-bo-form__tag-list">
+                  <div class="ui-bo-form__tag" *ngFor="let c of outcomes.controls; let i = index">
+                    <span class="ui-bo-form__tag-text">{{ c.value }}</span>
+                    <button type="button" class="ui-bo-form__tag-remove" (click)="removeChip(outcomes, i)" aria-label="Retirer">
+                      <app-tabler-icon name="x" [size]="14"></app-tabler-icon>
+                    </button>
+                  </div>
+                  <div class="ui-bo-form__tag-input-wrapper">
+                    <input 
+                      uiInput 
+                      #outInput 
+                      type="text" 
+                      class="ui-bo-form__tag-input"
+                      placeholder="Ajouter un résultat" 
+                      (keyup.enter)="addChip(outcomes, outInput.value); outInput.value=''" 
+                    />
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROGRAM -->
+        <div uiCard class="ui-bo-form__card" *ngIf="activeTab==='program'">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Programme de formation</h2>
+              <p class="ui-bo-form__muted">Organisez les modules et leurs contenus. Un topic par ligne.</p>
+            </div>
+            <button uiButton type="button" class="ui-bo-form__add-module" (click)="addModule()">
+              <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+              <span>Ajouter un module</span>
+            </button>
+          </div>
+
+          <div class="ui-bo-form__modules" *ngIf="modules.length > 0; else noModules">
+            <div class="ui-bo-form__module" *ngFor="let m of modules.controls; let i = index" [formGroup]="$any(m)">
+              <div class="ui-bo-form__module-header">
+                <div class="ui-bo-form__module-number">
+                  <app-tabler-icon name="stack" [size]="16"></app-tabler-icon>
+                  <span>Module {{ i + 1 }}</span>
+                </div>
+                <button 
+                  uiButton 
+                  variant="ghost" 
+                  type="button" 
+                  class="ui-icon-button ui-bo-form__module-remove" 
+                  (click)="removeModule(i)" 
+                  aria-label="Supprimer le module"
+                >
+                  <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+                </button>
+              </div>
+              
+              <div class="ui-bo-form__module-content">
+                <div class="ui-bo-form__module-fields">
+                <div class="ui-bo-form__field">
+                    <label class="ui-bo-form__label" for="module-title-{{i}}">Titre du module *</label>
+                    <input 
+                      uiInput 
+                      id="module-title-{{i}}" 
+                      type="text" 
+                      formControlName="title" 
+                      placeholder="Ex: Prompting & évaluation" 
+                    />
+                </div>
+                <div class="ui-bo-form__field">
+                    <label class="ui-bo-form__label" for="module-duration-{{i}}">Durée (heures)</label>
+                    <input 
+                      uiInput 
+                      id="module-duration-{{i}}" 
+                      type="number" 
+                      formControlName="durationHours" 
+                      placeholder="Ex: 7" 
+                    />
+                  </div>
+                </div>
+                
+                <div class="ui-bo-form__field ui-bo-form__field--full">
+                  <label class="ui-bo-form__label" for="module-topics-{{i}}">
+                    <app-tabler-icon name="code" [size]="14"></app-tabler-icon>
+                    <span>Topics (un par ligne)</span>
+                  </label>
+                  <textarea 
+                    uiInput 
+                    id="module-topics-{{i}}" 
+                    rows="6" 
+                    formControlName="topicsText" 
+                    placeholder="Concepts fondamentaux&#10;Atelier pratique&#10;Livrable final"
+                    class="ui-bo-form__module-textarea"
+                  ></textarea>
+                  <div class="ui-bo-form__module-hint">
+                    <app-tabler-icon name="check" [size]="12"></app-tabler-icon>
+                    <span>Chaque ligne représente un topic distinct</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noModules>
+            <div class="ui-bo-form__modules-empty">
+              <app-tabler-icon name="stack" [size]="32"></app-tabler-icon>
+              <p class="ui-bo-form__modules-empty-text">Aucun module pour le moment</p>
+              <p class="ui-bo-form__modules-empty-hint">Cliquez sur "Ajouter un module" pour commencer</p>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- MEDIA -->
+        <div uiCard class="ui-bo-form__card" *ngIf="activeTab==='media'">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Médias et visuels</h2>
+              <p class="ui-bo-form__muted">Téléchargez vos images par glisser-déposer ou collez une URL existante.</p>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">
+              <app-tabler-icon name="download" [size]="14"></app-tabler-icon>
+              <span>Images</span>
+            </h3>
+            
+            <div class="ui-bo-form__media-grid">
+              <!-- HERO -->
+              <div class="ui-bo-form__media-item">
+                <div class="ui-bo-form__label-row">
+                  <label class="ui-bo-form__label">
+                    <app-tabler-icon name="download" [size]="14"></app-tabler-icon>
+                    <span>Hero image</span>
+                  </label>
+                  <button 
+                    uiButton 
+                    variant="ghost" 
+                    type="button" 
+                    (click)="clearImage('hero')" 
+                    [disabled]="heroImageUploading || !heroImagePreview"
+                  >
+                    <app-tabler-icon name="trash" [size]="14"></app-tabler-icon>
+                    <span>Retirer</span>
+                  </button>
+                </div>
+
+                <div
+                  class="ui-upload-zone"
+                  [class.has-image]="heroImagePreview"
+                  [class.is-uploading]="heroImageUploading"
+                  (drop)="onFileDropped($event, 'hero')"
+                  (dragover)="onDragOver($event)"
+                  (dragleave)="onDragLeave($event)"
+                >
+                  <input class="ui-upload-zone__input" type="file" accept="image/*" (change)="onFileSelected($event, 'hero')" />
+
+                  <ng-container *ngIf="!heroImagePreview">
+                    <div class="ui-upload-zone__placeholder">
+                      <app-tabler-icon name="download" [size]="32"></app-tabler-icon>
+                      <div class="ui-upload-zone__title">Glissez une image ici</div>
+                      <div class="ui-upload-zone__muted">ou cliquez pour sélectionner un fichier</div>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="heroImagePreview">
+                    <div class="ui-upload-zone__preview">
+                      <img [src]="heroImagePreview" alt="Hero preview" class="ui-upload-zone__img" />
+                      <div class="ui-upload-zone__overlay" *ngIf="heroImageUploading">
+                        <div class="ui-upload-zone__progress">
+                          <div class="ui-upload-zone__bar" [style.width.%]="heroImageUploadProgress"></div>
+                        </div>
+                        <div class="ui-upload-zone__pct">{{ heroImageUploadProgress }}%</div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="ui-bo-form__media-url">
+                  <label class="ui-bo-form__label" for="heroImage">
+                    <app-tabler-icon name="code" [size]="14"></app-tabler-icon>
+                    <span>URL de l'image</span>
+                  </label>
+                  <input uiInput id="heroImage" type="text" formControlName="heroImage" placeholder="/uploads/images/hero.jpg" />
+                </div>
+              </div>
+
+              <!-- WATERMARK -->
+              <div class="ui-bo-form__media-item">
+                <div class="ui-bo-form__label-row">
+                  <label class="ui-bo-form__label">
+                    <app-tabler-icon name="download" [size]="14"></app-tabler-icon>
+                    <span>Watermark logo</span>
+                  </label>
+                  <button 
+                    uiButton 
+                    variant="ghost" 
+                    type="button" 
+                    (click)="clearImage('watermark')" 
+                    [disabled]="watermarkLogoUploading || !watermarkLogoPreview"
+                  >
+                    <app-tabler-icon name="trash" [size]="14"></app-tabler-icon>
+                    <span>Retirer</span>
+                  </button>
+                </div>
+
+                <div
+                  class="ui-upload-zone"
+                  [class.has-image]="watermarkLogoPreview"
+                  [class.is-uploading]="watermarkLogoUploading"
+                  (drop)="onFileDropped($event, 'watermark')"
+                  (dragover)="onDragOver($event)"
+                  (dragleave)="onDragLeave($event)"
+                >
+                  <input class="ui-upload-zone__input" type="file" accept="image/*" (change)="onFileSelected($event, 'watermark')" />
+
+                  <ng-container *ngIf="!watermarkLogoPreview">
+                    <div class="ui-upload-zone__placeholder">
+                      <app-tabler-icon name="download" [size]="32"></app-tabler-icon>
+                      <div class="ui-upload-zone__title">Glissez un logo ici</div>
+                      <div class="ui-upload-zone__muted">ou cliquez pour sélectionner un fichier</div>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="watermarkLogoPreview">
+                    <div class="ui-upload-zone__preview">
+                      <img [src]="watermarkLogoPreview" alt="Watermark preview" class="ui-upload-zone__img" />
+                      <div class="ui-upload-zone__overlay" *ngIf="watermarkLogoUploading">
+                        <div class="ui-upload-zone__progress">
+                          <div class="ui-upload-zone__bar" [style.width.%]="watermarkLogoUploadProgress"></div>
+                        </div>
+                        <div class="ui-upload-zone__pct">{{ watermarkLogoUploadProgress }}%</div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="ui-bo-form__media-url">
+                  <label class="ui-bo-form__label" for="watermarkLogo">
+                    <app-tabler-icon name="code" [size]="14"></app-tabler-icon>
+                    <span>URL du logo</span>
+                  </label>
+                  <input uiInput id="watermarkLogo" type="text" formControlName="watermarkLogo" placeholder="/uploads/images/logo.png" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SESSIONS -->
+        <div uiCard class="ui-bo-form__card" *ngIf="activeTab==='sessions'">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Sessions de formation</h2>
+              <p class="ui-bo-form__muted">Créez et gérez les sessions de cette formation.</p>
+            </div>
+            <button
+              *ngIf="trainingId"
+              uiButton
+              type="button"
+              (click)="openNewSession()"
+              [disabled]="saving || !hydrated"
+            >
+              <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+              <span>Nouvelle session</span>
+            </button>
+          </div>
+
+          <div *ngIf="!trainingId" class="ui-bo-form__empty-state">
+            <app-tabler-icon name="info-circle" [size]="48"></app-tabler-icon>
+            <h3 class="ui-bo-form__empty-title">Enregistrez d'abord la formation</h3>
+            <p class="ui-bo-form__empty-text">
+              Vous devez enregistrer la formation avant de pouvoir créer des sessions.
+            </p>
+          </div>
+
+          <!-- Liste des sessions -->
+          <div *ngIf="trainingId" class="ui-bo-form__section">
+            <h3 class="ui-bo-form__section-title">
+              <app-tabler-icon name="calendar" [size]="14"></app-tabler-icon>
+              <span>Sessions existantes</span>
+            </h3>
+            <div *ngIf="sessionsLoading" class="ui-bo-form__muted" style="padding: 2rem; text-align: center;">
+              Chargement des sessions…
+            </div>
+            <div *ngIf="!sessionsLoading && sessionsList.length === 0" class="ui-bo-form__empty-state">
+              <app-tabler-icon name="calendar-off" [size]="48"></app-tabler-icon>
+              <h3 class="ui-bo-form__empty-title">Aucune session</h3>
+              <p class="ui-bo-form__empty-text">
+                Créez votre première session pour cette formation.
+              </p>
+            </div>
+            <div *ngIf="!sessionsLoading && sessionsList.length > 0" class="ui-bo-form__sessions-list">
+              <div *ngFor="let session of sessionsList" class="ui-bo-form__session-card">
+                <div class="ui-bo-form__session-card-header">
+                  <div class="ui-bo-form__session-card-title">
+                    <app-tabler-icon name="calendar-event" [size]="16"></app-tabler-icon>
+                    <span>Session</span>
+                    <span *ngIf="session.highlight" class="ui-bo-form__session-badge">
+                      <app-tabler-icon name="star" [size]="12"></app-tabler-icon>
+                      Mise en avant
+                    </span>
+                  </div>
+                  <button
+                    uiButton
+                    type="button"
+                    variant="ghost"
+                    class="ui-icon-button"
+                    (click)="deleteSession(session.id)"
+                    title="Supprimer"
+                  >
+                    <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+                  </button>
+                </div>
+                
+                <div class="ui-bo-form__session-card-content">
+                  <div class="ui-bo-form__session-card-row">
+                    <div class="ui-bo-form__session-card-item">
+                      <app-tabler-icon name="calendar-event" [size]="14"></app-tabler-icon>
+                      <div>
+                        <div class="ui-bo-form__session-card-label">Début</div>
+                        <div class="ui-bo-form__session-card-value">{{ formatSessionDate(session.startDate) }}</div>
+                      </div>
+                    </div>
+                    <div class="ui-bo-form__session-card-item">
+                      <app-tabler-icon name="calendar-off" [size]="14"></app-tabler-icon>
+                      <div>
+                        <div class="ui-bo-form__session-card-label">Fin</div>
+                        <div class="ui-bo-form__session-card-value">{{ formatSessionDate(session.endDate) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="ui-bo-form__session-card-row" *ngIf="session.location || session.seats || session.price">
+                    <div class="ui-bo-form__session-card-item" *ngIf="session.location">
+                      <app-tabler-icon name="map-pin" [size]="14"></app-tabler-icon>
+                      <div>
+                        <div class="ui-bo-form__session-card-label">Lieu</div>
+                        <div class="ui-bo-form__session-card-value">{{ session.location }}</div>
+                      </div>
+                    </div>
+                    <div class="ui-bo-form__session-card-item" *ngIf="session.seats">
+                      <app-tabler-icon name="users" [size]="14"></app-tabler-icon>
+                      <div>
+                        <div class="ui-bo-form__session-card-label">Places</div>
+                        <div class="ui-bo-form__session-card-value">{{ session.seats }}</div>
+                      </div>
+                    </div>
+                    <div class="ui-bo-form__session-card-item" *ngIf="session.price">
+                      <app-tabler-icon name="currency-euro" [size]="14"></app-tabler-icon>
+                      <div>
+                        <div class="ui-bo-form__session-card-label">Prix</div>
+                        <div class="ui-bo-form__session-card-value">{{ session.price }}€</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="ui-bo-form__session-card-footer">
+                    <span class="ui-bo-form__session-status" [attr.data-status]="session.status">
+                      <app-tabler-icon name="circle" [size]="8"></app-tabler-icon>
+                      {{ session.status === 'scheduled' ? 'Planifiée' : session.status === 'in_progress' ? 'En cours' : session.status === 'completed' ? 'Terminée' : 'Annulée' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- IA: Generate dialog (lightweight modal) -->
+<div class="ui-modal" *ngIf="aiGenerateOpen" (click)="closeAiGenerate()" aria-hidden="true">
+  <div class="ui-modal__panel" (click)="$event.stopPropagation()" aria-hidden="false">
+    <div class="ui-modal__head">
+      <div class="ui-modal__title">
+        <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+        <span>Générer une formation avec l’IA</span>
+      </div>
+      <button uiButton variant="ghost" type="button" class="ui-icon-button ui-modal__close" (click)="closeAiGenerate()" [disabled]="aiGenerating">
+        <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+      </button>
+    </div>
+
+    <form class="ui-modal__form" [formGroup]="aiGenerateForm">
+      <div class="ui-bo-form__field">
+        <label class="ui-bo-form__label">Titre *</label>
+        <input uiInput type="text" formControlName="trainingTitle" placeholder="Ex: Développement Full Stack avec React et Node.js" />
+      </div>
+
+      <div class="ui-modal__grid">
+        <div class="ui-bo-form__field">
+          <label class="ui-bo-form__label">Code RNCP (optionnel)</label>
+          <input uiInput type="text" formControlName="rncpCode" placeholder="Ex: RNCP12345" />
+        </div>
+        <div class="ui-bo-form__field">
+          <label class="ui-bo-form__label">Titre RNCP (optionnel)</label>
+          <input uiInput type="text" formControlName="rncpTitle" placeholder="Titre de la certification RNCP" />
+        </div>
+      </div>
+
+      <div class="ui-modal__grid">
+        <div class="ui-bo-form__field">
+          <label class="ui-bo-form__label">Durée en jours (optionnel)</label>
+          <input uiInput type="number" formControlName="durationDays" min="1" max="365" />
+        </div>
+        <div class="ui-bo-form__field">
+          <label class="ui-bo-form__label">Nombre total d’heures (optionnel)</label>
+          <input uiInput type="number" formControlName="totalHours" min="1" max="2000" />
+        </div>
+      </div>
+
+      <div class="ui-modal__grid">
+        <div class="ui-bo-form__field">
+          <label class="ui-bo-form__label">Niveau (optionnel)</label>
+          <app-ui-choice-group
+            formControlName="level"
+            [options]="aiLevelOptions"
+            ariaLabel="Niveau IA"
+            size="sm"
+          ></app-ui-choice-group>
+        </div>
+        <div class="ui-bo-form__field">
+          <label class="ui-bo-form__label">Audience (optionnel)</label>
+          <app-ui-choice-group
+            formControlName="audienceType"
+            [options]="aiAudienceOptions"
+            ariaLabel="Audience IA"
+            size="sm"
+          ></app-ui-choice-group>
+        </div>
+      </div>
+    </form>
+
+    <div class="ui-modal__actions">
+      <button uiButton variant="ghost" type="button" (click)="closeAiGenerate()" [disabled]="aiGenerating">Annuler</button>
+      <button uiButton variant="primary" type="button" (click)="runAiGenerate()" [loading]="aiGenerating" [disabled]="aiGenerateForm.invalid || aiGenerating">
+        <span>Générer</span>
+        <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- IA: Field assistant popover (anchored, reusable) -->
+<app-anchored-panel
+  [open]="aiPopoverOpen"
+  [anchor]="aiPopoverAnchor"
+  [width]="340"
+  preferredPlacement="bottom-start"
+  (backdropClick)="closeAiPopover()"
+  (escapeKey)="closeAiPopover()"
+  panelClass="ui-anchored-panel__panel--sheet ui-ai-popover"
+>
+  <div class="ui-ai-popover__head">
+    <div class="ui-ai-popover__title">
+      <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+      <span>Assistant IA</span>
+    </div>
+    <button uiButton variant="ghost" type="button" class="ui-icon-button ui-ai-popover__close" (click)="closeAiPopover()">
+      <app-tabler-icon name="x" [size]="16"></app-tabler-icon>
+    </button>
+  </div>
+
+  <div class="ui-ai-popover__actions">
+    <div
+      class="ui-ai-popover__action-card"
+      (click)="runAiAssist('improve')"
+      [class.is-disabled]="aiPopoverLoading"
+    >
+      <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+      <span>Améliorer</span>
+    </div>
+
+    <div
+      class="ui-ai-popover__action-card"
+      (click)="runAiAssist('correct')"
+      [class.is-disabled]="aiPopoverLoading"
+    >
+      <app-tabler-icon name="check" [size]="18"></app-tabler-icon>
+      <span>Corriger</span>
+    </div>
+
+    <div
+      class="ui-ai-popover__action-card"
+      (click)="runAiAssist('complete')"
+      [class.is-disabled]="aiPopoverLoading"
+    >
+      <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+      <span>Compléter</span>
+    </div>
+
+    <div
+      class="ui-ai-popover__action-card"
+      (click)="runAiAssist('suggest')"
+      [class.is-disabled]="aiPopoverLoading"
+    >
+      <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+      <span>Suggérer</span>
+    </div>
+  </div>
+
+  <div class="ui-ai-popover__body" *ngIf="aiPopoverLoading">
+    <div class="ui-ai-popover__muted">Traitement…</div>
+  </div>
+
+  <div class="ui-ai-popover__body" *ngIf="!aiPopoverLoading && (aiPopoverResult || aiPopoverSuggestions.length)">
+    <div class="ui-ai-popover__list" *ngIf="aiPopoverSuggestions.length">
+      <div
+        class="ui-ai-popover__choice"
+        *ngFor="let s of aiPopoverSuggestions"
+        [class.is-selected]="aiPopoverSelected===s"
+        (click)="selectAiSuggestion(s)"
+      >
+        <div class="ui-ai-popover__choice-check" *ngIf="aiPopoverSelected===s">
+          <app-tabler-icon name="check" [size]="14"></app-tabler-icon>
+        </div>
+        <div class="ui-ai-popover__choice-text">{{ s }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="aiPopoverResult" class="ui-ai-popover__result">
+      <div class="ui-ai-popover__preview">{{ aiPopoverResult }}</div>
+    </div>
+
+    <div class="ui-ai-popover__apply">
+      <button
+        uiButton
+        variant="primary"
+        type="button"
+        (click)="applyAiResult()"
+        [disabled]="!aiPopoverSelected"
+      >
+        <app-tabler-icon name="check" [size]="18"></app-tabler-icon>
+        <span>Appliquer</span>
+      </button>
+    </div>
+  </div>
+</app-anchored-panel>
+
+

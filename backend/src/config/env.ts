@@ -91,8 +91,9 @@ export const env: EnvConfig = {
     host: getEnvVar('SMTP_HOST', 'smtp.ionos.fr'),
     port: parseInt(getEnvVar('SMTP_PORT', '465'), 10),
     secure: getEnvVar('SMTP_SECURE', 'true') === 'true',
-    user: getEnvVar('SMTP_USER', 'enseignement@unlock-formation.fr'),
-    password: getEnvVar('SMTP_PASSWORD', 'Alfaromeo190'),
+    // Do NOT ship real credentials in code defaults.
+    user: getEnvVar('SMTP_USER', ''),
+    password: getEnvVar('SMTP_PASSWORD', ''),
     fromName: getEnvVar('SMTP_FROM_NAME', 'Unlock Formation'),
   },
   franceCompetences: {

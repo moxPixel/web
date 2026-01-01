@@ -135,6 +135,7 @@ app.get('/api', (_req: Request, res: Response) => {
 import trainingsRoutes from './routes/trainings.routes';
 import certificationsRoutes from './routes/certifications.routes';
 import sessionsRoutes from './routes/sessions.routes';
+import eventsRoutes from './routes/events.routes';
 import uploadRoutes from './routes/upload.routes';
 import authRoutes from './routes/auth.routes';
 import usersRoutes from './routes/users.routes';
@@ -144,10 +145,12 @@ import enrollmentsRoutes from './routes/enrollments.routes';
 import mailRoutes from './routes/mail.routes';
 import orientationRoutes from './routes/orientation.routes';
 import sitemapRoutes from './routes/sitemap.routes';
+import backofficeBadgesRoutes from './routes/backoffice-badges.routes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/trainings', trainingsRoutes);
+app.use('/api/events', eventsRoutes);
 app.use('/api/certifications', certificationsRoutes);
 app.use('/api/sessions', sessionsRoutes);
 app.use('/api/contacts', contactsRoutes);
@@ -156,6 +159,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/enrollments', enrollmentsRoutes);
 app.use('/api/mail', mailRoutes);
 app.use('/api/orientation', orientationRoutes);
+app.use('/api/backoffice/badges', backofficeBadgesRoutes);
 
 // Sitemap (avant les routes API pour éviter les conflits)
 app.use('/', sitemapRoutes);

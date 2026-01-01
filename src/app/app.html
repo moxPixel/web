@@ -1,1 +1,53 @@
-<router-outlet />
+<!-- Global fixed background (shared across all pages) -->
+<div class="ui-app-bg" aria-hidden="true">
+  <div class="ui-bg-spheres" #spheresContainer>
+    <div class="ui-bg-sphere-wrapper" #wrapper1><div #sphere1 class="ui-bg-sphere ui-bg-sphere--1"></div></div>
+    <div class="ui-bg-sphere-wrapper" #wrapper2><div #sphere2 class="ui-bg-sphere ui-bg-sphere--2"></div></div>
+    <div class="ui-bg-sphere-wrapper" #wrapper3><div #sphere3 class="ui-bg-sphere ui-bg-sphere--3"></div></div>
+    <div class="ui-bg-sphere-wrapper" #wrapper4><div #sphere4 class="ui-bg-sphere ui-bg-sphere--4"></div></div>
+  </div>
+  <!-- Dots Pattern -->
+  <div class="ui-bg-pattern" aria-hidden="true">
+    <svg class="ui-bg-pattern-svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <defs>
+        <!-- Masque pour fade vers les bords -->
+        <mask id="dots-mask">
+          <radialGradient id="fade-gradient" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stop-color="white" stop-opacity="1"/>
+            <stop offset="60%" stop-color="white" stop-opacity="0.8"/>
+            <stop offset="80%" stop-color="white" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="100%" height="100%" fill="url(#fade-gradient)"/>
+        </mask>
+        <pattern id="dots-pattern" x="0" y="0" width="9" height="9" patternUnits="userSpaceOnUse">
+          <!-- Subtle, modern micro-dots (less dense) -->
+          <circle cx="4.5" cy="4.5" r="0.5" fill="currentColor" opacity="0.18"/>
+        </pattern>
+        </defs>
+      <rect width="100%" height="100%" fill="url(#dots-pattern)" mask="url(#dots-mask)"/>
+          </svg>
+      </div>
+    </div>
+
+<!-- App shell (always above the background + body tint) -->
+<div class="ui-app-shell">
+  <app-header *ngIf="!isBackofficeRoute"></app-header>
+  <div class="router-wrapper" [@routeFadeIn]="routeTransitionId">
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer *ngIf="!isBackofficeRoute"></app-footer>
+  <app-backoffice-bottom-nav *ngIf="isBackofficeRoute"></app-backoffice-bottom-nav>
+</div>
+
+<!-- Notifications (global, SSOT) -->
+<app-notifications></app-notifications>
+
+<!-- Cookie consent (global, SSOT) -->
+<app-cookie-consent *ngIf="!isBackofficeRoute"></app-cookie-consent>
+
+<!-- Highlighted event modal (global; shown only after cookie decision or if already decided) -->
+<app-event-highlight-modal *ngIf="!isBackofficeRoute"></app-event-highlight-modal>
+
+<!-- EVA Help Button (floating, appears on scroll) -->
+<app-eva-help-button *ngIf="!isBackofficeRoute"></app-eva-help-button>

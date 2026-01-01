@@ -1,117 +1,79 @@
-<section id="business-solutions" class="business-solutions-section bg-background-4 dark:bg-background-5">
-  <div class="main-container py-14 md:py-16 lg:py-20 xl:py-24">
-
+<section class="ui-business-solutions ui-home-section" data-ui-section="business-solutions">
+  <div class="ui-business-solutions__container ui-home-container">
     <!-- Header Section -->
-    <div class="text-center mb-12 lg:mb-16">
-      <div class="space-y-4 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
-        <span class="badge badge-green mb-5 inline-block"> Entreprises </span>
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto">
-          Montée en compétences <span class="text-primary-500 dark:text-ns-green-light">de vos équipes</span>
-        </h2>
-        <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Formations intra calibrées sur vos technologies, vos process et vos enjeux business. Impact mesurable sur la productivité, l'autonomie technique et la capacité d'innovation de vos collaborateurs.
-        </p>
-      </div>
-    </div>
+    <header class="ui-business-solutions__header ui-home-header">
+      <div class="ui-business-solutions__pill ui-home-pill">Entreprises</div>
+      <h2 class="ui-business-solutions__title ui-home-title">
+        Montée en compétences <span class="ui-business-solutions__title-accent ui-home-title-accent">de vos équipes</span>
+      </h2>
+      <p class="ui-business-solutions__lede ui-home-lede">
+        Vos équipes méritent le meilleur : des formations sur mesure, conçues pour répondre à vos enjeux métier, animées par des experts passionnés. Nous intervenons sur site ou à distance, et nous adaptons à votre contexte et vos contraintes.
+      </p>
+    </header>
 
     <!-- Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-
+    <div class="ui-business-solutions__grid">
       <!-- Images superposées -->
-      <div class="order-2 lg:order-1 relative">
-        <div class="relative aspect-[4/3]">
+      <div class="ui-business-solutions__visual">
+        <div class="ui-business-solutions__image-wrapper">
           <!-- Image principale (en arrière, décalée à droite) -->
-          <div class="absolute top-0 right-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-xl group/image">
-            <img
-              ngSrc="/assets/images/img/g2.jpg"
-              alt="Formations intra-entreprise IT & IA sur mesure - Unlock Formation"
-              width="600"
-              height="450"
-              class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover/image:scale-110"
-              loading="lazy"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent transition-opacity duration-500 group-hover/image:opacity-80"></div>
-          </div>
-
-          <!-- Image secondaire (superposée à gauche) -->
-          <div class="absolute bottom-0 left-0 w-[75%] h-[85%] rounded-2xl overflow-hidden shadow-2xl z-10 group/image2">
-            <img
-              ngSrc="/assets/images/img/g3.jpg"
-              alt="Accompagnement entreprises en transformation digitale - Unlock Formation"
-              width="600"
-              height="450"
-              class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover/image2:scale-110"
-              loading="lazy"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent transition-opacity duration-500 group-hover/image2:opacity-80"></div>
-          </div>
+          <div class="ui-business-solutions__image-main" data-ui-morph-target="business-photo"></div>
         </div>
       </div>
 
       <!-- Content -->
-      <div class="order-1 lg:order-2 space-y-6 w-full lg:max-w-full max-w-[90%] lg:mx-0 mx-auto">
-        <div class="space-y-4">
-          <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-            Construisons ensemble <span class="text-primary-500 dark:text-ns-green-light">votre plan de formation</span>
+      <div class="ui-business-solutions__content">
+        <div class="ui-business-solutions__intro-block">
+          <h3 class="ui-business-solutions__subtitle">
+            Des formations qui <span class="ui-business-solutions__subtitle-accent">transforment vos équipes</span>
           </h3>
-          <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            Diagnostic de vos besoins, design du parcours sur vos stacks techniques, animation en vos locaux ou à distance, suivi des résultats. Vos équipes gagnent en autonomie, réduisent leur dette technique et accélèrent la livraison de valeur.
+          <p class="ui-business-solutions__intro-text">
+            Nous prenons le temps de comprendre vos besoins, vos technologies et votre culture d'entreprise. Puis nous concevons un programme adapté, avec des exercices sur vos propres cas d'usage. Résultat : vos collaborateurs montent en compétences rapidement et prennent plaisir à apprendre.
           </p>
         </div>
 
         <!-- Benefits List -->
-        <ul class="space-y-4 list-none">
-          <li class="flex items-start gap-4 group cursor-default">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900 dark:text-white mb-1">Contenu ancré dans votre réalité</h4>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
-                Formation construite sur vos outils (AWS, Azure, GCP, Kubernetes, React, Python…), vos données, vos architectures. Cas d'usage tirés de vos projets réels. Vocabulaire et contexte alignés sur votre culture tech.
+        <ul class="ui-business-solutions__benefits">
+          <li class="ui-business-solutions__benefit-item">
+            <div class="ui-business-solutions__benefit-icon"></div>
+            <div class="ui-business-solutions__benefit-content">
+              <h4 class="ui-business-solutions__benefit-title">Du sur-mesure qui parle à vos équipes</h4>
+              <p class="ui-business-solutions__benefit-text">
+                Nous construisons chaque formation autour de vos technologies (AWS, Azure, GCP, React, Python…), vos projets et votre vocabulaire. Vos collaborateurs se retrouvent dans les exemples et appliquent immédiatement ce qu'ils apprennent.
               </p>
             </div>
           </li>
 
-          <li class="flex items-start gap-4 group cursor-default">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900 dark:text-white mb-1">Intervenants du terrain</h4>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
-                Architectes, lead dev, data engineers, experts sécurité en activité. Retours d'expérience directs, best practices éprouvées, conseils sur les pièges à éviter. <strong>EVA</strong> prolonge la formation après les sessions pour ancrer les réflexes.
+          <li class="ui-business-solutions__benefit-item">
+            <div class="ui-business-solutions__benefit-icon"></div>
+            <div class="ui-business-solutions__benefit-content">
+              <h4 class="ui-business-solutions__benefit-title">Des formateurs passionnés et pédagogues</h4>
+              <p class="ui-business-solutions__benefit-text">
+                Nos intervenants sont des experts en activité, qui aiment transmettre. Ils partagent leurs retours d'expérience, leurs bonnes pratiques et créent une vraie dynamique d'apprentissage. <strong>EVA</strong> est également disponible pour prolonger la formation après les sessions.
               </p>
             </div>
           </li>
 
-          <li class="flex items-start gap-4 group cursor-default">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center mt-1 transition-all duration-300 group-hover:bg-primary-500/20 dark:group-hover:bg-ns-green-light/20">
-              <div class="w-3 h-3 rounded-full bg-black dark:bg-white transition-all duration-300 group-hover:scale-125"></div>
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900 dark:text-white mb-1">ROI visible et rapide</h4>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
-                Compétences activables dès le lendemain, indicateurs de progression partagés, gain d'autonomie chiffré. Vos équipes débloquent des projets, réduisent les dépendances externes et font évoluer votre produit plus vite.
+          <li class="ui-business-solutions__benefit-item">
+            <div class="ui-business-solutions__benefit-icon"></div>
+            <div class="ui-business-solutions__benefit-content">
+              <h4 class="ui-business-solutions__benefit-title">Un impact mesurable</h4>
+              <p class="ui-business-solutions__benefit-text">
+                Nous suivons la progression de vos équipes, recueillons leurs retours et ajustons si besoin. L'objectif : des collaborateurs plus autonomes, plus confiants et plus performants. Et ça, ça se voit rapidement dans vos projets.
               </p>
             </div>
           </li>
         </ul>
 
         <!-- CTA Button -->
-        <div class="pt-4">
-          <a
-            routerLink="/projet-formation"
-            matRipple
-            [matRippleColor]="'rgba(255, 255, 255, 0.3)'"
-            class="btn btn-lg bg-secondary text-white hover:bg-secondary/90 border-0 dark:bg-white dark:text-secondary w-full sm:w-auto px-8 h-12 flex items-center justify-center gap-2"
-          >
+        <div class="ui-business-solutions__cta">
+          <a routerLink="/projet-formation" class="ui-button ui-button--primary ui-button--lg">
             <span>Construire votre projet formation</span>
-            <mat-icon class="!w-[18px] !h-[18px] !text-[18px] !leading-[18px] flex-shrink-0">arrow_forward</mat-icon>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
           </a>
         </div>
       </div>
-
     </div>
   </div>
 </section>
+

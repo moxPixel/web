@@ -1,0 +1,133 @@
+<section class="ui-bo-sub">
+  <div class="ui-bo-sub__hero ui-container">
+    <div class="ui-bo-sub__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-sub__back ui-icon-button" [routerLink]="['/backoffice']">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-sub__head">
+      <div class="ui-bo-sub__pill">Backoffice</div>
+      <div class="ui-bo-sub__head-row">
+        <div>
+          <h1 class="ui-bo-sub__h1">Sessions</h1>
+          <p class="ui-bo-sub__p">Créer, modifier et suivre les sessions par formation.</p>
+        </div>
+        <button uiButton variant="primary" type="button" class="ui-bo-sub__create" (click)="create()">
+          <span>Nouvelle session</span>
+          <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div class="ui-bo-sub__toolbar">
+      <div class="ui-bo-filterbar">
+        <!-- Recherche (ligne 1) -->
+        <div class="ui-bo-filterbar__search">
+          <label class="ui-bo-sub__label" for="bo-trainingId">Training ID (optionnel)</label>
+          <input
+            uiInput
+            id="bo-trainingId"
+            type="text"
+            [(ngModel)]="trainingId"
+            placeholder="Filtrer par trainingId…"
+          (ngModelChange)="scheduleLoad()"
+            (keyup.enter)="load()"
+          />
+        </div>
+
+        <!-- Filtres + actions (ligne 2, toujours alignée / jamais empilée) -->
+        <div class="ui-bo-filterbar__row" aria-label="Filtres sessions">
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label" for="bo-session-status">Statut</label>
+            <app-ui-choice-group
+              [(ngModel)]="status"
+            (ngModelChange)="scheduleLoad()"
+              name="bo-session-status"
+              [options]="statusOptions"
+              ariaLabel="Filtre statut"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label" for="bo-session-highlight">Highlight</label>
+            <app-ui-choice-group
+              [(ngModel)]="highlight"
+            (ngModelChange)="scheduleLoad()"
+              name="bo-session-highlight"
+              [options]="highlightOptions"
+              ariaLabel="Filtre highlight"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__actions">
+            <button uiButton type="button" class="ui-bo-sub__apply" (click)="load()">Appliquer</button>
+            <button uiButton variant="ghost" type="button" class="ui-bo-sub__clear" (click)="clearFilters()">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ui-bo-sub__list-wrap">
+      <div *ngIf="hasLoaded && !sessions.length" class="ui-bo-sub__empty">
+        <div class="ui-bo-sub__muted">Aucune session trouvée.</div>
+      </div>
+
+      <div class="ui-bo-table" *ngIf="sessions.length">
+        <div class="ui-bo-table__head ui-bo-table__head--sessions" aria-hidden="true">
+          <div class="ui-bo-table__col ui-bo-table__col--main">Dates</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Training ID</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Infos</div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">Statut</div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions"></div>
+        </div>
+
+        <div class="ui-bo-row ui-bo-row--sessions" *ngFor="let s of sessions" (click)="edit(s.id)" role="button" tabindex="0">
+          <div class="ui-bo-table__col ui-bo-table__col--main">
+            <div class="ui-bo-row__title">
+              <app-tabler-icon name="calendar" [size]="18"></app-tabler-icon>
+              <span>{{ fmtDate(s.startDate) }}</span>
+            </div>
+            <div class="ui-bo-row__sub">{{ fmtDate(s.endDate) }}</div>
+          </div>
+
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ s.trainingId }}</div>
+          </div>
+
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__sub">
+              <span *ngIf="s.location">{{ s.location }}</span>
+              <span *ngIf="!s.location">—</span>
+              <span *ngIf="s.highlight"> • highlight</span>
+            </div>
+          </div>
+
+          <div class="ui-bo-table__col ui-bo-table__col--status">
+            <span class="ui-bo-sub__status" [class.is-draft]="s.status==='scheduled'" [class.is-archived]="s.status==='cancelled'">
+              {{ s.status }}
+            </span>
+          </div>
+
+          <div class="ui-bo-table__col ui-bo-table__col--actions ui-bo-row__actions" (click)="$event.stopPropagation()">
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="edit(s.id)" aria-label="Modifier">
+              <app-tabler-icon name="pencil" [size]="18"></app-tabler-icon>
+            </button>
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="delete(s.id)" aria-label="Supprimer">
+              <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

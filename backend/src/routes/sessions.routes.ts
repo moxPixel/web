@@ -3,6 +3,7 @@ import sessionsController from '../controllers/sessions.controller';
 import { body, param } from 'express-validator';
 import { validate } from '../middleware/validation.middleware';
 import { createLimiter } from '../middleware/rate-limit.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -18,11 +19,11 @@ const idParamValidation = [
   validate,
 ];
 
-router.post('/', createLimiter, createValidation, sessionsController.create.bind(sessionsController));
+router.post('/', authenticate, requireAdmin, createLimiter, createValidation, sessionsController.create.bind(sessionsController));
 router.get('/', sessionsController.findAll.bind(sessionsController));
 router.get('/:id', idParamValidation, sessionsController.findById.bind(sessionsController));
-router.put('/:id', idParamValidation, sessionsController.update.bind(sessionsController));
-router.delete('/:id', idParamValidation, sessionsController.delete.bind(sessionsController));
+router.put('/:id', authenticate, requireAdmin, idParamValidation, sessionsController.update.bind(sessionsController));
+router.delete('/:id', authenticate, requireAdmin, idParamValidation, sessionsController.delete.bind(sessionsController));
 
 export default router;
 

@@ -1,0 +1,71 @@
+<section class="ui-events ui-home-section" data-ui-section="events">
+  <div class="ui-events__container ui-home-container">
+    <div class="ui-events__layout">
+      <!-- Left: sticky model/date (Three.js morph target) -->
+      <div class="ui-events__visual" aria-hidden="true">
+        <div class="ui-events__image-wrapper">
+          <div class="ui-events__image-main" data-ui-morph-target="events-photo"></div>
+        </div>
+      </div>
+
+      <!-- Right: sticky content -->
+      <div class="ui-events__panel">
+        <header class="ui-events__header ui-home-header">
+          <div class="ui-events__pill ui-home-pill">Événements</div>
+          <h2 class="ui-events__title ui-home-title">
+            Prochains <span class="ui-events__title-accent ui-home-title-accent">rendez-vous</span>
+          </h2>
+          <p class="ui-events__lede ui-home-lede">
+            Ateliers, webinars, conférences et portes ouvertes. Rejoignez-nous pour découvrir Unlock, poser vos questions et rencontrer l’équipe.
+          </p>
+        </header>
+
+        <div class="ui-events__grid" *ngIf="events.length; else empty">
+          <a class="ui-events__card" *ngFor="let e of events" [routerLink]="['/contact']">
+            <div class="ui-events__media">
+              <span class="ui-events__ring">
+                <img [src]="coverUrl(e)" [alt]="e.title" loading="lazy" decoding="async" />
+              </span>
+              <div class="ui-events__badge" [class.is-highlight]="e.highlight">
+                <app-tabler-icon name="calendar-event" [size]="14"></app-tabler-icon>
+                <span>{{ typeLabel(e) }}</span>
+              </div>
+            </div>
+
+            <div class="ui-events__content">
+              <div class="ui-events__title-row">
+                <div class="ui-events__card-title">{{ e.title }}</div>
+              </div>
+              <div class="ui-events__meta">
+                <span class="ui-events__meta-item">
+                  <app-tabler-icon name="clock" [size]="14"></app-tabler-icon>
+                  <span>{{ dateLabel(e) }}</span>
+                </span>
+                <span class="ui-events__meta-item">
+                  <app-tabler-icon name="map-pin" [size]="14"></app-tabler-icon>
+                  <span>{{ placeLabel(e) }}</span>
+                </span>
+              </div>
+
+              <div class="ui-events__excerpt" *ngIf="e.excerpt">{{ e.excerpt }}</div>
+
+              <div class="ui-events__cta">
+                <span>Demander une place</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #empty>
+      <div class="ui-events__empty" *ngIf="hasLoaded">
+        <div class="ui-events__empty-title">Aucun événement publié pour le moment</div>
+        <div class="ui-events__empty-text">On annonce les prochains rendez-vous ici dès qu’ils sont prêts.</div>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+

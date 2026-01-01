@@ -1,60 +1,38 @@
 <section
-  class="cookie-consent"
-  [class.cookie-consent--visible]="isVisible"
-  [class.cookie-consent--hiding]="isHiding"
+  class="ui-cookie"
+  [class.ui-cookie--visible]="isVisible"
+  [class.ui-cookie--hiding]="isHiding"
   aria-live="polite"
   aria-label="Bannière de consentement aux cookies"
 >
-  <div class="cookie-consent__content backdrop-blur-lg shadow-glass-lg">
-    <div class="cookie-consent__header">
-      <div class="cookie-consent__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 2a10 10 0 1 0 10 10c-.8 0-1.5-.3-2-.8a2.7 2.7 0 0 1-2.2-4.2c-.4-.7-.6-1.4-.6-2.2A2.7 2.7 0 0 1 12 2Z"
-          />
-          <circle cx="8.5" cy="11.5" r="1" />
-          <circle cx="13.5" cy="7.5" r="1" />
-          <circle cx="15" cy="14" r="1" />
-          <circle cx="11" cy="16.5" r="1" />
-        </svg>
-      </div>
-      <div>
-        <p class="cookie-consent__eyebrow">Expérience premium</p>
-        <h3 class="cookie-consent__title">Un cookie pour orchestrer la magie</h3>
-      </div>
-    </div>
+  <div class="ui-cookie__container">
+    <div uiCard class="ui-cookie__panel" [padded]="false">
+      <div class="ui-cookie__main">
+        <div class="ui-cookie__icon" aria-hidden="true">
+          <app-tabler-icon name="info-circle" [size]="18"></app-tabler-icon>
+        </div>
 
-    <div class="cookie-consent__body">
-      <p class="cookie-consent__text">
-        Nous utilisons des cookies pour offrir un parcours aussi fluide qu’un produit SaaS haut de gamme :
-        animations GSAP, modèles 3D, analytics et recommandations personnalisées.
-      </p>
-      <div class="cookie-consent__links">
-        <a href="/politique-de-confidentialite" class="cookie-link">Politique de confidentialité</a>
-        <span class="cookie-separator" aria-hidden="true">•</span>
-        <a href="/mentions-legales" class="cookie-link">Mentions légales</a>
+        <div class="ui-cookie__copy">
+          <div class="ui-cookie__title">Cookies</div>
+          <p class="ui-cookie__text">
+            Nous utilisons des cookies pour améliorer l’expérience, mesurer l’audience et sécuriser les parcours.
+          </p>
+          <div class="ui-cookie__links">
+            <a class="ui-cookie__link" routerLink="/cgu">Politique</a>
+            <span class="ui-cookie__sep" aria-hidden="true">•</span>
+            <a class="ui-cookie__link" routerLink="/faq">Aide</a>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="cookie-consent__actions">
-      <button
-        type="button"
-        class="btn btn-md btn-outline cookie-btn-reject"
-        matRipple
-        [matRippleColor]="rippleColor"
-        (click)="reject()"
-      >
-        Refuser
-      </button>
-      <button
-        type="button"
-        class="btn btn-md btn-primary cookie-btn-accept"
-        matRipple
-        [matRippleColor]="rippleColor"
-        (click)="accept()"
-      >
-        Activer toutes les fonctionnalités
-      </button>
+      <div class="ui-cookie__actions">
+        <button uiButton variant="ghost" type="button" class="ui-cookie__btn" (click)="reject()">
+          Refuser
+        </button>
+        <button uiButton variant="primary" type="button" class="ui-cookie__btn" (click)="accept()">
+          Accepter
+        </button>
+      </div>
     </div>
   </div>
 </section>

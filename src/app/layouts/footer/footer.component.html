@@ -1,0 +1,116 @@
+<footer class="ui-footer" aria-label="Footer">
+  <div class="ui-footer__glow" aria-hidden="true"></div>
+
+  <div class="ui-footer__container">
+    <div class="ui-footer__grid">
+      <!-- Brand -->
+      <div class="ui-footer__brand">
+        <figure class="ui-footer__poster" aria-hidden="true">
+          <img
+            src="/assets/images/img/gf.jpg"
+            alt=""
+            width="640"
+            height="480"
+            loading="lazy"
+          />
+        </figure>
+
+        <img class="ui-footer__logo" src="/assets/images/logo/dark-logo.png" alt="Unlock" />
+
+        <p class="ui-footer__desc">
+          Centre de formation en technologies avancées. Des parcours concrets, des projets, et une pédagogie qui
+          accélère vraiment.
+        </p>
+
+        <div class="ui-footer__meta">
+          <app-tabler-icon name="map-pin" [size]="18"></app-tabler-icon>
+          <span>Malakoff, France</span>
+        </div>
+
+        <div class="ui-footer__social" aria-label="Réseaux sociaux">
+          <a
+            class="ui-footer__social-link"
+            href="https://m.facebook.com/profile.php?id=100091919067689"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
+            <app-tabler-icon name="brand-facebook" [size]="18"></app-tabler-icon>
+          </a>
+          <a
+            class="ui-footer__social-link"
+            href="https://www.instagram.com/unlock_formation/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <app-tabler-icon name="brand-instagram" [size]="18"></app-tabler-icon>
+          </a>
+          <a
+            class="ui-footer__social-link"
+            href="https://fr.linkedin.com/company/unlock-formation"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <app-tabler-icon name="brand-linkedin" [size]="18"></app-tabler-icon>
+          </a>
+          <a
+            class="ui-footer__social-link"
+            href="https://www.youtube.com/@Unlock-formation"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+          >
+            <app-tabler-icon name="brand-youtube" [size]="18"></app-tabler-icon>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="ui-footer__cols">
+        <div class="ui-footer__col" *ngFor="let col of columns">
+          <p class="ui-footer__title">{{ col.title }}</p>
+          <ul class="ui-footer__list">
+            <li *ngFor="let link of col.links">
+              <a
+                class="ui-footer__link"
+                *ngIf="link.routerLink; else externalLink"
+                [routerLink]="link.routerLink"
+              >
+                {{ link.label }}
+              </a>
+              <ng-template #externalLink>
+                <a
+                  class="ui-footer__link"
+                  [href]="link.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ link.label }}
+                </a>
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-footer__bottom">
+      <div class="ui-footer__divider" aria-hidden="true"></div>
+      <div class="ui-footer__bottom-content">
+        <p class="ui-footer__copyright">
+          © {{ currentYear }} Unlock — Centre de formation en technologies avancées
+        </p>
+        <img
+          class="ui-footer__qualiopi-logo"
+          src="/assets/images/logo/qualiopi.png"
+          alt="Qualiopi - Certification qualité"
+          width="120"
+          height="auto"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</footer>

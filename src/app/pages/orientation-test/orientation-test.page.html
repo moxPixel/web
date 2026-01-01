@@ -1,0 +1,473 @@
+<section class="ui-orientation">
+  <!-- HERO (same layout language as training-detail) -->
+  <div class="ui-orientation__hero-wrap">
+    <div class="ui-orientation__hero-spheres" aria-hidden="true">
+      <div class="ui-orientation__sphere orientation-sphere-1"></div>
+      <div class="ui-orientation__sphere orientation-sphere-2"></div>
+      <div class="ui-orientation__sphere orientation-sphere-3"></div>
+    </div>
+
+    <div class="ui-orientation__hero-card">
+      <div class="ui-orientation__hero-inner">
+        <div class="ui-orientation__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-orientation__back ui-icon-button" [routerLink]="['/trainings']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-orientation__hero-grid">
+          <div class="ui-orientation__hero-copy">
+            <div class="ui-orientation__badge-row">
+              <span class="ui-orientation__badge">Orientation</span>
+              <span class="ui-orientation__tags">Test de positionnement • KPIs • Recommandations IA</span>
+            </div>
+
+            <h1 class="ui-orientation__h1">
+              Test de <span class="ui-orientation__h1-accent">positionnement</span>
+            </h1>
+
+            <p class="ui-orientation__p">
+              Un parcours guidé pour évaluer votre profil, calculer vos KPIs et obtenir des recommandations personnalisées.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="ui-orientation__body ui-container">
+    <div uiCard class="ui-orientation__card" [class.is-submitting]="isSubmitting">
+      <div class="ui-orientation__card-head">
+        <div>
+          <h2 class="ui-orientation__h2">Test d’orientation</h2>
+          <p class="ui-orientation__muted">Parcourez les étapes et obtenez vos résultats.</p>
+        </div>
+      </div>
+
+      <!-- Stepper -->
+      <div class="ui-orientation__stepper" aria-label="Progression du test">
+        <div class="ui-orientation__steps">
+          <div class="ui-orientation__step" [class.is-active]="step >= 1" [class.is-done]="step > 1">
+            <div class="ui-orientation__step-dot">
+              <span *ngIf="step <= 1">1</span>
+              <svg *ngIf="step > 1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="ui-orientation__step-label">Profil</div>
+          </div>
+          <div class="ui-orientation__line" [class.is-done]="step > 1"></div>
+          <div class="ui-orientation__step" [class.is-active]="step >= 2" [class.is-done]="step > 2">
+            <div class="ui-orientation__step-dot">
+              <span *ngIf="step <= 2">2</span>
+              <svg *ngIf="step > 2" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="ui-orientation__step-label">Questions</div>
+          </div>
+          <div class="ui-orientation__line" [class.is-done]="step > 2"></div>
+          <div class="ui-orientation__step" [class.is-active]="step >= 3" [class.is-done]="step > 3">
+            <div class="ui-orientation__step-dot">
+              <span *ngIf="step <= 3">3</span>
+              <svg *ngIf="step > 3" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="ui-orientation__step-label">Logique &amp; tech</div>
+          </div>
+          <div class="ui-orientation__line" [class.is-done]="step > 3"></div>
+          <div class="ui-orientation__step" [class.is-active]="step >= 4" [class.is-done]="step > 4">
+            <div class="ui-orientation__step-dot">
+              <span *ngIf="step <= 4">4</span>
+              <svg *ngIf="step > 4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="ui-orientation__step-label">Soft skills</div>
+          </div>
+          <div class="ui-orientation__line" [class.is-done]="step > 4"></div>
+          <div class="ui-orientation__step" [class.is-active]="step >= 5" [class.is-done]="step > 5">
+            <div class="ui-orientation__step-dot">
+              <span *ngIf="step <= 5">5</span>
+              <svg *ngIf="step > 5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="ui-orientation__step-label">Résultats</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="ui-orientation__step-panel" *ngIf="step === 1">
+        <div class="ui-orientation__section">
+          <p class="ui-orientation__label">Sélectionnez votre profil</p>
+          <p class="ui-orientation__help">Choisissez la situation qui vous correspond le mieux.</p>
+
+          <div class="ui-orientation__profile-grid">
+            <label
+              class="ui-orientation__profile"
+              *ngFor="let option of profileOptions"
+              [class.is-selected]="selectedProfile === option.value"
+            >
+              <input
+                type="radio"
+                name="profileType"
+                [value]="option.value"
+                [(ngModel)]="selectedProfile"
+                class="ui-orientation__radio"
+              />
+              <div class="ui-orientation__profile-inner">
+                <div class="ui-orientation__profile-icon" aria-hidden="true">
+                  <app-tabler-icon [name]="option.icon" [size]="18"></app-tabler-icon>
+                </div>
+                <div class="ui-orientation__profile-text">
+                  <div class="ui-orientation__profile-title">{{ option.title }}</div>
+                  <div class="ui-orientation__profile-desc">{{ option.description }}</div>
+                </div>
+                <div class="ui-orientation__profile-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="ui-orientation__actions">
+          <button uiButton variant="primary" type="button" (click)="nextStep()" [disabled]="!selectedProfile">Suivant</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="ui-orientation__step-panel" *ngIf="step === 2 && selectedProfile" [formGroup]="profileForm">
+        <div class="ui-orientation__section">
+          <p class="ui-orientation__label">Questions</p>
+          <p class="ui-orientation__help">Quelques infos pour personnaliser le résultat.</p>
+
+          <div class="ui-orientation__field">
+            <label class="ui-orientation__field-label">Confort digital (1–5)</label>
+            <div class="ui-orientation__range-row">
+              <input class="ui-orientation__range" type="range" min="1" max="5" step="1" formControlName="digitalComfort" />
+              <span class="ui-orientation__range-val">{{ profileForm.value.digitalComfort }}</span>
+            </div>
+          </div>
+
+          <div class="ui-orientation__field">
+            <label class="ui-orientation__field-label">Objectif principal</label>
+            <div class="ui-orientation__chips">
+              <label class="ui-orientation__chip" *ngFor="let option of objectiveOptions">
+                <input class="ui-orientation__radio" type="radio" name="objective" [value]="option.value" formControlName="objective" />
+                <span>{{ option.label }}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Particulier -->
+          <ng-container *ngIf="selectedProfile === 'particulier'">
+            <div class="ui-orientation__grid-2">
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Âge (optionnel)</label>
+                <input class="ui-orientation__input" type="number" min="15" max="100" formControlName="age" placeholder="Ex. 28" />
+              </div>
+            </div>
+
+            <div class="ui-orientation__grid-2">
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Inscrit à Pôle Emploi ?</label>
+                <div class="ui-orientation__chips">
+                  <label class="ui-orientation__chip">
+                    <input class="ui-orientation__radio" type="radio" name="poleEmploi" [value]="true" formControlName="poleEmploi" />
+                    <span>Oui</span>
+                  </label>
+                  <label class="ui-orientation__chip">
+                    <input class="ui-orientation__radio" type="radio" name="poleEmploi" [value]="false" formControlName="poleEmploi" />
+                    <span>Non</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Compte CPF disponible ?</label>
+                <div class="ui-orientation__chips">
+                  <label class="ui-orientation__chip">
+                    <input class="ui-orientation__radio" type="radio" name="cpfDisponible" [value]="true" formControlName="cpfDisponible" />
+                    <span>Oui</span>
+                  </label>
+                  <label class="ui-orientation__chip">
+                    <input class="ui-orientation__radio" type="radio" name="cpfDisponible" [value]="false" formControlName="cpfDisponible" />
+                    <span>Non</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Étudiant -->
+          <ng-container *ngIf="selectedProfile === 'etudiant'">
+            <div class="ui-orientation__grid-2">
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Âge (optionnel)</label>
+                <input class="ui-orientation__input" type="number" min="15" max="100" formControlName="age" placeholder="Ex. 21" />
+              </div>
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Études actuelles</label>
+                <input class="ui-orientation__input" type="text" formControlName="currentStudies" placeholder="Licence, BTS, Master…" />
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Entreprise -->
+          <ng-container *ngIf="selectedProfile === 'entreprise'">
+            <div class="ui-orientation__grid-2">
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Taille de l’entreprise</label>
+                <input class="ui-orientation__input" type="text" formControlName="companySize" placeholder="Ex. 50–200 personnes" />
+              </div>
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Personnes à former</label>
+                <input class="ui-orientation__input" type="number" min="1" formControlName="headcountToTrain" placeholder="Ex. 12" />
+              </div>
+            </div>
+
+            <div class="ui-orientation__field">
+              <label class="ui-orientation__field-label">Besoins en formation</label>
+              <div class="ui-orientation__chips">
+                <label class="ui-orientation__chip" *ngFor="let need of trainingNeedsOptions">
+                  <input
+                    class="ui-orientation__check"
+                    type="checkbox"
+                    [checked]="profileForm.value.trainingNeeds?.includes(need)"
+                    (change)="toggleTrainingNeed(need, $any($event.target).checked)"
+                  />
+                  <span>{{ need }}</span>
+                </label>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Porteur de projet -->
+          <ng-container *ngIf="selectedProfile === 'porteur-projet'">
+            <div class="ui-orientation__field">
+              <label class="ui-orientation__field-label">Type de projet</label>
+              <input class="ui-orientation__input" type="text" formControlName="projectType" placeholder="SaaS, e-commerce, app, IA…" />
+            </div>
+          </ng-container>
+
+          <!-- Étranger -->
+          <ng-container *ngIf="selectedProfile === 'etranger'">
+            <div class="ui-orientation__grid-2">
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Âge (optionnel)</label>
+                <input class="ui-orientation__input" type="number" min="15" max="100" formControlName="age" placeholder="Ex. 30" />
+              </div>
+              <div class="ui-orientation__field">
+                <label class="ui-orientation__field-label">Niveau de langue (obligatoire)</label>
+                <input class="ui-orientation__input" type="text" formControlName="languageLevel" placeholder="Ex. B2, C1…" />
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="ui-orientation__actions ui-orientation__actions--split">
+          <button uiButton type="button" (click)="previousStep()">Retour</button>
+          <button uiButton variant="primary" type="button" (click)="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="ui-orientation__step-panel" *ngIf="step === 3" [formGroup]="assessmentForm">
+        <div class="ui-orientation__section">
+          <p class="ui-orientation__label">Logique &amp; technique</p>
+          <p class="ui-orientation__help">Quelques questions pour mesurer votre raisonnement et vos bases techniques.</p>
+
+          <div class="ui-orientation__quiz">
+            <div class="ui-orientation__quiz-block" formGroupName="logic">
+              <div class="ui-orientation__quiz-title">Logique</div>
+              <div class="ui-orientation__quiz-grid">
+                <div class="ui-orientation__quiz-item" *ngFor="let q of logicQuestions">
+                  <div class="ui-orientation__quiz-q">
+                    <div class="ui-orientation__quiz-q-title">{{ q.title }}</div>
+                    <div class="ui-orientation__quiz-q-text">{{ q.prompt }}</div>
+                  </div>
+                  <div class="ui-orientation__quiz-choices">
+                    <label class="ui-orientation__chip ui-orientation__chip--sm" *ngFor="let c of q.choices">
+                      <input class="ui-orientation__radio" type="radio" [name]="q.id" [value]="c.key" [formControlName]="$any(q.id)" />
+                      <span>{{ c.label }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-orientation__quiz-block" formGroupName="technical">
+              <div class="ui-orientation__quiz-title">Technique</div>
+              <div class="ui-orientation__quiz-grid">
+                <div class="ui-orientation__quiz-item" *ngFor="let q of technicalQuestions">
+                  <div class="ui-orientation__quiz-q">
+                    <div class="ui-orientation__quiz-q-title">{{ q.title }}</div>
+                    <div class="ui-orientation__quiz-q-text">{{ q.prompt }}</div>
+                  </div>
+                  <div class="ui-orientation__quiz-choices">
+                    <label class="ui-orientation__chip ui-orientation__chip--sm" *ngFor="let c of q.choices">
+                      <input class="ui-orientation__radio" type="radio" [name]="q.id" [value]="c.key" [formControlName]="$any(q.id)" />
+                      <span>{{ c.label }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-orientation__quiz-block" formGroupName="personality">
+              <div class="ui-orientation__quiz-title">Personnalité (style)</div>
+              <div class="ui-orientation__quiz-grid">
+                <div class="ui-orientation__quiz-item" *ngFor="let q of personalityQuestions">
+                  <div class="ui-orientation__quiz-q">
+                    <div class="ui-orientation__quiz-q-title">{{ q.title }}</div>
+                    <div class="ui-orientation__quiz-q-text">{{ q.prompt }}</div>
+                  </div>
+                  <div class="ui-orientation__quiz-choices">
+                    <label class="ui-orientation__chip ui-orientation__chip--sm" *ngFor="let c of q.choices">
+                      <input class="ui-orientation__radio" type="radio" [name]="q.id" [value]="c.key" [formControlName]="$any(q.id)" />
+                      <span>{{ c.label }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-orientation__actions ui-orientation__actions--split">
+          <button uiButton type="button" (click)="previousStep()">Retour</button>
+          <button uiButton variant="primary" type="button" (click)="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="ui-orientation__step-panel" *ngIf="step === 4" [formGroup]="softSkillsForm">
+        <div class="ui-orientation__section">
+          <p class="ui-orientation__label">Soft skills</p>
+          <p class="ui-orientation__help">Évaluez chaque dimension de 1 à 5.</p>
+
+          <div class="ui-orientation__sliders">
+            <div class="ui-orientation__field" *ngFor="let key of ['logic','autonomy','creativity','patience','communication','techComfort']">
+              <label class="ui-orientation__field-label">{{ key }}</label>
+              <div class="ui-orientation__range-row">
+                <input class="ui-orientation__range" type="range" min="1" max="5" step="1" [formControlName]="$any(key)" />
+                <span class="ui-orientation__range-val">{{ softSkillsForm.value[key] }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-orientation__actions ui-orientation__actions--split">
+          <button uiButton type="button" (click)="previousStep()">Retour</button>
+          <button uiButton variant="primary" type="button" (click)="submit()" [loading]="isSubmitting" [disabled]="isSubmitting">
+            <span>Voir mes résultats</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="ui-orientation__step-panel" *ngIf="step === 5">
+        <ng-container *ngIf="result; else pendingResult">
+          <div class="ui-orientation__results">
+            <div class="ui-orientation__kpi-circles" aria-label="KPIs">
+              <div class="ui-orientation__kpi-circle" *ngFor="let k of kpiList">
+                <div class="ui-orientation__kpi-ring" [class.is-empty]="k.value == null">
+                  <svg viewBox="0 0 44 44" aria-hidden="true">
+                    <circle class="ui-orientation__kpi-track" cx="22" cy="22" r="18" pathLength="100"></circle>
+                    <circle
+                      class="ui-orientation__kpi-prog"
+                      cx="22"
+                      cy="22"
+                      r="18"
+                      pathLength="100"
+                      [attr.stroke-dasharray]="100"
+                      [attr.stroke-dashoffset]="k.value == null ? 100 : (100 - k.value)"
+                    ></circle>
+                  </svg>
+                  <div class="ui-orientation__kpi-center">
+                    <div class="ui-orientation__kpi-v">{{ k.value == null ? '—' : (k.value | number:'1.0-0') }}</div>
+                    <div class="ui-orientation__kpi-unit" *ngIf="k.value != null">/100</div>
+                  </div>
+                </div>
+                <div class="ui-orientation__kpi-k">{{ k.label }}</div>
+                <div
+                  class="ui-orientation__kpi-hint"
+                  [class.is-muted]="kpiHint(k.value).tone === 'muted'"
+                  [class.is-good]="kpiHint(k.value).tone === 'good'"
+                  [class.is-mid]="kpiHint(k.value).tone === 'mid'"
+                  [class.is-bad]="kpiHint(k.value).tone === 'bad'"
+                >
+                  {{ kpiHint(k.value).label }}
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-orientation__top">
+              <h3 class="ui-orientation__h3">Top recommandations</h3>
+              <div class="ui-orientation__reco-grid">
+                <a class="ui-orientation__reco" *ngFor="let f of result.topFormations" [routerLink]="['/trainings']">
+                  <div class="ui-orientation__reco-title">{{ f.label }}</div>
+                  <div class="ui-orientation__reco-meta">Score {{ f.score | number:'1.0-0' }}/100</div>
+                </a>
+              </div>
+            </div>
+
+            <div class="ui-orientation__report">
+              <h3 class="ui-orientation__h3">Analyse IA</h3>
+              <div class="ui-orientation__report-box" [innerHTML]="aiReportSafeHtml"></div>
+            </div>
+
+            <div class="ui-orientation__actions ui-orientation__actions--split">
+              <button uiButton type="button" (click)="restart()">Refaire le test</button>
+              <button uiButton variant="primary" type="button" [routerLink]="['/trainings']">Voir les formations</button>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #pendingResult>
+          <div class="ui-orientation__empty">
+            <p>Vos résultats seront affichés ici.</p>
+            <button uiButton type="button" (click)="restart()">Recommencer</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div uiCard class="ui-orientation__notice" aria-label="Information sur le test">
+      <div class="ui-orientation__notice-head">
+        <span class="ui-orientation__notice-pill">
+          <app-tabler-icon name="sparkles" [size]="16"></app-tabler-icon>
+          EVA AI
+        </span>
+        <h3 class="ui-orientation__notice-title">Un test intelligent pour vous orienter, sans blabla</h3>
+      </div>
+
+      <p class="ui-orientation__notice-text">
+        Ce test est guidé par <strong>EVA</strong>, notre assistant IA. Il analyse vos réponses pour estimer votre niveau,
+        vos objectifs et votre contexte (profil, disponibilité, financement), puis vous propose des recommandations
+        claires et actionnables.
+      </p>
+
+      <ul class="ui-orientation__notice-list">
+        <li><strong>À quoi ça sert ?</strong> Vous aider à choisir une formation adaptée, et à prioriser les prochaines étapes.</li>
+        <li><strong>Ce que vous obtenez :</strong> des KPIs (digital, soft skills, motivation…), un top de recommandations, et un mini‑rapport.</li>
+        <li><strong>Confidentialité :</strong> vos réponses servent uniquement à produire vos résultats (et à améliorer l’expérience si vous le souhaitez).</li>
+      </ul>
+
+      <div class="ui-orientation__notice-cta">
+        <button uiButton type="button" [routerLink]="['/contact']">Parler à un conseiller</button>
+        <button uiButton variant="primary" type="button" [routerLink]="['/trainings']">Explorer les formations</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+

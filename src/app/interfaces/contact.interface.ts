@@ -19,10 +19,10 @@ export enum SubjectCategory {
 }
 
 export enum ContactStatus {
-  PENDING = 'pending', // Demande en attente
-  IN_PROGRESS = 'in_progress', // En cours de traitement
-  RESPONDED = 'responded', // Répondu
-  ARCHIVED = 'archived', // Archivé
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  RESPONDED = 'responded',
+  ARCHIVED = 'archived',
 }
 
 export interface Contact {
@@ -41,12 +41,6 @@ export interface Contact {
   response?: string;
   respondedAt?: string;
   respondedBy?: string;
-  responder?: {
-    id: string;
-    email: string;
-    firstName?: string;
-    lastName?: string;
-  };
   createdAt: string;
   updatedAt: string;
 }
@@ -77,4 +71,5 @@ export interface ContactQueryParams {
   requestType?: RequestType;
   search?: string;
 }
+
 

@@ -1,0 +1,492 @@
+:host {
+  display: block;
+}
+
+.ui-training-register {
+  margin-top: 0.75rem;
+  position: relative;
+  padding: 0 var(--ui-gutter-x) var(--ui-page-pad-bottom);
+  min-height: calc(100vh - 120px);
+}
+
+.ui-training-register__hero-wrap {
+  max-width: 1920px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.ui-training-register__hero-spheres {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.ui-training-register__sphere {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(56px);
+  opacity: 0.95;
+}
+
+.register-sphere-1 {
+  width: 280px;
+  height: 280px;
+  top: 5%;
+  right: 15%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-accent) 80%, transparent) 0%, transparent 70%);
+}
+.register-sphere-2 {
+  width: 350px;
+  height: 350px;
+  top: 25%;
+  right: 10%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-secondary) 75%, transparent) 0%, transparent 70%);
+}
+.register-sphere-3 {
+  width: 240px;
+  height: 240px;
+  top: 50%;
+  right: 18%;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--ui-nebula-teal) 70%, transparent) 0%, transparent 70%);
+}
+
+.ui-training-register__hero-card {
+  position: relative;
+  z-index: 10;
+  border-radius: 28px;
+  overflow: hidden;
+  background: url('/assets/images/home-page-14/hero-bg-dark.svg') center / cover no-repeat;
+  margin-bottom: var(--ui-hero-card-margin-bottom);
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-glass-border) 65%, transparent);
+}
+
+.ui-training-register__hero-inner {
+  position: relative;
+  z-index: 10;
+  padding: var(--ui-hero-inner-padding-y) var(--ui-gutter-x);
+}
+
+.ui-training-register__back-row {
+  margin-bottom: var(--ui-back-row-margin-bottom);
+}
+
+.ui-training-register__back {
+  /* Align with Trainings + Training Detail back button positioning */
+  margin-left: var(--ui-back-button-margin-left);
+}
+
+.ui-training-register__hero-grid {
+  display: flex;
+  align-items: center;
+  min-height: 220px;
+}
+
+.ui-training-register__hero-copy {
+  width: 100%;
+  max-width: 860px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .ui-training-register__hero-copy {
+    text-align: left;
+    margin: 0;
+    max-width: 820px;
+  }
+  .ui-training-register__hero-grid {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-register__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+@media (min-width: 1024px) {
+  .ui-training-register__badge-row {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-register__badge {
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--ui-nebula-accent) 75%, var(--ui-fg));
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-nebula-accent) 35%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 70%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+}
+
+.ui-training-register__tags {
+  color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  font-size: 0.95rem;
+}
+
+.ui-training-register__h1 {
+  font-size: clamp(1.35rem, 1.05rem + 1.5vw, 2.1rem);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  font-weight: var(--ui-weight-semibold);
+}
+
+.ui-training-register__p {
+  margin-top: 0.85rem;
+  max-width: 780px;
+  color: color-mix(in srgb, var(--ui-fg) 78%, transparent);
+  line-height: 1.7;
+}
+
+.ui-training-register__orientation-hint {
+  margin-top: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .ui-training-register__orientation-hint {
+    justify-content: flex-start;
+  }
+}
+
+.ui-training-register__orientation-text {
+  color: color-mix(in srgb, var(--ui-fg) 65%, transparent);
+  font-size: 0.875rem;
+}
+
+.ui-training-register__orientation-link {
+  color: var(--ui-accent, var(--ui-nebula-accent));
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all var(--ui-dur-2) var(--ui-ease-out);
+  white-space: nowrap;
+}
+
+.ui-training-register__orientation-link:hover {
+  color: var(--ui-accent, var(--ui-nebula-accent));
+  border-bottom-color: var(--ui-accent, var(--ui-nebula-accent));
+}
+
+.ui-training-register__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 980px) {
+  .ui-training-register__grid {
+    grid-template-columns: 1fr 2.1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .ui-training-register__aside {
+    position: sticky;
+    top: 110px;
+    align-self: start;
+  }
+}
+
+.ui-training-register__summary {
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.ui-training-register__summary-image {
+  position: relative;
+  height: 210px;
+  /* Ensure radius is visible even if parent overflow is not respected (browser differences) */
+  overflow: hidden;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+}
+
+.ui-training-register__summary-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
+.ui-training-register__summary-gradient {
+  position: absolute;
+  inset: 0;
+  /* avoid hardcoded rgba black; keep theme-consistent */
+  background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, var(--ui-bg) 78%, transparent));
+}
+
+.ui-training-register__summary-body {
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.ui-training-register__summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.55rem;
+}
+
+.ui-training-register__pill {
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--ui-nebula-accent) 80%, var(--ui-fg));
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 70%, transparent);
+}
+
+.ui-training-register__mini {
+  color: color-mix(in srgb, var(--ui-fg) 68%, transparent);
+  font-size: 0.9rem;
+}
+
+.ui-training-register__summary-title {
+  margin: 0.35rem 0 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ui-training-register__summary-muted {
+  margin: 0.35rem 0 0;
+  color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.ui-training-register__summary-price {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--ui-fg) 10%, transparent);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.ui-training-register__summary-price .k {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ui-fg) 60%, transparent);
+}
+.ui-training-register__summary-price .v {
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.ui-training-register__note {
+  margin-top: 1rem;
+  border-radius: 22px;
+  padding: 1rem 1.1rem 1.1rem;
+}
+
+.ui-training-register__note-title {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ui-training-register__note-list {
+  margin: 0.65rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+}
+
+.ui-training-register__form-card {
+  border-radius: 22px;
+  padding: clamp(1.1rem, 2.3vw, 1.6rem);
+}
+
+.ui-training-register__form-card.is-submitting {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ui-training-register__form-head {
+  margin-bottom: 1rem;
+}
+
+.ui-training-register__form-k {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ui-fg) 60%, transparent);
+}
+
+.ui-training-register__h2 {
+  margin: 0.35rem 0 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.ui-training-register__muted {
+  margin: 0.4rem 0 0;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+  line-height: 1.6;
+}
+
+.ui-training-register__submit-error,
+.ui-training-register__submit-success {
+  margin: 0.75rem 0 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 16px;
+}
+
+.ui-training-register__submit-error {
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-tertiary) 28%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-tertiary) 12%, transparent);
+}
+
+.ui-training-register__submit-success {
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent);
+}
+
+.ui-training-register__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.ui-training-register__roles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+@media (min-width: 720px) {
+  .ui-training-register__roles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ui-training-register__role {
+  position: relative;
+  cursor: pointer;
+}
+
+.ui-training-register__radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ui-training-register__role-inner {
+  height: 100%;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 70%, transparent);
+  padding: 0.85rem 0.9rem;
+  transition:
+    transform var(--ui-dur-2) var(--ui-ease-out),
+    border-color var(--ui-dur-2) var(--ui-ease-out),
+    background-color var(--ui-dur-2) var(--ui-ease-out);
+}
+
+.ui-training-register__role:hover .ui-training-register__role-inner {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 24%, transparent);
+}
+
+.ui-training-register__role.is-selected .ui-training-register__role-inner {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 46%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 10%, var(--ui-bg));
+}
+
+.ui-training-register__role .t {
+  font-weight: 650;
+}
+.ui-training-register__role .d {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ui-fg) 66%, transparent);
+  line-height: 1.35;
+}
+
+.ui-training-register__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+@media (min-width: 720px) {
+  .ui-training-register__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ui-training-register__field label {
+  display: block;
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--ui-fg) 86%, transparent);
+}
+
+.ui-training-register__sessions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+@media (min-width: 720px) {
+  .ui-training-register__sessions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ui-training-register__session {
+  position: relative;
+  cursor: pointer;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 70%, transparent);
+  padding: 0.85rem 0.9rem;
+  color: color-mix(in srgb, var(--ui-fg) 85%, transparent);
+  transition: border-color var(--ui-dur-2) var(--ui-ease-out), background-color var(--ui-dur-2) var(--ui-ease-out);
+}
+
+.ui-training-register__session.is-selected {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 46%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 10%, var(--ui-bg));
+}
+
+.ui-training-register__foot {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 720px) {
+  .ui-training-register__foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.ui-training-register__consent {
+  margin: 0;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ui-fg) 60%, transparent);
+  max-width: 52ch;
+  line-height: 1.5;
+}
+
+

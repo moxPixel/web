@@ -1,0 +1,143 @@
+<section class="ui-web-trainings">
+  <!-- HERO (same structure as web example) -->
+  <div class="ui-web-trainings__hero-wrap">
+    <div class="ui-web-trainings__hero-spheres" aria-hidden="true">
+      <div class="ui-web-trainings__sphere trainings-sphere-1"></div>
+      <div class="ui-web-trainings__sphere trainings-sphere-2"></div>
+      <div class="ui-web-trainings__sphere trainings-sphere-3"></div>
+    </div>
+
+    <div class="ui-web-trainings__hero-card">
+      <div class="ui-web-trainings__hero-inner">
+        <div class="ui-web-trainings__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-web-trainings__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+
+        <div class="ui-web-trainings__hero-grid">
+          <div class="ui-web-trainings__hero-copy">
+            <div class="ui-web-trainings__badge-row">
+              <span class="ui-web-trainings__badge">Formations</span>
+              <span class="ui-web-trainings__tags">IA • Automatisation • Technologies avancées</span>
+            </div>
+
+            <h1 class="ui-web-trainings__h1">
+              Toutes nos <span class="ui-web-trainings__h1-accent">formations IT & IA</span>
+            </h1>
+
+            <p class="ui-web-trainings__p">
+              Découvrez nos programmes en développement web, IA, data, cybersécurité, cloud et réseaux. Des formations
+              pratiques et accompagnées, adaptées à tous les profils.
+            </p>
+
+            <div class="ui-web-trainings__cta">
+              <button uiButton variant="primary" type="button" [routerLink]="['/contact']">Être rappelé</button>
+              <button uiButton type="button" [routerLink]="['/orientation']">Être guidé dans mon choix</button>
+            </div>
+
+            <div class="ui-web-trainings__timer">
+              <span>Prochaine session dans</span>
+              <span class="ui-web-trainings__timer-accent">{{ globalCountdownText }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTERS (sticky hashtag bar like web example) -->
+  <div class="ui-web-trainings__filters">
+    <div class="ui-web-trainings__filters-inner">
+      <div class="ui-web-trainings__hashtags scrollbar-hide">
+        <ng-container *ngFor="let f of levelFilters">
+          <button type="button" class="ui-web-hashtag" [class.is-active]="selectedLevel === f.value" (click)="toggleLevelFilter(f.value)">
+            {{ f.label }}
+          </button>
+        </ng-container>
+        <span class="ui-web-dot">•</span>
+        <ng-container *ngFor="let f of modeFilters">
+          <button type="button" class="ui-web-hashtag" [class.is-active]="selectedMode === f.value" (click)="toggleModeFilter(f.value)">
+            {{ f.label }}
+          </button>
+        </ng-container>
+        <span class="ui-web-dot">•</span>
+        <ng-container *ngFor="let f of trainingTypeFilters">
+          <button type="button" class="ui-web-hashtag" [class.is-active]="selectedTrainingType === f.value" (click)="toggleTrainingTypeFilter(f.value)">
+            {{ f.label }}
+          </button>
+        </ng-container>
+        <span class="ui-web-dot">•</span>
+        <ng-container *ngFor="let f of audienceTypeFilters">
+          <button type="button" class="ui-web-hashtag" [class.is-active]="selectedAudienceType === f.value" (click)="toggleAudienceTypeFilter(f.value)">
+            {{ f.label }}
+          </button>
+        </ng-container>
+      </div>
+
+      <div class="ui-web-trainings__filters-foot">
+        <span>Vous ne savez pas quelle formation choisir ?</span>
+        <a [routerLink]="['/orientation']" class="ui-web-trainings__orientation-link">Faire le test de positionnement</a>
+        <button uiButton variant="ghost" type="button" class="ui-web-trainings__reset" (click)="clearFilters()">Réinitialiser</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS + GRID (same card structure as web example) -->
+  <div class="ui-web-trainings__results ui-container">
+    <div class="ui-web-trainings__results-head">
+      <div>
+        <h2 class="ui-web-trainings__h2">Formations disponibles</h2>
+        <p class="ui-web-trainings__count">
+          <strong>{{ filteredTrainings.length }}</strong>
+          <span>{{ filteredTrainings.length <= 1 ? ' formation trouvée' : ' formations trouvées' }}</span>
+        </p>
+      </div>
+    </div>
+
+    <ng-container *ngIf="filteredTrainings.length; else noTrainings">
+      <div class="ui-web-trainings__grid">
+        <a *ngFor="let t of filteredTrainings" [routerLink]="['/trainings', t.slug]" class="ui-web-program-card">
+          <div class="ui-web-program-card__image">
+            <img [src]="getImageUrl(t.heroImage)" [alt]="t.shortTitle" loading="lazy" />
+            <div class="ui-web-program-card__gradient"></div>
+          </div>
+
+          <div uiCard class="ui-web-program-card__glass">
+            <div class="ui-web-program-card__head">
+              <span class="ui-web-program-card__badge">{{ t.category }}</span>
+              <span class="ui-web-program-card__level">{{ t.level }}</span>
+            </div>
+            <h3 class="ui-web-program-card__title">{{ t.shortTitle }}</h3>
+            <p class="ui-web-program-card__tagline">{{ t.tagline }}</p>
+
+            <div class="ui-web-program-card__meta">
+              <div><span class="k">Format :</span> {{ t.format }}</div>
+              <div><span class="k">Lieux :</span> {{ t.locationTypes.join(' • ') }}</div>
+              <div class="sub">{{ t.nextSessionHighlight }}</div>
+            </div>
+
+            <div class="ui-web-program-card__foot">
+              <div class="price">{{ t.priceFrom }} € HT</div>
+              <span class="cta">
+                Voir le détail
+                <app-tabler-icon name="arrow-right" [size]="14"></app-tabler-icon>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </ng-container>
+
+    <ng-template #noTrainings>
+      <ng-container *ngIf="hasLoaded">
+      <div uiCard class="ui-web-trainings__empty">
+        <h3>Aucune formation trouvée</h3>
+        <p>Aucune formation ne correspond à vos filtres. Essayez de les modifier.</p>
+        <button uiButton type="button" (click)="clearFilters()">Réinitialiser les filtres</button>
+      </div>
+      </ng-container>
+    </ng-template>
+  </div>
+</section>
+

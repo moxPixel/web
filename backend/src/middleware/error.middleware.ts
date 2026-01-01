@@ -5,6 +5,7 @@ export interface AppError extends Error {
   statusCode?: number;
   status?: string;
   isOperational?: boolean;
+  details?: unknown;
 }
 
 /**
@@ -18,6 +19,7 @@ export const errorHandler = (
 ): void => {
   const statusCode = err.statusCode || 500;
   const status = err.status || 'error';
+  const details = err.details;
 
   logger.error('Error handled by middleware', {
     statusCode,
@@ -26,11 +28,13 @@ export const errorHandler = (
     stack: err.stack,
     url: req.url,
     method: req.method,
+    ...(details ? { details } : {}),
   });
 
   res.status(statusCode).json({
     status,
     message: err.message || 'Internal server error',
+    ...(statusCode < 500 && details ? { details } : {}),
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 };

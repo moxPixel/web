@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+@import './backoffice-trainings.page.css';
+
+.ui-bo-row--sessions .ui-bo-row__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+

@@ -1,0 +1,51 @@
+<nav class="ui-bo-bottom-nav" aria-label="Backoffice navigation">
+  <div #navContainer class="ui-bo-bottom-nav__container" role="navigation">
+    <a routerLink="/backoffice/trainings" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Formations">
+      <app-tabler-icon name="stack" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__badge" *ngIf="(badges$ | async)?.trainingsDraft as n" [class.is-hidden]="n <= 0">{{ badgeLabel(n) }}</span>
+      <span class="ui-bo-bottom-nav__sr">Formations</span>
+    </a>
+
+    <a routerLink="/backoffice/sessions" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Sessions">
+      <app-tabler-icon name="calendar" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__sr">Sessions</span>
+    </a>
+
+    <a routerLink="/backoffice/events" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Événements">
+      <app-tabler-icon name="calendar-event" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__badge" *ngIf="(badges$ | async)?.eventsDraft as n" [class.is-hidden]="n <= 0">{{ badgeLabel(n) }}</span>
+      <span class="ui-bo-bottom-nav__sr">Événements</span>
+    </a>
+
+    <a routerLink="/backoffice/certifications" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Certifications">
+      <app-tabler-icon name="star" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__badge" *ngIf="(badges$ | async)?.certificationsInactive as n" [class.is-hidden]="n <= 0">{{ badgeLabel(n) }}</span>
+      <span class="ui-bo-bottom-nav__sr">Certifications</span>
+    </a>
+
+    <a routerLink="/backoffice/users" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Users">
+      <app-tabler-icon name="users" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__badge" *ngIf="(badges$ | async)?.usersPending as n" [class.is-hidden]="n <= 0">{{ badgeLabel(n) }}</span>
+      <span class="ui-bo-bottom-nav__sr">Users</span>
+    </a>
+
+    <a routerLink="/backoffice/contacts" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Contacts">
+      <app-tabler-icon name="mail" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__badge" *ngIf="(badges$ | async)?.contactsToProcess as n" [class.is-hidden]="n <= 0">{{ badgeLabel(n) }}</span>
+      <span class="ui-bo-bottom-nav__sr">Contacts</span>
+    </a>
+
+    <a routerLink="/backoffice/enrollments" routerLinkActive="is-active" class="ui-bo-bottom-nav__item" aria-label="Inscriptions">
+      <app-tabler-icon name="checklist" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__badge" *ngIf="(badges$ | async)?.enrollmentsToProcess as n" [class.is-hidden]="n <= 0">{{ badgeLabel(n) }}</span>
+      <span class="ui-bo-bottom-nav__sr">Inscriptions</span>
+    </a>
+
+    <a routerLink="/profile" class="ui-bo-bottom-nav__item" aria-label="Profil">
+      <app-tabler-icon name="user" [size]="18"></app-tabler-icon>
+      <span class="ui-bo-bottom-nav__sr">Profil</span>
+    </a>
+  </div>
+</nav>
+
+

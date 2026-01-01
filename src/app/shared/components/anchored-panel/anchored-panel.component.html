@@ -1,0 +1,15 @@
+<!-- Panel -->
+<div
+  *ngIf="open"
+  #panelEl
+  class="ui-anchored-panel__panel"
+  [class]="panelClass ? 'ui-anchored-panel__panel ' + panelClass : 'ui-anchored-panel__panel'"
+  [style.top.px]="top"
+  [style.left.px]="left"
+  [style.width.px]="width"
+  [style.transform]="'translate3d(0, 0, 0)'"
+  role="dialog"
+  aria-modal="true"
+>
+  <ng-content></ng-content>
+</div>

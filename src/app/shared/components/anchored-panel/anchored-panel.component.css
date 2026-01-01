@@ -1,0 +1,45 @@
+.ui-anchored-panel__panel {
+  position: fixed;
+  z-index: 95;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--ui-glass-bg-strong, #ffffff) 95%, transparent);
+  border: var(--ui-hairline, 1px) solid color-mix(in srgb, var(--ui-glass-border-strong, rgba(0, 0, 0, 0.1)) 80%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur, 16px)) saturate(var(--ui-glass-sat, 120%));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur, 16px)) saturate(var(--ui-glass-sat, 120%));
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    0 0 0 1px color-mix(in srgb, var(--ui-nebula-accent, #3b82f6) 10%, transparent);
+  animation: ui-anchored-panel-slide-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top left;
+  overflow: hidden;
+  /* Ensure panel is always visible */
+  opacity: 1 !important;
+  /* Force GPU acceleration and prevent layout shifts */
+  will-change: transform;
+  /* Smooth position updates without transitions (prevents jumps) */
+  transition: none;
+}
+
+/* Variant: Mail composer sheet (cleaner, scrollable, less “popover-y”) */
+.ui-anchored-panel__panel.ui-anchored-panel__panel--sheet,
+.ui-anchored-panel__panel.ui-anchored-panel__panel--mail {
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--ui-glass-bg) 86%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ui-border) 60%, transparent);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.45),
+    0 0 0 1px color-mix(in srgb, var(--ui-nebula-accent) 10%, transparent);
+  overflow: auto;
+  max-height: min(82vh, 860px);
+}
+
+@keyframes ui-anchored-panel-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

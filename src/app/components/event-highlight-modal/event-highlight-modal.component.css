@@ -1,0 +1,241 @@
+/* ============================================
+   EVENT HIGHLIGHT MODAL - Compact card style
+   ============================================ */
+
+.ui-ehm {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 80;
+  max-width: min(620px, calc(100vw - 2.5rem));
+  pointer-events: none;
+}
+
+.ui-ehm--visible {
+  pointer-events: auto;
+}
+
+.ui-ehm--hiding {
+  pointer-events: none;
+}
+
+.ui-ehm__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: var(--ui-radius-xl);
+  border: var(--ui-hairline) solid var(--ui-glass-border-strong);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 92%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+  /* Match notifications: animate the element that owns backdrop-filter to avoid delayed blur paint */
+  transform: translate3d(120%, 0, 0);
+  opacity: 0;
+  will-change: transform, opacity, backdrop-filter;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--ui-dur-3) var(--ui-ease-out),
+    background var(--ui-dur-3) var(--ui-ease-out),
+    box-shadow var(--ui-dur-3) var(--ui-ease-out);
+}
+
+.ui-ehm--visible .ui-ehm__card {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.ui-ehm--hiding .ui-ehm__card {
+  transform: translate3d(120%, 0, 0);
+  opacity: 0;
+}
+
+.ui-ehm__card:hover {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 96%, transparent);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.5);
+}
+
+.ui-ehm__close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 10;
+}
+
+.ui-ehm__grid {
+  display: contents;
+}
+
+.ui-ehm__media {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.ui-ehm__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.ui-ehm__ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 26%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-nebula-secondary) 12%, transparent) inset;
+}
+
+.ui-ehm__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ui-ehm__img--bg {
+  position: absolute;
+  inset: -18px;
+  width: calc(100% + 36px);
+  height: calc(100% + 36px);
+  filter: blur(22px) saturate(1.15) contrast(1.05);
+  opacity: 0.55;
+  transform: scale(1.15);
+}
+
+.ui-ehm__img--main {
+  position: relative;
+  filter: saturate(1.08) contrast(1.03);
+  transform: scale(1.03);
+}
+
+.ui-ehm__badge {
+  position: absolute;
+  left: 0.85rem;
+  top: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 650;
+  border: var(--ui-hairline) solid var(--ui-glass-border);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 88%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  color: color-mix(in srgb, var(--ui-fg) 82%, transparent);
+}
+
+.ui-ehm__badge.is-highlight {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 28%, transparent);
+  color: color-mix(in srgb, var(--ui-nebula-accent) 78%, var(--ui-fg));
+}
+
+.ui-ehm__content {
+  display: grid;
+  gap: 0.6rem;
+  padding-right: 1.5rem;
+}
+
+.ui-ehm__kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--ui-fg) 55%, transparent);
+  letter-spacing: 0.15px;
+  text-transform: uppercase;
+}
+
+.ui-ehm__title {
+  font-size: 1.05rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--ui-fg);
+  line-height: 1.25;
+}
+
+.ui-ehm__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+  font-size: 0.9rem;
+}
+
+.ui-ehm__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ui-ehm__meta-time {
+  opacity: 0.9;
+}
+
+.ui-ehm__excerpt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ui-fg) 78%, transparent);
+}
+
+.ui-ehm__actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.ui-ehm__btn-primary {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 640px) {
+  .ui-ehm {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
+  }
+
+  .ui-ehm__card {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    transform: translate3d(0, 100%, 0);
+  }
+
+  .ui-ehm__content {
+    padding-right: 0;
+  }
+
+  .ui-ehm__media {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 640px) {
+  .ui-ehm--visible .ui-ehm__card {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .ui-ehm--hiding .ui-ehm__card {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@media (max-width: 420px) {
+  .ui-ehm__title {
+    font-size: 1rem;
+  }
+}
+
+

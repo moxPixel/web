@@ -1,0 +1,234 @@
+<section class="ui-bo-form">
+  <div class="ui-bo-form__hero ui-container">
+    <div class="ui-bo-form__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-form__back ui-icon-button" (click)="back()">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-form__head">
+      <div class="ui-bo-form__pill">Backoffice</div>
+      <div class="ui-bo-form__head-row">
+        <div>
+          <h1 class="ui-bo-form__h1">{{ isEdit ? 'Modifier la session' : 'Nouvelle session' }}</h1>
+          <p class="ui-bo-form__p">Sessions alignées avec `web/` (statut, highlight, capacité…).</p>
+        </div>
+        <div class="ui-bo-form__head-actions">
+          <button uiButton variant="primary" type="button" class="ui-bo-form__save" (click)="submit()" [loading]="saving" [disabled]="saving || !hydrated">
+            <span>Enregistrer</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div>
+      <form class="ui-bo-form__form" [formGroup]="form">
+        <!-- Section: Informations générales -->
+        <div uiCard class="ui-bo-form__card">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Informations générales</h2>
+              <p class="ui-bo-form__muted">Formation, dates et modalités de la session.</p>
+            </div>
+          </div>
+
+          <!-- Formation -->
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="graduation-cap" [size]="12"></app-tabler-icon>
+              <span>Formation</span>
+            </h4>
+            <div class="ui-bo-form__field ui-bo-form__field--full">
+              <label class="ui-bo-form__label" for="trainingId">Formation *</label>
+              <input
+                uiInput
+                id="trainingId"
+                type="text"
+                formControlName="trainingId"
+                placeholder="Collez l'ID (ou choisissez dans la liste)…"
+                list="bo-training-ids"
+              />
+              <datalist id="bo-training-ids">
+                <option *ngFor="let t of trainingsOptions" [value]="t.id">{{ t.title }}</option>
+              </datalist>
+              <div class="ui-bo-form__field-hint" *ngIf="!trainingsOptions.length">
+                Liste non disponible — vous pouvez renseigner l'ID manuellement
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="calendar" [size]="12"></app-tabler-icon>
+              <span>Dates</span>
+            </h4>
+            <div class="ui-bo-form__grid">
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="startDate">
+                  <app-tabler-icon name="calendar-event" [size]="12"></app-tabler-icon>
+                  <span>Date et heure de début *</span>
+                </label>
+                <input uiInput id="startDate" type="datetime-local" formControlName="startDate" />
+              </div>
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="endDate">
+                  <app-tabler-icon name="calendar-off" [size]="12"></app-tabler-icon>
+                  <span>Date et heure de fin *</span>
+                </label>
+                <input uiInput id="endDate" type="datetime-local" formControlName="endDate" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Modalités -->
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="map-pin" [size]="12"></app-tabler-icon>
+              <span>Modalités</span>
+            </h4>
+            <div class="ui-bo-form__field ui-bo-form__field--full">
+              <label class="ui-bo-form__label">Type de lieu</label>
+              <div class="ui-bo-form__location-types">
+                <label class="ui-bo-form__location-option" [class.is-selected]="locationType === LocationType.DISTANCIEL">
+                  <input 
+                    type="radio" 
+                    [value]="LocationType.DISTANCIEL"
+                    formControlName="locationType"
+                    (change)="toggleLocationType(LocationType.DISTANCIEL)"
+                  />
+                  <span>Distanciel</span>
+                </label>
+                <label class="ui-bo-form__location-option" [class.is-selected]="locationType === LocationType.PRESENTIEL">
+                  <input 
+                    type="radio" 
+                    [value]="LocationType.PRESENTIEL"
+                    formControlName="locationType"
+                    (change)="toggleLocationType(LocationType.PRESENTIEL)"
+                  />
+                  <span>Présentiel</span>
+                </label>
+                <label class="ui-bo-form__location-option" [class.is-selected]="locationType === LocationType.HYBRIDE">
+                  <input 
+                    type="radio" 
+                    [value]="LocationType.HYBRIDE"
+                    formControlName="locationType"
+                    (change)="toggleLocationType(LocationType.HYBRIDE)"
+                  />
+                  <span>Hybride</span>
+                </label>
+              </div>
+            </div>
+            <div class="ui-bo-form__field ui-bo-form__field--full" *ngIf="showLocationField">
+              <label class="ui-bo-form__label" for="location">
+                <app-tabler-icon name="map-pin" [size]="12"></app-tabler-icon>
+                <span>Lieu</span>
+              </label>
+              <input 
+                uiInput 
+                id="location" 
+                type="text" 
+                formControlName="location" 
+                placeholder="Ex: Paris, 123 Rue de la République" 
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Capacité et tarifs -->
+        <div uiCard class="ui-bo-form__card">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Capacité et tarifs</h2>
+              <p class="ui-bo-form__muted">Places disponibles et prix de la session.</p>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="users" [size]="12"></app-tabler-icon>
+              <span>Capacité</span>
+            </h4>
+            <div class="ui-bo-form__grid">
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="seats">
+                  <app-tabler-icon name="users" [size]="12"></app-tabler-icon>
+                  <span>Nombre de places</span>
+                </label>
+                <input uiInput id="seats" type="number" formControlName="seats" placeholder="Ex: 20" min="1" />
+              </div>
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="seatsAvailable">
+                  <app-tabler-icon name="users" [size]="12"></app-tabler-icon>
+                  <span>Places restantes</span>
+                </label>
+                <input uiInput id="seatsAvailable" type="number" formControlName="seatsAvailable" placeholder="Ex: 8" min="0" />
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="currency-euro" [size]="12"></app-tabler-icon>
+              <span>Tarif</span>
+            </h4>
+            <div class="ui-bo-form__field">
+              <label class="ui-bo-form__label" for="price">
+                <app-tabler-icon name="currency-euro" [size]="12"></app-tabler-icon>
+                <span>Prix</span>
+              </label>
+              <input uiInput id="price" type="number" formControlName="price" placeholder="Ex: 2400" min="0" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Statut et options -->
+        <div uiCard class="ui-bo-form__card">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Statut et options</h2>
+              <p class="ui-bo-form__muted">Statut de la session et options de mise en avant.</p>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="circle" [size]="12"></app-tabler-icon>
+              <span>Statut</span>
+            </h4>
+            <div class="ui-bo-form__field">
+              <label class="ui-bo-form__label" for="status">Statut</label>
+              <app-ui-choice-group
+                formControlName="status"
+                [options]="statusOptions"
+                ariaLabel="Statut"
+                size="sm"
+              ></app-ui-choice-group>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="star" [size]="12"></app-tabler-icon>
+              <span>Options</span>
+            </h4>
+            <div class="ui-bo-form__field ui-bo-form__field--full">
+              <label class="ui-bo-form__check">
+                <input type="checkbox" formControlName="highlight" />
+                <span>
+                  <app-tabler-icon name="star" [size]="14"></app-tabler-icon>
+                  Mettre en avant cette session
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+

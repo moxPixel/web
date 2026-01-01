@@ -1,0 +1,180 @@
+<section class="ui-alternance-page">
+  <div class="ui-alternance-page__hero-wrap">
+    <div class="ui-alternance-page__hero-spheres" aria-hidden="true">
+      <div class="ui-alternance-page__sphere alternance-sphere-1"></div>
+      <div class="ui-alternance-page__sphere alternance-sphere-2"></div>
+      <div class="ui-alternance-page__sphere alternance-sphere-3"></div>
+    </div>
+    <div class="ui-alternance-page__hero-card">
+      <div class="ui-alternance-page__hero-inner">
+        <div class="ui-alternance-page__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-alternance-page__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+        <div class="ui-alternance-page__hero-grid">
+          <div class="ui-alternance-page__hero-copy">
+            <div class="ui-alternance-page__badge-row">
+              <span class="ui-alternance-page__badge">Alternance — Votre tremplin</span>
+            </div>
+            <h1 class="ui-alternance-page__h1">
+              Apprendre et travailler : votre <span class="ui-alternance-page__h1-accent">passeport vers l'emploi</span>
+            </h1>
+            <p class="ui-alternance-page__p">
+              L'alternance chez Unlock, c'est le meilleur des deux mondes : vous apprenez les compétences qui font la différence
+              (<strong>développement</strong>, <strong>data & IA</strong>, <strong>cybersécurité</strong>, <strong>cloud</strong>),
+              et en même temps vous travaillez sur de vrais projets en entreprise. Vous êtes payé, accompagné, et vous construisez votre expérience pro.
+            </p>
+            <div class="ui-alternance-page__cta-row">
+              <a routerLink="/contact" uiButton variant="primary" class="ui-alternance-page__cta">
+                <span>Parler à un conseiller</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+              <a routerLink="/trainings" uiButton variant="outline" class="ui-alternance-page__cta">
+                <span>Explorer les formations</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+            </div>
+          </div>
+          <div class="ui-alternance-page__hero-stats">
+            <div uiCard class="ui-alternance-page__stat-card">
+              <div class="ui-alternance-page__stat-icon">
+                <app-tabler-icon name="graduation-cap" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-alternance-page__stat-title">Contrat d'apprentissage</p>
+              <p class="ui-alternance-page__stat-text">Statut salarié, protection sociale, et formation financée. Vous apprenez et vous gagnez votre vie.</p>
+            </div>
+            <div uiCard class="ui-alternance-page__stat-card">
+              <div class="ui-alternance-page__stat-icon">
+                <app-tabler-icon name="circle-check" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-alternance-page__stat-title">Contrat de professionnalisation</p>
+              <p class="ui-alternance-page__stat-text">Pour les reconversions et montées en compétences, avec prise en charge adaptée à votre situation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-alternance-page__body ui-container">
+    <div class="ui-alternance-page__layout">
+      <div class="ui-alternance-page__main">
+        <section uiCard class="ui-alternance-page__block">
+          <h2>
+            <app-tabler-icon name="info-circle" [size]="18" class="ui-alternance-page__h2-icon"></app-tabler-icon>
+            <span>Comment ça marche, concrètement ?</span>
+          </h2>
+          <p>
+            L'alternance, c'est simple : vous alternez entre des périodes à l'école (où vous apprenez les bases et les techniques)
+            et des périodes en entreprise (où vous mettez tout ça en pratique sur de vrais projets). Vous êtes salarié, vous avez un contrat,
+            et on vous accompagne tout au long du parcours.
+          </p>
+          <ul>
+            <li>Des cours structurés, avec des formateurs qui connaissent le terrain.</li>
+            <li>Du temps en entreprise pour apprendre le métier en conditions réelles.</li>
+            <li>Un suivi à trois : vous, votre tuteur en entreprise, et notre équipe pédagogique.</li>
+          </ul>
+        </section>
+
+        <section uiCard class="ui-alternance-page__block">
+          <h2>
+            <app-tabler-icon name="user" [size]="18" class="ui-alternance-page__h2-icon"></app-tabler-icon>
+            <span>C'est pour qui ?</span>
+          </h2>
+          <p>
+            L'alternance chez Unlock, c'est ouvert à plein de profils différents. Que vous soyez étudiant, en reconversion, déjà en poste ou à la recherche d'un emploi, il y a une solution pour vous :
+          </p>
+          <ul>
+            <li>Étudiants qui veulent décrocher un diplôme tout en travaillant.</li>
+            <li>Personnes en reconversion qui veulent se lancer dans la tech.</li>
+            <li>Salariés qui veulent évoluer ou changer de poste en interne.</li>
+            <li>Demandeurs d'emploi accompagnés par Pôle emploi, mission locale, etc.</li>
+          </ul>
+          <p class="ui-alternance-page__note">
+            Les conditions d'âge et de niveau varient selon le type de contrat. On vous explique tout lors d'un premier échange, pas de panique !
+          </p>
+        </section>
+
+        <section uiCard class="ui-alternance-page__block">
+          <h2>
+            <app-tabler-icon name="briefcase" [size]="18" class="ui-alternance-page__h2-icon"></app-tabler-icon>
+            <span>Ce que vous ferez en entreprise</span>
+          </h2>
+          <p>Vos missions en entreprise sont directement liées à votre formation. Quelques exemples :</p>
+          <ul>
+            <li><strong>Développement web & mobile</strong> : créer des fonctionnalités, corriger des bugs, intégrer des API.</li>
+            <li><strong>Data & IA</strong> : nettoyer des données, automatiser des tâches, créer des modèles prédictifs.</li>
+            <li><strong>Cybersécurité</strong> : auditer des systèmes, renforcer la sécurité, former les équipes.</li>
+            <li><strong>Cloud & DevOps</strong> : déployer des environnements, automatiser des pipelines, surveiller les infrastructures.</li>
+            <li><strong>Réseaux & systèmes</strong> : administrer des serveurs, gérer des réseaux, faire évoluer l'infrastructure.</li>
+          </ul>
+        </section>
+
+        <section uiCard class="ui-alternance-page__block">
+          <h2>
+            <app-tabler-icon name="currency-euro" [size]="18" class="ui-alternance-page__h2-icon"></app-tabler-icon>
+            <span>Combien vous gagnez et qui paie quoi ?</span>
+          </h2>
+          <p>
+            En alternance, vous êtes salarié, donc vous êtes payé tous les mois. Le montant dépend de votre âge, de votre niveau de formation,
+            et du type de contrat. Mais en gros :
+          </p>
+          <ul>
+            <li><strong>Rémunération</strong> : calculée selon les grilles légales (entre 27% et 100% du SMIC selon votre profil).</li>
+            <li><strong>Formation gratuite</strong> : les frais de formation sont pris en charge par l'entreprise via son OPCO.</li>
+            <li><strong>Protection sociale</strong> : vous avez droit à tout (sécu, congés payés, mutuelle, retraite).</li>
+          </ul>
+        </section>
+
+        <section uiCard class="ui-alternance-page__block">
+          <h2>
+            <app-tabler-icon name="circle-check" [size]="18" class="ui-alternance-page__h2-icon"></app-tabler-icon>
+            <span>Ce qu'on vous garantit</span>
+          </h2>
+          <ul>
+            <li>Des cours alignés sur ce que les entreprises recherchent vraiment.</li>
+            <li>Des formateurs qui exercent le métier et qui savent de quoi ils parlent.</li>
+            <li>Des projets concrets, pas juste de la théorie.</li>
+            <li>Un suivi régulier entre vous, votre tuteur et notre équipe.</li>
+            <li><strong>EVA</strong>, votre assistant IA, pour vous aider à réviser, comprendre et avancer plus vite.</li>
+          </ul>
+        </section>
+
+        <section uiCard class="ui-alternance-page__notice">
+          <h3>Les petites lignes (mais importantes)</h3>
+          <p>
+            Les infos sur cette page sont là pour vous donner une idée générale de comment marche l'alternance chez Unlock.
+            Mais attention, ce n'est pas un document contractuel : les détails précis (salaire, rythme, durée, prise en charge)
+            sont définis dans les contrats officiels signés entre vous, l'entreprise, et nous.
+          </p>
+          <p>
+            Chaque situation est unique, donc on vous recommande de discuter avec nos conseillers pour bien comprendre ce qui s'applique à votre cas.
+            Les règles peuvent évoluer (lois, conventions collectives, accords de branche), donc on reste vigilants pour vous tenir informés.
+          </p>
+        </section>
+      </div>
+
+      <aside class="ui-alternance-page__side" aria-label="Résumé alternance">
+        <div uiCard class="ui-alternance-page__side-card">
+          <h3 class="ui-alternance-page__side-title">En résumé</h3>
+          <ul class="ui-alternance-page__side-list">
+            <li><strong>Statut</strong> : salarié (payé tous les mois)</li>
+            <li><strong>Financement</strong> : formation gratuite, prise en charge par l'OPCO</li>
+            <li><strong>Suivi</strong> : école + tuteur + vous</li>
+            <li><strong>Pédagogie</strong> : projets concrets + coaching + EVA</li>
+          </ul>
+          <div class="ui-alternance-page__side-cta">
+            <a routerLink="/contact" uiButton variant="primary" class="ui-alternance-page__side-btn">
+              <span>Discuter avec nous</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+            <a routerLink="/trainings" uiButton variant="outline" class="ui-alternance-page__side-btn">
+              <span>Voir les formations</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

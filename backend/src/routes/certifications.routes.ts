@@ -3,6 +3,7 @@ import certificationsController from '../controllers/certifications.controller';
 import { body, param } from 'express-validator';
 import { validate } from '../middleware/validation.middleware';
 import { createLimiter } from '../middleware/rate-limit.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -18,11 +19,11 @@ const idParamValidation = [
   validate,
 ];
 
-router.post('/', createLimiter, createValidation, certificationsController.create.bind(certificationsController));
+router.post('/', authenticate, requireAdmin, createLimiter, createValidation, certificationsController.create.bind(certificationsController));
 router.get('/', certificationsController.findAll.bind(certificationsController));
 router.get('/:id', idParamValidation, certificationsController.findById.bind(certificationsController));
-router.put('/:id', idParamValidation, certificationsController.update.bind(certificationsController));
-router.delete('/:id', idParamValidation, certificationsController.delete.bind(certificationsController));
+router.put('/:id', authenticate, requireAdmin, idParamValidation, certificationsController.update.bind(certificationsController));
+router.delete('/:id', authenticate, requireAdmin, idParamValidation, certificationsController.delete.bind(certificationsController));
 
 export default router;
 

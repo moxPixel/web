@@ -1,0 +1,17 @@
+<svg
+  [attr.width]="size"
+  [attr.height]="size"
+  [attr.viewBox]="def().viewBox"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  stroke="currentColor"
+  [attr.stroke-width]="stroke"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path *ngFor="let d of def().paths" [attr.d]="d"></path>
+</svg>
+
+

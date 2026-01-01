@@ -86,7 +86,10 @@ const listValidation = [
 // Route publique : créer un contact
 router.post('/', createValidation, validate, contactsController.create.bind(contactsController));
 
-// Routes protégées : nécessitent une authentification admin
+// Authenticated user: voir ses propres messages envoyés (par email)
+router.get('/mine', authenticate, contactsController.findMine.bind(contactsController));
+
+// Routes admin
 router.use(authenticate);
 router.use(requireAdmin);
 
@@ -94,13 +97,14 @@ router.use(requireAdmin);
 router.get('/', contactsController.list.bind(contactsController));
 
 // Obtenir un contact par ID
-router.get('/:id', listValidation, validate, contactsController.getById.bind(contactsController));
+// IMPORTANT: constrain :id to UUID so it never captures routes like "/mine"
+router.get('/:id([0-9a-fA-F-]{36})', listValidation, validate, contactsController.getById.bind(contactsController));
 
 // Mettre à jour un contact
-router.patch('/:id', updateValidation, validate, contactsController.update.bind(contactsController));
+router.patch('/:id([0-9a-fA-F-]{36})', updateValidation, validate, contactsController.update.bind(contactsController));
 
 // Supprimer un contact
-router.delete('/:id', listValidation, validate, contactsController.delete.bind(contactsController));
+router.delete('/:id([0-9a-fA-F-]{36})', listValidation, validate, contactsController.delete.bind(contactsController));
 
 export default router;
 

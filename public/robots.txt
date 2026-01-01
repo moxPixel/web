@@ -1,39 +1,13 @@
-# robots.txt pour Unlock Formation
-# https://www.unlock-technologies.fr/robots.txt
-
 User-agent: *
 Allow: /
 
-# Bloquer les dossiers techniques et privés
-Disallow: /bo/
-Disallow: /account/
+Disallow: /backoffice
+Disallow: /profile
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
 Disallow: /api/
-Disallow: /_next/
-Disallow: /node_modules/
 
-# Autoriser les ressources importantes
-Allow: /assets/
-Allow: /favicon.ico
+Sitemap: https://www.unlock-formation.fr/sitemap.xml
 
-# Sitemap
-Sitemap: https://www.unlock-technologies.fr/sitemap.xml
 
-# Crawl-delay pour éviter la surcharge (optionnel)
-# Crawl-delay: 1
-
-# User-agent spécifiques
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-# Bloquer les bots indésirables
-User-agent: AhrefsBot
-Crawl-delay: 10
-
-User-agent: SemrushBot
-Crawl-delay: 10
-
-User-agent: MJ12bot
-Crawl-delay: 10

@@ -1,0 +1,37 @@
+<div class="ui-toasts" aria-live="polite" aria-label="Notifications">
+  <ng-container *ngIf="notifications$ | async as items">
+    <div class="ui-toasts__stack">
+      <div
+        uiCard
+        [padded]="false"
+        class="ui-toast ui-toast--{{ n.type }} ui-toast--{{ n.state }}"
+        *ngFor="let n of items; trackBy: trackById"
+        role="status"
+      >
+        <div class="ui-toast__inner">
+          <div class="ui-toast__icon" aria-hidden="true">
+            <app-tabler-icon [name]="iconFor(n.type)" [size]="18"></app-tabler-icon>
+          </div>
+
+          <div class="ui-toast__copy">
+            <div class="ui-toast__title" *ngIf="n.title">{{ n.title }}</div>
+            <div class="ui-toast__msg">{{ n.message }}</div>
+          </div>
+
+          <button
+            uiButton
+            variant="ghost"
+            type="button"
+            class="ui-toast__close ui-icon-button"
+            (click)="dismiss(n.id)"
+            aria-label="Fermer"
+          >
+            <app-tabler-icon name="x" [size]="16"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+

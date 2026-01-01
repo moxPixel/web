@@ -11,8 +11,12 @@ import { logger } from '../logger/logger';
 import { createError } from '../middleware/error.middleware';
 import Training from '../models/Training';
 import franceCompetencesService from '../france-competences/fc.service';
+import aiCache from './cache/ai-cache.service';
+import { z } from 'zod';
 
 export class AiTrainingService {
+  private readonly HOURS_PER_DAY_DEFAULT = 7;
+
   /**
    * Générer une formation complète via IA
    */
@@ -22,6 +26,21 @@ export class AiTrainingService {
     }
 
     try {
+      const cacheKey = aiCache.generateKey('generate-training', input.trainingTitle, 'v2', {
+        rncpCode: input.rncpCode || null,
+        rncpTitle: input.rncpTitle || null,
+        durationDays: input.durationDays || null,
+        totalHours: input.totalHours || null,
+        level: input.level || null,
+        audienceType: input.audienceType || null,
+      });
+
+      const cached = aiCache.get<AiGeneratedTraining>(cacheKey);
+      if (cached) {
+        logger.info(`✅ AI training cache hit for: "${input.trainingTitle}"`);
+        return cached;
+      }
+
       // 1. Enrichir avec RNCP si code fourni (optionnel pour l'instant)
       const rncpData = await this.enrichWithRncp(input.rncpCode, input.rncpTitle);
 
@@ -51,22 +70,33 @@ export class AiTrainingService {
         {
           model: 'gpt-4o-mini',
           temperature: 0.2,
-          maxTokens: 4000,
+          maxTokens: 3000,
           responseFormat: { type: 'json_object' },
         }
       );
 
       // 5. Parser et valider la réponse JSON
-      let generated: any;
-      try {
-        generated = JSON.parse(response.content);
-      } catch (parseError) {
-        logger.error('Failed to parse AI response as JSON:', response.content);
+      let generated: any = this.safeParseJson(response.content);
+      if (!generated) {
+        logger.warn('AI returned invalid JSON, attempting repair...');
+        generated = await this.repairJsonWithAi(systemPrompt, userPrompt, response.content);
+      }
+      if (!generated) {
+        logger.error('Failed to parse/repair AI JSON response.');
         throw createError('Invalid JSON response from AI', 500);
+      }
+
+      // 5bis. Validation stricte (on tolère et on “clean” en fallback)
+      const TrainingSchema = this.getGeneratedTrainingSchema();
+      const strictParsed = TrainingSchema.safeParse(generated);
+      if (!strictParsed.success) {
+        logger.warn('AI training JSON does not match schema, cleaning output.');
       }
 
       // 6. Valider et nettoyer les données générées
       const validated = this.validateAndCleanGeneratedTraining(generated, input);
+      this.normalizeDurations(validated, input);
+      this.normalizeModules(validated);
 
       // 7. Calculer le prix si non fourni ou invalide
       if (!validated.priceFrom || validated.priceFrom <= 0) {
@@ -93,6 +123,7 @@ export class AiTrainingService {
 
       logger.info(`✅ Training generated successfully: ${validated.title}`);
 
+      aiCache.set(cacheKey, validated);
       return validated;
     } catch (error: any) {
       logger.error('Error generating training with AI:', error);
@@ -187,6 +218,7 @@ export class AiTrainingService {
       priceFrom: typeof generated.priceFrom === 'number' ? generated.priceFrom : undefined,
       currency: 'EUR',
       nextSessionHighlight: this.sanitizeString(generated.nextSessionHighlight),
+      fundingOptions: this.sanitizeArray(generated.fundingOptions, 3, 6),
       heroImage: '', // FORCE EMPTY
       watermarkLogo: '', // FORCE EMPTY
       status: 'draft',
@@ -194,6 +226,89 @@ export class AiTrainingService {
     };
 
     return validated;
+  }
+
+  private getGeneratedTrainingSchema(): z.ZodType<AiGeneratedTraining> {
+    const LevelEnum = z.enum(['initiation', 'intermediaire', 'avance', 'expert']);
+    const TrainingTypeEnum = z.enum(['bootcamp', 'alternance', 'diplomante', 'certifiante']);
+    const AudienceEnum = z.enum(['entreprise', 'monter-en-competence', 'reconversion']);
+    const LocationEnum = z.enum(['distanciel', 'presentiel', 'hybride']);
+
+    return z.object({
+      title: z.string().min(5),
+      shortTitle: z.string().min(2),
+      slug: z.string().min(2),
+      category: z.string().optional(),
+      level: LevelEnum,
+      trainingType: TrainingTypeEnum,
+      audienceType: AudienceEnum,
+      tagline: z.string().optional(),
+      description: z.string().optional(),
+      objectives: z.array(z.string()).optional(),
+      targetAudience: z.array(z.string()).optional(),
+      prerequisites: z.array(z.string()).optional(),
+      outcomes: z.array(z.string()).optional(),
+      format: z.string().optional(),
+      durationDays: z.number().int().positive().optional(),
+      durationHours: z.number().int().positive().optional(),
+      durationLabel: z.string().optional(),
+      pace: z.string().optional(),
+      locationTypes: z.array(LocationEnum).optional(),
+      priceFrom: z.number().positive().optional(),
+      currency: z.string().optional(),
+      nextSessionHighlight: z.string().optional(),
+      fundingOptions: z.array(z.string().min(1)).optional(),
+      heroImage: z.string().optional(),
+      watermarkLogo: z.string().optional(),
+      status: z.enum(['draft', 'published', 'archived']).optional(),
+      modules: z.array(z.object({
+        title: z.string().min(2),
+        durationHours: z.number().int().positive().optional(),
+        topics: z.array(z.string().min(1)).optional(),
+        order: z.number().int().nonnegative().optional(),
+      })).optional(),
+    }).strict();
+  }
+
+  private safeParseJson(content: string): any | null {
+    try {
+      return JSON.parse(content);
+    } catch {
+      return null;
+    }
+  }
+
+  private async repairJsonWithAi(systemPrompt: string, userPrompt: string, badJson: string): Promise<any | null> {
+    try {
+      const repair = await openaiClient.chatCompletionWithRetry(
+        [
+          { role: 'system', content: systemPrompt },
+          {
+            role: 'user',
+            content: [
+              userPrompt,
+              '',
+              '---',
+              'Le JSON ci-dessous est invalide ou non conforme.',
+              'Répare-le et renvoie UNIQUEMENT un JSON valide respectant le schéma demandé (mêmes clés).',
+              'Aucun texte hors JSON.',
+              '',
+              badJson,
+            ].join('\n'),
+          },
+        ],
+        {
+          model: 'gpt-4o-mini',
+          temperature: 0.0,
+          maxTokens: 1200,
+          responseFormat: { type: 'json_object' },
+        }
+      );
+      return this.safeParseJson(repair.content);
+    } catch (e) {
+      logger.warn('AI JSON repair failed.');
+      return null;
+    }
   }
 
   /**
@@ -264,10 +379,135 @@ export class AiTrainingService {
       .map((module, index) => ({
         title: this.sanitizeString(module.title) || `Module ${index + 1}`,
         durationHours: typeof module.durationHours === 'number' ? module.durationHours : undefined,
-        topics: this.sanitizeArray(module.topics || [], 0, 10),
+        topics: this.sanitizeArray(module.topics || [], 3, 6),
         order: index,
       }))
       .filter(module => module.title);
+  }
+
+  private normalizeDurations(validated: AiGeneratedTraining, input: AiGenerateTrainingInput): void {
+    const days = validated.durationDays ?? input.durationDays ?? undefined;
+    const hours = validated.durationHours ?? input.totalHours ?? undefined;
+
+    if (!days && !hours) {
+      return;
+    }
+
+    if (!validated.durationDays && hours) {
+      validated.durationDays = Math.max(1, Math.ceil(hours / this.HOURS_PER_DAY_DEFAULT));
+    } else if (!validated.durationDays && days) {
+      validated.durationDays = days;
+    }
+
+    if (!validated.durationHours && days) {
+      validated.durationHours = Math.max(1, Math.round(days * this.HOURS_PER_DAY_DEFAULT));
+    } else if (!validated.durationHours && hours) {
+      validated.durationHours = hours;
+    }
+
+    if (!validated.durationLabel && validated.durationDays && validated.durationHours) {
+      validated.durationLabel = `${validated.durationDays} jours • ${validated.durationHours} h`;
+    }
+  }
+
+  private normalizeModules(validated: AiGeneratedTraining): void {
+    if (!validated.modules || validated.modules.length === 0) {
+      validated.modules = this.buildDefaultModules(validated.title);
+      return;
+    }
+
+    // Clamp module count (keep first N) to avoid huge payloads
+    if (validated.modules.length > 8) {
+      validated.modules = validated.modules.slice(0, 8);
+    }
+    if (validated.modules.length < 5) {
+      const fill = this.buildDefaultModules(validated.title).slice(0, 5 - validated.modules.length);
+      validated.modules = [...validated.modules, ...fill].map((m, idx) => ({ ...m, order: idx }));
+    } else {
+      validated.modules = validated.modules.map((m, idx) => ({ ...m, order: idx }));
+    }
+
+    // Ensure topics presence
+    validated.modules = validated.modules.map((m) => ({
+      ...m,
+      topics: (m.topics && m.topics.length >= 3 ? m.topics : ['TP guidé', 'Mini-projet', 'Évaluation courte']).slice(0, 6),
+    }));
+
+    // Ensure module hours are present & coherent with training durationHours when possible
+    if (validated.durationHours && validated.durationHours > 0) {
+      const total = validated.durationHours;
+      const count = validated.modules.length;
+      const currentSum = validated.modules.reduce((s, m) => s + (m.durationHours || 0), 0);
+
+      // If missing or clearly inconsistent, distribute
+      const needsDistribution = currentSum <= 0 || Math.abs(currentSum - total) / total > 0.25;
+      if (needsDistribution) {
+        const distributed = this.distributeHours(total, count);
+        validated.modules = validated.modules.map((m, idx) => ({
+          ...m,
+          durationHours: distributed[idx],
+        }));
+      }
+    }
+
+    // Ensure capstone/soutenance when long format
+    if ((validated.durationDays || 0) > 8) {
+      const hasCapstone = validated.modules.some((m) => /capstone|projet fil rouge|projet/i.test(m.title));
+      if (!hasCapstone) {
+        validated.modules[validated.modules.length - 1] = {
+          ...validated.modules[validated.modules.length - 1],
+          title: 'Projet fil rouge & soutenance',
+          topics: ['Mini-projet: cadrage + backlog — livrable: roadmap', 'TP: implémentation guidée — livrable: repo', 'Évaluation: soutenance (critères: qualité, clarté, reproductibilité)'],
+        };
+      } else {
+        // Make sure last module has an explicit evaluation topic
+        validated.modules = validated.modules.map((m) => {
+          if (!/capstone|projet fil rouge|projet/i.test(m.title)) return m;
+          const topics = (m.topics || []).slice(0, 6);
+          const hasEval = topics.some((t) => /évaluation|soutenance/i.test(t));
+          if (hasEval) return m;
+          return { ...m, topics: [...topics.slice(0, 5), 'Évaluation: soutenance (critères: livrable, rigueur, posture pro)'] };
+        });
+      }
+    }
+  }
+
+  private distributeHours(totalHours: number, moduleCount: number): number[] {
+    // Deterministic distribution with a gentle “ramp up” (later modules slightly heavier)
+    const weights = Array.from({ length: moduleCount }, (_, i) => 1 + i * 0.12);
+    const wSum = weights.reduce((a, b) => a + b, 0);
+    const raw = weights.map((w) => (totalHours * w) / wSum);
+    const rounded = raw.map((h) => Math.max(2, Math.round(h))); // at least 2h/module
+
+    // Fix rounding drift
+    let drift = totalHours - rounded.reduce((a, b) => a + b, 0);
+    let idx = moduleCount - 1;
+    while (drift !== 0) {
+      if (drift > 0) {
+        rounded[idx] += 1;
+        drift -= 1;
+      } else {
+        if (rounded[idx] > 2) {
+          rounded[idx] -= 1;
+          drift += 1;
+        }
+      }
+      idx = (idx - 1 + moduleCount) % moduleCount;
+      // safety
+      if (Math.abs(drift) > totalHours * 2) break;
+    }
+    return rounded;
+  }
+
+  private buildDefaultModules(title: string): Array<{ title: string; durationHours?: number; topics?: string[]; order?: number }> {
+    const base = [
+      { title: `Fondations & contexte — ${title}`, topics: ['Panorama & cas d’usage', 'Bases & concepts', 'TP: prise en main'] },
+      { title: 'Outillage & workflow', topics: ['Environnement', 'Bonnes pratiques', 'TP: workflow complet'] },
+      { title: 'Pratique guidée', topics: ['TP progressifs', 'Debug & qualité', 'Mini-projet'] },
+      { title: 'Approfondissement', topics: ['Patterns avancés', 'Sécurité/qualité', 'TP: cas réel'] },
+      { title: 'Capstone & soutenance', topics: ['Projet fil rouge', 'Préparation livrables', 'Soutenance'] },
+    ];
+    return base.map((m, idx) => ({ ...m, order: idx }));
   }
 
   /**

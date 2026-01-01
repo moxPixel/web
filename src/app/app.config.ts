@@ -1,49 +1,22 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, inject, provideEnvironmentInitializer, isDevMode } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import { PageLoaderService } from './services/page-loader.service';
-import { PageLoaderInlineService } from './services/page-loader-inline.service';
-import { authInterceptor } from './interceptors/auth.interceptor';
-import { AuthApiService } from './services/api/auth-api.service';
-import { provideServiceWorker } from '@angular/service-worker';
-import { ThemeService } from './services/theme.service';
+import { authInterceptor } from './shared/http/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAnimations(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(
       routes,
       withInMemoryScrolling({
-        scrollPositionRestoration: 'top',
-        anchorScrolling: 'enabled'
-      })
-    ),
-    provideAnimations(),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    // Initialiser le loader avant le bootstrap de l'app
-    provideEnvironmentInitializer(() => {
-      const pageLoaderService = inject(PageLoaderService);
-      const pageLoaderInline = inject(PageLoaderInlineService);
-      const authService = inject(AuthApiService);
-      const themeService = inject(ThemeService);
-      
-      // Démarrer le préchargement
-      pageLoaderService.initialize().catch((error) => {
-        console.warn('[AppConfig] loader initialize failed', error);
-      });
-      
-      // Initialiser l'authentification depuis le token stocké
-      authService.initFromStorage();
-
-      // Initialiser le thème (dark/light) une seule fois au bootstrap
-      themeService.init();
-    }), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
+        scrollPositionRestoration: 'top', // Scroll to top on route change
+        anchorScrolling: 'enabled',
+      }),
+    )
   ]
 };

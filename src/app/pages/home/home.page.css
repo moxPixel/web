@@ -1,0 +1,8 @@
+/* Extra pacing between sections to avoid morph windows overlapping */
+.ui-section-spacer {
+  height: clamp(2rem, 10vh, 10rem);
+}
+
+.ui-section-spacer--xl {
+  height: clamp(3rem, 16vh, 16rem);
+}

@@ -4,6 +4,7 @@ import { body, param, query } from 'express-validator';
 import { validate } from '../middleware/validation.middleware';
 import { TrainingLevel, TrainingType, AudienceType } from '../models/Training';
 import { createLimiter } from '../middleware/rate-limit.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -30,6 +31,8 @@ const createTrainingValidation = [
   body('category').optional().trim().escape(),
   body('tagline').optional().trim().escape(),
   body('description').optional().trim(),
+  body('fundingOptions').optional().isArray().withMessage('Funding options must be an array'),
+  body('fundingOptions.*').optional().isString().trim().withMessage('Funding option must be a string'),
   body('priceFrom').optional().isFloat({ min: 0 }).withMessage('Price must be positive'),
   body('durationDays').optional().isInt({ min: 1 }).withMessage('Duration days must be positive'),
   body('durationHours').optional().isInt({ min: 1 }).withMessage('Duration hours must be positive'),
@@ -58,12 +61,12 @@ const slugParamValidation = [
 ];
 
 // Routes avec rate limiting spécifique pour création
-router.post('/', createLimiter, createTrainingValidation, trainingsController.create.bind(trainingsController));
+router.post('/', authenticate, requireAdmin, createLimiter, createTrainingValidation, trainingsController.create.bind(trainingsController));
 router.get('/', trainingsController.findAll.bind(trainingsController));
 router.get('/:id', idParamValidation, trainingsController.findById.bind(trainingsController));
 router.get('/slug/:slug', slugParamValidation, trainingsController.findBySlug.bind(trainingsController));
-router.put('/:id', updateTrainingValidation, trainingsController.update.bind(trainingsController));
-router.delete('/:id', idParamValidation, trainingsController.delete.bind(trainingsController));
+router.put('/:id', authenticate, requireAdmin, updateTrainingValidation, trainingsController.update.bind(trainingsController));
+router.delete('/:id', authenticate, requireAdmin, idParamValidation, trainingsController.delete.bind(trainingsController));
 
 export default router;
 

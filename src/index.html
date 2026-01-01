@@ -1,169 +1,69 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-accent="primary">
 <head>
   <meta charset="utf-8">
-  <title>Unlock Formation - Formations IT & IA par des experts | Cybersécurité, Data, Cloud</title>
+  <title>Unlock Formation</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Unlock Formation : centre expert en formations IT &amp; IA. Formations certifiantes en développement web, cybersécurité, data science, cloud et DevOps. Alternance et reconversion professionnelle. Experts reconnus et assistant IA EVA.">
-  <meta name="keywords" content="formation IT, formation IA, formation cybersécurité, formation développement web, formation data science, formation cloud, alternance IT, reconversion IT, formation professionnelle, certification IT">
-  <meta name="author" content="Unlock Formation">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="French">
-  <meta name="revisit-after" content="7 days">
-  <meta name="distribution" content="global">
-  <meta name="rating" content="general">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.unlock-technologies.fr/">
-  <meta property="og:title" content="Unlock Formation - Formations IT &amp; IA par des experts">
-  <meta property="og:description" content="Centre expert en formations IT &amp; IA. Formations certifiantes en développement web, cybersécurité, data science, cloud et DevOps. Alternance et reconversion professionnelle.">
-  <meta property="og:image" content="https://www.unlock-technologies.fr/assets/images/logo/main-logo.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:site_name" content="Unlock Formation">
-  <meta property="og:locale" content="fr_FR">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://www.unlock-technologies.fr/">
-  <meta name="twitter:title" content="Unlock Formation - Formations IT &amp; IA par des experts">
-  <meta name="twitter:description" content="Centre expert en formations IT &amp; IA. Formations certifiantes en développement web, cybersécurité, data science, cloud et DevOps.">
-  <meta name="twitter:image" content="https://www.unlock-technologies.fr/assets/images/logo/main-logo.png">
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://www.unlock-technologies.fr/">
-  
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/images/logo/logo.png">
-  
-  <!-- Manifest -->
-  <link rel="manifest" href="/manifest.webmanifest">
-  
-  <!-- Theme Color -->
-  <meta name="theme-color" content="#2563eb">
-  <meta name="msapplication-TileColor" content="#2563eb">
-  
-  <!-- Preconnect pour performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-  
-  <!-- Schema.org JSON-LD - Organisation -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "EducationalOrganization",
-    "name": "Unlock Formation",
-    "alternateName": "Unlock Technologies",
-    "description": "Centre de formation expert en IT, IA, cybersécurité, développement, cloud et data. Formations certifiantes, alternance et reconversion professionnelle.",
-    "url": "https://www.unlock-technologies.fr",
-    "logo": "https://www.unlock-technologies.fr/assets/images/logo/main-logo.png",
-    "image": "https://www.unlock-technologies.fr/assets/images/logo/main-logo.png",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "FR"
-    },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "Service client",
-      "availableLanguage": ["French"]
-    },
-    "sameAs": [],
-    "offers": {
-      "@type": "Offer",
-      "category": "Formation professionnelle",
-      "availability": "https://schema.org/InStock"
-    }
-  }
-  </script>
-  
-  <!-- Schema.org JSON-LD - Website -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Unlock Formation",
-    "url": "https://www.unlock-technologies.fr",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://www.unlock-technologies.fr/trainings?search={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Prefetch du modèle 3D pour démarrer le téléchargement dès le début -->
-  <link rel="prefetch" href="/assets/models/robot0.glb" as="fetch" crossorigin="anonymous">
-  <script>
-    // Appliquer le dark mode avant le chargement d'Angular pour éviter le flash blanc
-    (function() {
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  <meta name="description" content="Unlock Formation — Formations Tech & IA (bootcamp, alternance, certifiantes). Projets réels, mentorat, accompagnement carrière." />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#050506" />
 
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.style.backgroundColor = '#070b10';
-        document.body.style.backgroundColor = '#070b10';
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.style.backgroundColor = '#ffffff';
-        document.body.style.backgroundColor = '#ffffff';
-      }
-    })();
-  </script>
+  <!-- Preload critical Three.js assets (reduces first-load stutter) -->
+  <link rel="preload" href="/assets/models/unlock-model.glb" as="fetch" crossorigin />
+  <link rel="preload" href="/assets/draco/draco_decoder.wasm" as="fetch" crossorigin />
+  <link rel="preload" href="/assets/draco/draco_wasm_wrapper.js" as="script" crossorigin />
+
+  <!-- Open Graph (fallback; Angular will update dynamically) -->
+  <meta property="og:site_name" content="Unlock Formation" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Unlock Formation" />
+  <meta property="og:description" content="Formations Tech & IA (bootcamp, alternance, certifiantes). Projets réels, mentorat, accompagnement carrière." />
+  <meta property="og:image" content="/assets/images/logo/logo-dark.png" />
+
+  <!-- Twitter (fallback) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Unlock Formation" />
+  <meta name="twitter:description" content="Formations Tech & IA (bootcamp, alternance, certifiantes)." />
+  <meta name="twitter:image" content="/assets/images/logo/logo-dark.png" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html {
-      background-color: #ffffff;
-      transition: background-color 0.3s ease;
-      margin: 0;
-      padding: 0;
-    }
-    html.dark {
-      background-color: #070b10;
-    }
-    body {
-      background-color: #ffffff;
-      transition: background-color 0.3s ease;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-    }
-    html.dark body {
-      background-color: #070b10;
+    /* ------------------------------------------------------------
+      Inline critical styles: show a premium loader instantly
+      (before Angular + CSS bundles are ready)
+    -------------------------------------------------------------*/
+    :root {
+      color-scheme: dark;
+      --ui-bg: #050506;
+      --ui-fg: #f1f1f2;
+      --ui-fg-subtle: rgba(241, 241, 242, 0.55);
+      --ui-glass-blur: 24px;
+      --ui-glass-sat: 150%;
+      --ui-glass-bg: rgba(14, 14, 16, 0.58);
+      --ui-glass-bg-strong: rgba(14, 14, 16, 0.75);
+      --ui-glass-border: rgba(241, 241, 242, 0.08);
+
+      /* Nebula */
+      /* Base palette (matches theme.css SSOT base to avoid color “flash”) */
+      --ui-nebula-accent: #cfeeff;
+      --ui-nebula-secondary: #3b82f6;
+      --ui-nebula-tertiary: #070b14;
+      --ui-nebula-teal: #8b5cf6;
     }
 
-    /* Page Loader - CSS inline pour chargement immédiat */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; background: var(--ui-bg); }
+
+    body:not(.app-ready) { overflow: hidden; }
+
+    /* Fullscreen loader overlay */
     #page-loader {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       z-index: 9999;
-      background-color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: var(--ui-bg);
       opacity: 1;
-      transition: opacity 0.4s ease-out;
-    }
-
-    html.dark #page-loader {
-      background-color: #070b10;
+      transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     #page-loader.loader-exit {
@@ -171,153 +71,225 @@
       pointer-events: none;
     }
 
+    /* Loader background (same spirit as app spheres) */
+    #page-loader .loader-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Dots Pattern (same as app) */
+    #page-loader .loader-pattern {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.38;
+      mix-blend-mode: soft-light;
+    }
+
+    #page-loader .loader-pattern-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      color: var(--ui-nebula-accent);
+      filter: saturate(110%);
+    }
+
+    #page-loader .loader-sphere {
+      position: absolute;
+      border-radius: 999px;
+      mix-blend-mode: screen;
+      will-change: transform, opacity, filter;
+      pointer-events: none;
+    }
+
+    #page-loader .loader-sphere.s1 {
+      width: clamp(300px, 34vw, 600px); height: clamp(300px, 34vw, 600px);
+      top: -12%; right: 10%;
+      background:
+        radial-gradient(ellipse at 30% 35%,
+          color-mix(in srgb, var(--ui-nebula-accent) 70%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-accent) 28%, transparent) 34%,
+          transparent 70%),
+        radial-gradient(ellipse at 70% 68%,
+          color-mix(in srgb, var(--ui-nebula-accent) 40%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-accent) 16%, transparent) 38%,
+          transparent 72%);
+      opacity: 0.52;
+      filter: blur(98px) saturate(115%);
+      animation: loader-float-1 40s cubic-bezier(0.4,0,0.2,1) infinite;
+    }
+    #page-loader .loader-sphere.s2 {
+      width: clamp(420px, 54vw, 940px); height: clamp(420px, 54vw, 940px);
+      top: 12%; right: -6%;
+      background:
+        radial-gradient(ellipse at 48% 42%,
+          color-mix(in srgb, var(--ui-nebula-secondary) 52%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-secondary) 18%, transparent) 40%,
+          transparent 74%),
+        radial-gradient(ellipse at 60% 62%,
+          color-mix(in srgb, var(--ui-nebula-accent) 22%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-accent) 8%, transparent) 46%,
+          transparent 78%);
+      opacity: 0.42;
+      filter: blur(120px) saturate(110%);
+      animation: loader-float-2 54s cubic-bezier(0.4,0,0.2,1) infinite;
+    }
+    #page-loader .loader-sphere.s3 {
+      width: clamp(260px, 30vw, 520px); height: clamp(260px, 30vw, 520px);
+      top: 56%; right: 16%;
+      background:
+        radial-gradient(ellipse at 55% 40%,
+          color-mix(in srgb, var(--ui-nebula-teal) 40%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-teal) 14%, transparent) 42%,
+          transparent 76%),
+        radial-gradient(ellipse at 35% 70%,
+          color-mix(in srgb, var(--ui-nebula-accent) 18%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-accent) 6%, transparent) 48%,
+          transparent 78%);
+      opacity: 0.34;
+      filter: blur(92px) saturate(110%);
+      animation: loader-float-3 46s cubic-bezier(0.4,0,0.2,1) infinite;
+    }
+    #page-loader .loader-sphere.s4 {
+      width: clamp(220px, 22vw, 420px); height: clamp(220px, 22vw, 420px);
+      top: 8%; right: 26%;
+      background:
+        radial-gradient(ellipse at 40% 48%,
+          color-mix(in srgb, var(--ui-nebula-tertiary) 26%, transparent) 0%,
+          color-mix(in srgb, var(--ui-nebula-tertiary) 9%, transparent) 44%,
+          transparent 78%),
+        radial-gradient(ellipse at 62% 62%,
+          color-mix(in srgb, var(--ui-nebula-accent) 10%, transparent) 0%,
+          transparent 70%);
+      opacity: 0.22;
+      filter: blur(84px) saturate(105%);
+      animation: loader-float-4 62s cubic-bezier(0.4,0,0.2,1) infinite;
+    }
+
+    /* Subtle tint overlay (like body::before in app) */
+    #page-loader .loader-tint {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 5, 6, 0.24);
+      pointer-events: none;
+    }
+
+    /* Loader content (no panel / no container) */
     #page-loader .loader-content {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2rem;
-      position: relative;
-      z-index: 10;
+      gap: 14px;
+      padding: 24px;
+      transform: translateY(6px) scale(0.99);
       opacity: 0;
-      filter: blur(25px);
-      transform: scale(0.9);
-      animation: loader-deblur 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      will-change: opacity, filter, transform;
+      filter: blur(14px);
+      animation: loader-in 700ms cubic-bezier(0.16,1,0.3,1) 120ms forwards;
+      will-change: transform, opacity, filter;
     }
 
-    #page-loader.loader-exit {
-      opacity: 0;
-      transition: opacity 0.4s ease-out;
-    }
-
-    #page-loader.loader-exit .loader-content {
-      opacity: 0;
-      filter: blur(20px);
-      transform: scale(0.9);
-      transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    #page-loader .loader-logo-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #page-loader .loader-logo-wrapper img {
-      height: 2rem;
+    #page-loader .loader-logo {
+      height: 28px;
+      width: auto;
       object-fit: contain;
-      animation: logo-pulse 1.5s ease-in-out infinite;
     }
 
-    @media (min-width: 768px) {
-      #page-loader .loader-logo-wrapper img {
-        height: 2.5rem;
-      }
+    #page-loader .loader-line {
+      width: 120px;
+      height: 2px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--ui-nebula-accent) 28%, rgba(241,241,242,0.14));
+      overflow: hidden;
+      position: relative;
     }
-
-    #page-loader .loader-logo-wrapper img.logo-light {
-      display: block;
-    }
-
-    html.dark #page-loader .loader-logo-wrapper img.logo-light {
-      display: none;
-    }
-
-    #page-loader .loader-logo-wrapper img.logo-dark {
-      display: none;
-    }
-
-    html.dark #page-loader .loader-logo-wrapper img.logo-dark {
-      display: block;
+    #page-loader .loader-line::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-60%);
+      background: color-mix(in srgb, var(--ui-nebula-accent) 78%, rgba(241,241,242,0.25));
+      animation: loader-sweep 1100ms cubic-bezier(0.16,1,0.3,1) infinite;
     }
 
     #page-loader .loader-text {
-      font-family: ui-sans-serif, system-ui, sans-serif;
-      font-size: 0.875rem;
-      font-weight: 400;
-      color: #6b7280;
+      font: 450 13px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+      color: var(--ui-fg-subtle);
+      letter-spacing: -0.01em;
       text-align: center;
-      opacity: 0;
-      animation: loader-text-fade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
-      max-width: 280px;
-      line-height: 1.5;
+      margin: 0;
     }
 
-    html.dark #page-loader .loader-text {
-      color: #9ca3af;
+    @keyframes loader-in {
+      to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
     }
-
-    @keyframes loader-text-fade {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes loader-sweep {
+      0% { transform: translateX(-70%); opacity: 0.0; }
+      15% { opacity: 1; }
+      55% { transform: translateX(0%); opacity: 1; }
+      100% { transform: translateX(70%); opacity: 0.0; }
     }
-
-    body:not(.loader-hidden) {
-      overflow: hidden;
+    @keyframes loader-float-1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(28px,-34px) scale(1.12); }
     }
-
-    @keyframes loader-deblur {
-      0% {
-        opacity: 0;
-        filter: blur(25px);
-        transform: scale(0.9);
-      }
-      100% {
-        opacity: 1;
-        filter: blur(0px);
-        transform: scale(1);
-      }
+    @keyframes loader-float-2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-38px,26px) scale(1.1); }
     }
-
-    @keyframes logo-pulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 0.8;
-      }
+    @keyframes loader-float-3 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(24px,32px) scale(1.16); }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      #page-loader .loader-content {
-        animation: none !important;
-        opacity: 1;
-        filter: none !important;
-        transform: none;
-      }
-      #page-loader .loader-logo-wrapper img {
-        animation: none !important;
-      }
+    @keyframes loader-float-4 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-22px,18px) scale(1.12); }
     }
   </style>
-  <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
-  <!-- Page Loader - HTML statique pour affichage immédiat -->
-  <div id="page-loader">
-    <div class="loader-content">
-      <!-- Logo avec pulse -->
-      <div class="loader-logo-wrapper">
-        <img src="/assets/images/logo/logo.png" alt="Unlock Web" class="logo-light"/>
-        <img src="/assets/images/logo/logo-dark.png" alt="Unlock Web" class="logo-dark"/>
+  <!-- Premium loader (removed after Angular bootstraps) -->
+  <div id="page-loader" aria-hidden="true">
+    <div class="loader-bg">
+      <div class="loader-sphere s1"></div>
+      <div class="loader-sphere s2"></div>
+      <div class="loader-sphere s3"></div>
+      <div class="loader-sphere s4"></div>
+      <div class="loader-tint"></div>
+      <!-- Dots Pattern -->
+      <div class="loader-pattern" aria-hidden="true">
+        <svg class="loader-pattern-svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <defs>
+            <!-- Masque pour fade vers les bords -->
+            <mask id="loader-dots-mask">
+              <radialGradient id="loader-fade-gradient" cx="50%" cy="50%" r="70%">
+                <stop offset="0%" stop-color="white" stop-opacity="1"/>
+                <stop offset="60%" stop-color="white" stop-opacity="0.8"/>
+                <stop offset="80%" stop-color="white" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="white" stop-opacity="0"/>
+              </radialGradient>
+              <rect width="100%" height="100%" fill="url(#loader-fade-gradient)"/>
+            </mask>
+            <pattern id="loader-dots-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+              <!-- Points ultra rapprochés, nombreux et très petits - densité maximale -->
+              <circle cx="2.5" cy="2.5" r="0.3" fill="currentColor" opacity="0.3"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#loader-dots-pattern)" mask="url(#loader-dots-mask)"/>
+        </svg>
       </div>
-      <!-- Texte informatif -->
+    </div>
+    <div class="loader-content">
+      <img class="loader-logo" src="/assets/images/logo/logo-dark.png" alt="Unlock" />
+      <div class="loader-line"></div>
       <p class="loader-text">Patienter<br/>Nous améliorons votre expérience utilisateur</p>
     </div>
   </div>
-
   <app-root></app-root>
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
 </html>

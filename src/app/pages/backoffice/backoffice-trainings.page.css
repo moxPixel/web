@@ -1,0 +1,365 @@
+:host {
+  display: block;
+}
+
+.ui-bo-sub {
+  margin-top: 0.75rem;
+  position: relative;
+  padding: 0 var(--ui-gutter-x) var(--ui-page-pad-bottom);
+  min-height: calc(100vh - 120px);
+}
+
+.ui-bo-sub__hero {
+  position: relative;
+  padding-top: 0.75rem;
+}
+
+.ui-bo-sub__back-row {
+  margin: 0.75rem 0 var(--ui-back-row-margin-bottom);
+}
+
+.ui-bo-sub__back {
+  margin-left: var(--ui-back-button-margin-left);
+}
+
+.ui-bo-sub__head {
+  /* Let the head span the container so actions can truly align to the far right */
+  max-width: 100%;
+}
+
+.ui-bo-sub__head-row {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 860px) {
+  .ui-bo-sub__head-row {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  /* Keep the left column readable while allowing the action buttons to hit the right edge */
+  .ui-bo-sub__head-row > div:first-child {
+    max-width: 72ch;
+  }
+
+  /* Works for both: trainings page (head-actions wrapper) and sessions page (single button) */
+  .ui-bo-sub__head-row > :last-child {
+    margin-left: auto;
+  }
+
+  .ui-bo-sub__head-actions {
+    justify-content: flex-end;
+  }
+}
+
+.ui-bo-sub__create {
+  width: fit-content;
+  gap: 0.6rem;
+}
+
+.ui-bo-sub__head-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.ui-bo-sub__sessions {
+  width: fit-content;
+  gap: 0.55rem;
+}
+
+.ui-bo-sub__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.1rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: var(--ui-hairline) solid color-mix(in srgb, var(--ui-nebula-accent) 25%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 70%, transparent);
+  color: color-mix(in srgb, var(--ui-nebula-accent) 75%, var(--ui-fg));
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.ui-bo-sub__filters {
+  padding: clamp(1.1rem, 2.2vw, 1.35rem);
+  margin-top: 1.25rem;
+}
+
+.ui-bo-sub__toolbar {
+  margin-top: 1.25rem;
+  padding: 0.95rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--ui-border) 60%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 68%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+/* ===========================
+   FILTER BAR (SSOT) - Clean
+   Search row + single horizontal row below (no stacking).
+   On small widths: row scrolls horizontally instead of wrapping.
+   =========================== */
+
+.ui-bo-filterbar__search {
+  margin-bottom: 1rem;
+}
+
+.ui-bo-filterbar__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.15rem; /* avoid clipping focus ring */
+}
+
+.ui-bo-filterbar__row::-webkit-scrollbar {
+  display: none;
+}
+
+.ui-bo-filterbar__item {
+  min-width: 260px;
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-bo-filterbar__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+  align-items: flex-end;
+}
+
+@media (min-width: 860px) {
+  .ui-bo-filterbar__row {
+    overflow: visible;
+  }
+
+  .ui-bo-filterbar__actions {
+    margin-left: auto;
+  }
+}
+
+.ui-bo-sub__filters-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  align-items: end;
+}
+
+@media (min-width: 860px) {
+  .ui-bo-sub__filters-row {
+    grid-template-columns: 1.25fr 0.6fr 0.6fr auto;
+    gap: 0.9rem;
+  }
+}
+
+.ui-bo-sub__label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--ui-fg) 75%, transparent);
+  margin: 0 0 0.4rem;
+}
+
+.ui-bo-sub__input,
+.ui-bo-sub__select-el {
+  width: 100%;
+}
+
+.ui-bo-sub__actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.ui-bo-sub__apply {
+  width: fit-content;
+}
+
+.ui-bo-sub__clear {
+  width: fit-content;
+}
+
+.ui-bo-sub__error {
+  margin-top: 0.85rem;
+  color: color-mix(in srgb, var(--ui-nebula-tertiary) 92%, white);
+  background: color-mix(in srgb, var(--ui-nebula-tertiary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-tertiary) 20%, transparent);
+  padding: 0.75rem 0.85rem;
+  border-radius: 14px;
+}
+
+.ui-bo-sub__list-wrap {
+  margin-top: 1.15rem;
+}
+
+.ui-bo-sub__empty {
+  padding: 1.1rem 0.25rem;
+}
+
+.ui-bo-table {
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--ui-border) 60%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 62%, transparent);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.ui-bo-table__head {
+  display: none;
+  padding: 0.75rem 0.95rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--ui-border) 55%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 70%, transparent);
+  color: color-mix(in srgb, var(--ui-fg) 58%, transparent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 860px) {
+  .ui-bo-table__head {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.6fr 0.55fr auto;
+    gap: 0.85rem;
+    align-items: center;
+  }
+}
+
+.ui-bo-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  padding: 0.95rem;
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--ui-border) 55%, transparent);
+  cursor: pointer;
+}
+
+.ui-bo-row:last-child {
+  border-bottom: none;
+}
+
+.ui-bo-row:hover {
+  background: color-mix(in srgb, var(--ui-nebula-accent) 7%, transparent);
+}
+
+@media (min-width: 860px) {
+  .ui-bo-row {
+    grid-template-columns: 1.5fr 1fr 0.6fr 0.55fr auto;
+    gap: 0.85rem;
+  }
+}
+
+.ui-bo-table__col {
+  min-width: 0;
+}
+
+.ui-bo-table__col--actions {
+  justify-self: end;
+}
+
+.ui-bo-row__title {
+  font-weight: 780;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--ui-fg) 92%, transparent);
+  line-height: 1.25;
+}
+
+.ui-bo-row__sub {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ui-fg) 62%, transparent);
+}
+
+.ui-bo-row__mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ui-fg) 68%, transparent);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-bo-row__actions {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.ui-bo-sub__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 1px solid color-mix(in srgb, var(--ui-nebula-accent) 20%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 10%, transparent);
+  color: color-mix(in srgb, var(--ui-fg) 82%, transparent);
+  flex-shrink: 0;
+}
+
+.ui-bo-sub__status.is-draft {
+  border-color: color-mix(in srgb, var(--ui-nebula-secondary) 22%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-secondary) 12%, transparent);
+}
+
+.ui-bo-sub__status.is-archived {
+  border-color: color-mix(in srgb, var(--ui-fg) 18%, transparent);
+  background: color-mix(in srgb, var(--ui-fg) 8%, transparent);
+  color: color-mix(in srgb, var(--ui-fg) 70%, transparent);
+}
+
+.ui-bo-row__actions .ui-icon-button {
+  width: 40px;
+  height: 40px;
+}
+
+.ui-bo-sub__h1 {
+  margin: 0.85rem 0 0;
+  font-size: clamp(1.35rem, 1.05rem + 1.5vw, 2.1rem);
+  font-weight: var(--ui-weight-semibold);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--ui-fg);
+}
+
+.ui-bo-sub__p {
+  margin: 0.85rem 0 0;
+  color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
+  line-height: 1.7;
+}
+
+.ui-bo-sub__card {
+  padding: clamp(1.25rem, 2.5vw, 1.5rem);
+}
+
+.ui-bo-sub__muted {
+  color: color-mix(in srgb, var(--ui-fg) 60%, transparent);
+  font-size: 0.95rem;
+}
+
+.ui-bo-sub__list {
+  margin: 0.85rem 0 0;
+  padding-left: 1.1rem;
+  color: color-mix(in srgb, var(--ui-fg) 78%, transparent);
+  line-height: 1.75;
+}
+
+

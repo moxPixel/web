@@ -1,7 +1,7 @@
 export interface TrainingSession {
   id: string;
   startDate: string; // ISO date
-  endDate: string;   // ISO date
+  endDate: string; // ISO date
   location: string;
   format: 'presentiel' | 'distanciel' | 'hybride';
   priceExclTax: number;
@@ -22,6 +22,11 @@ export interface Training {
   shortTitle: string;
   category: string;
   tagline: string;
+  /**
+   * Optional long description coming from API (`TrainingApi.description`).
+   * Some UI/SEO features use it when available.
+   */
+  description?: string;
   level: 'initiation' | 'intermediaire' | 'avance' | 'expert';
   format: string;
   durationDays: number;

@@ -1,0 +1,114 @@
+<section class="ui-bo-form">
+  <div class="ui-bo-form__hero ui-container">
+    <div class="ui-bo-form__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-form__back ui-icon-button" (click)="back()">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-form__head">
+      <div class="ui-bo-form__pill">Backoffice</div>
+      <div class="ui-bo-form__head-row">
+        <div>
+          <h1 class="ui-bo-form__h1">{{ isEdit ? 'Modifier la certification' : 'Nouvelle certification' }}</h1>
+          <p class="ui-bo-form__p">Référentiel certifications (RNCP / RS / autres).</p>
+        </div>
+        <div class="ui-bo-form__head-actions">
+          <button uiButton variant="primary" type="button" class="ui-bo-form__save" (click)="submit()" [loading]="saving" [disabled]="saving || !hydrated">
+            <span>Enregistrer</span>
+            <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div>
+      <form class="ui-bo-form__form" [formGroup]="form">
+        <!-- Section: Informations générales -->
+        <div uiCard class="ui-bo-form__card">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Informations générales</h2>
+              <p class="ui-bo-form__muted">Type, code et titre de la certification.</p>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="star" [size]="12"></app-tabler-icon>
+              <span>Identification</span>
+            </h4>
+
+            <div class="ui-bo-form__field ui-bo-form__field--full">
+              <label class="ui-bo-form__label">Type *</label>
+              <app-ui-choice-group
+                formControlName="type"
+                [options]="typeOptions"
+                ariaLabel="Type de certification"
+                size="sm"
+              ></app-ui-choice-group>
+            </div>
+
+            <div class="ui-bo-form__grid">
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="code">Code *</label>
+                <input uiInput id="code" type="text" formControlName="code" placeholder="Ex: RNCP12345" />
+              </div>
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="title">Titre *</label>
+                <input uiInput id="title" type="text" formControlName="title" placeholder="Titre de la certification" />
+              </div>
+            </div>
+
+            <div class="ui-bo-form__grid">
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="level">Niveau</label>
+                <input uiInput id="level" type="text" formControlName="level" placeholder="Ex: Niveau 6 (Bac+3/4)" />
+              </div>
+              <div class="ui-bo-form__field">
+                <label class="ui-bo-form__label" for="issuer">Organisme certificateur</label>
+                <input uiInput id="issuer" type="text" formControlName="issuer" placeholder="Ex: France Compétences" />
+              </div>
+            </div>
+
+            <div class="ui-bo-form__field ui-bo-form__field--full">
+              <label class="ui-bo-form__label" for="description">Description</label>
+              <textarea uiInput id="description" rows="4" formControlName="description" placeholder="Description (optionnel)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Statut -->
+        <div uiCard class="ui-bo-form__card">
+          <div class="ui-bo-form__card-head">
+            <div>
+              <h2 class="ui-bo-form__h2">Statut</h2>
+              <p class="ui-bo-form__muted">Contrôle la visibilité et l’usage en backoffice.</p>
+            </div>
+          </div>
+
+          <div class="ui-bo-form__subsection">
+            <h4 class="ui-bo-form__subsection-title">
+              <app-tabler-icon name="info-circle" [size]="12"></app-tabler-icon>
+              <span>Activation</span>
+            </h4>
+
+            <div class="ui-bo-form__field ui-bo-form__field--full">
+              <label class="ui-bo-form__label">Statut</label>
+              <app-ui-choice-group
+                formControlName="status"
+                [options]="statusOptions"
+                ariaLabel="Statut"
+                size="sm"
+              ></app-ui-choice-group>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+

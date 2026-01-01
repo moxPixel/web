@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { TablerIconComponent } from '../../../shared/icons/tabler-icon/tabler-icon.component';
 
 type Review = {
   author: string;
@@ -14,7 +14,7 @@ type Review = {
 @Component({
   selector: 'app-reviews-section',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, TablerIconComponent],
   templateUrl: './reviews-section.component.html',
   styleUrl: './reviews-section.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -32,9 +32,9 @@ export class ReviewsSectionComponent {
     },
     {
       author: 'Murielle Bakayoko',
-      title: 'Administration à l’écoute, formatrice compétente',
+      title: "Administration à l'écoute, formatrice compétente",
       content:
-        'Administration toujours active et à l’écoute. La formatrice prend le temps d’expliquer, revient sur les notions et reste présente du début à la fin.',
+        "Administration toujours active et à l'écoute. La formatrice prend le temps d'expliquer, revient sur les notions et reste présente du début à la fin.",
       date: '26 juin 2024',
       source: 'Trustpilot',
       rating: 5
@@ -52,7 +52,7 @@ export class ReviewsSectionComponent {
       author: 'David',
       title: 'Encadrement ultra performant',
       content:
-        'Encadrement ultra performant permettant une formule IA “pour les nuls” et un suivi efficace.',
+        'Encadrement ultra performant permettant une formule IA "pour les nuls" et un suivi efficace.',
       date: '30 juin 2024',
       source: 'Trustpilot',
       rating: 5

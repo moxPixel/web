@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+@import './backoffice-training-form.page.css';
+
+.ui-bo-event__textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 160px;
+  padding: 0.9rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--ui-border) 60%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 78%, transparent);
+  color: color-mix(in srgb, var(--ui-fg) 92%, white);
+  line-height: 1.6;
+}
+
+.ui-bo-event__textarea:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 35%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-nebula-accent) 12%, transparent);
+}
+
+.ui-bo-event__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-top: 0.25rem;
+  color: color-mix(in srgb, var(--ui-fg) 86%, transparent);
+  font-weight: 550;
+}
+
+.ui-bo-event__check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ui-nebula-accent);
+}
+
+.ui-bo-event__media {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 860px) {
+  .ui-bo-event__media {
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: start;
+  }
+}
+
+.ui-bo-event__preview {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--ui-border) 60%, transparent);
+  background: color-mix(in srgb, var(--ui-glass-bg) 62%, transparent);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+}
+
+.ui-bo-event__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ui-bo-event__preview-empty {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: color-mix(in srgb, var(--ui-fg) 60%, transparent);
+  font-weight: 650;
+}
+
+.ui-bo-event__media-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.ui-bo-event__upload {
+  width: fit-content;
+  gap: 0.55rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-bo-event__upload input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+

@@ -1,0 +1,128 @@
+<section class="ui-bo-sub">
+  <div class="ui-bo-sub__hero ui-container">
+    <div class="ui-bo-sub__back-row">
+      <button uiButton variant="ghost" type="button" class="ui-bo-sub__back ui-icon-button" [routerLink]="['/backoffice']">
+        <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+      </button>
+    </div>
+
+    <div class="ui-bo-sub__head">
+      <div class="ui-bo-sub__pill">Backoffice</div>
+      <div class="ui-bo-sub__head-row">
+        <div>
+          <h1 class="ui-bo-sub__h1">Certifications</h1>
+          <p class="ui-bo-sub__p">Créer, modifier et maintenir les certifications (RNCP/RS…).</p>
+        </div>
+        <div class="ui-bo-sub__head-actions">
+          <button uiButton variant="primary" type="button" class="ui-bo-sub__create" (click)="create()">
+            <span>Nouvelle certification</span>
+            <app-tabler-icon name="plus" [size]="18"></app-tabler-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-container">
+    <div class="ui-bo-sub__toolbar">
+      <div class="ui-bo-filterbar">
+        <!-- Recherche (ligne 1) -->
+        <div class="ui-bo-filterbar__search">
+          <label class="ui-bo-sub__label" for="bo-cert-search">Recherche</label>
+          <input
+            uiInput
+            id="bo-cert-search"
+            type="text"
+            [(ngModel)]="search"
+            placeholder="Titre, code, type…"
+            (ngModelChange)="scheduleLoad()"
+            (keyup.enter)="load()"
+          />
+        </div>
+
+        <!-- Filtres + actions (ligne 2, toujours alignée / jamais empilée) -->
+        <div class="ui-bo-filterbar__row" aria-label="Filtres certifications">
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label">Type</label>
+            <app-ui-choice-group
+              [(ngModel)]="type"
+              (ngModelChange)="scheduleLoad()"
+              name="bo-cert-type"
+              [options]="typeOptions"
+              ariaLabel="Filtre type"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__item">
+            <label class="ui-bo-sub__label">Statut</label>
+            <app-ui-choice-group
+              [(ngModel)]="status"
+              (ngModelChange)="scheduleLoad()"
+              name="bo-cert-status"
+              [options]="statusOptions"
+              ariaLabel="Filtre statut"
+              size="sm"
+              wrap="nowrap"
+            ></app-ui-choice-group>
+          </div>
+
+          <div class="ui-bo-filterbar__actions">
+            <button uiButton type="button" class="ui-bo-sub__apply" (click)="load()">Appliquer</button>
+            <button uiButton variant="ghost" type="button" class="ui-bo-sub__clear" (click)="clearFilters()">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ui-bo-sub__list-wrap">
+      <div *ngIf="hasLoaded && !certifications.length" class="ui-bo-sub__empty">
+        <div class="ui-bo-sub__muted">Aucune certification trouvée.</div>
+      </div>
+
+      <div class="ui-bo-table" *ngIf="certifications.length">
+        <div class="ui-bo-table__head" aria-hidden="true">
+          <div class="ui-bo-table__col ui-bo-table__col--main">Certification</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">Code</div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">MAJ</div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">Statut</div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions"></div>
+        </div>
+
+        <div class="ui-bo-row" *ngFor="let c of certifications" (click)="edit(c.id)" role="button" tabindex="0">
+          <div class="ui-bo-table__col ui-bo-table__col--main">
+            <div class="ui-bo-row__title">{{ c.title }}</div>
+            <div class="ui-bo-row__sub">
+              {{ c.type || '—' }}
+              <span *ngIf="c.level"> • {{ c.level }}</span>
+              <span *ngIf="c.issuer"> • {{ c.issuer }}</span>
+            </div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ c.code }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--meta">
+            <div class="ui-bo-row__mono">{{ fmtDateTime(c.updatedAt) }}</div>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--status">
+            <span class="ui-bo-sub__status" [class.is-archived]="c.status === 'inactive'">
+              {{ badgeForStatus(c.status) }}
+            </span>
+          </div>
+          <div class="ui-bo-table__col ui-bo-table__col--actions ui-bo-row__actions" (click)="$event.stopPropagation()">
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="edit(c.id)" aria-label="Modifier">
+              <app-tabler-icon name="pencil" [size]="18"></app-tabler-icon>
+            </button>
+            <button uiButton variant="ghost" type="button" class="ui-icon-button" (click)="delete(c.id)" aria-label="Supprimer">
+              <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

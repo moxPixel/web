@@ -138,10 +138,13 @@ export class AuthController {
   async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const email = (req.body.email as string).toLowerCase();
-      await authService.requestPasswordReset(email);
+      const result = await authService.requestPasswordReset(email);
       const response: ApiResponse = {
         success: true,
-        message: 'Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.',
+        data: { exists: result.exists },
+        message: result.exists
+          ? 'Un lien de réinitialisation a été envoyé.'
+          : "Aucun compte n'existe avec cet email.",
       };
       res.status(200).json(response);
     } catch (error) {

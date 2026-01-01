@@ -78,13 +78,26 @@ export class SessionsService {
         sortOrder = 'ASC',
       } = query;
 
-      const offset = (page - 1) * limit;
+      // Sécuriser les valeurs numériques (évite LIMIT '300' qui casse MySQL)
+      const safeLimit = Math.max(1, Math.min(500, Number(limit) || 10));
+      const safePage = Math.max(1, Number(page) || 1);
+      const offset = (safePage - 1) * safeLimit;
+
+      // Whitelist sort fields to prevent invalid SQL / injection
+      const allowedSortFields = new Set<string>(['startDate', 'endDate', 'createdAt', 'updatedAt', 'status']);
+      const safeSortBy = allowedSortFields.has(String(sortBy)) ? String(sortBy) : 'startDate';
+      const safeSortOrder = String(sortOrder).toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+      const safeHighlight =
+        typeof highlight === 'string'
+          ? highlight === 'true' || highlight === '1'
+          : highlight;
       const where: Record<string, unknown> = {};
 
       // Filtres
       if (trainingId) where.trainingId = trainingId;
       if (status) where.status = status;
-      if (highlight !== undefined) where.highlight = highlight;
+      if (safeHighlight !== undefined) where.highlight = safeHighlight;
 
       if (startDateFrom || startDateTo) {
         (where as any).startDate = {};
@@ -98,9 +111,9 @@ export class SessionsService {
 
       const { count, rows } = await TrainingSession.findAndCountAll({
         where,
-        limit,
+        limit: safeLimit,
         offset,
-        order: [[sortBy, sortOrder]],
+        order: [[safeSortBy, safeSortOrder]],
         include: [
           {
             model: Training,
@@ -113,10 +126,10 @@ export class SessionsService {
       return {
         data: rows,
         pagination: {
-          page,
-          limit,
+          page: safePage,
+          limit: safeLimit,
           total: count,
-          totalPages: Math.ceil(count / limit),
+          totalPages: Math.ceil(count / safeLimit),
         },
       };
     } catch (error) {

@@ -99,6 +99,43 @@ export class ContactsController {
   }
 
   /**
+   * GET /api/contacts/mine
+   * Lister les demandes envoyées par l'utilisateur connecté (par email)
+   * - Public "account" view (auth required)
+   */
+  async findMine(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const email = (req.user?.email || '').toLowerCase().trim();
+      if (!email) {
+        return next(createError('Non authentifié', 401));
+      }
+
+      const rows = await Contact.findAll({
+        where: { email },
+        order: [['createdAt', 'DESC']],
+        limit: 200,
+        include: [
+          {
+            model: User,
+            as: 'responder',
+            attributes: ['id', 'email', 'firstName', 'lastName'],
+            required: false,
+          },
+        ],
+      });
+
+      const response: ApiResponse<Contact[]> = {
+        success: true,
+        data: rows,
+      };
+
+      res.status(200).json(response);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  /**
    * GET /api/contacts
    * Lister toutes les demandes de contact (admin seulement)
    */
@@ -225,8 +262,27 @@ export class ContactsController {
 
       // Mettre à jour la réponse
       if (response !== undefined) {
-        contact.response = response;
-        if (response && !contact.respondedAt) {
+        const newResponse = String(response ?? '').trim();
+        if (newResponse) {
+          // Keep a simple thread in `response` so admins can reply multiple times.
+          // Newest reply goes on top for quick scan.
+          const stamp = new Date().toLocaleString('fr-FR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
+          const block = `Réponse (${stamp})\n${newResponse}`;
+
+          if (contact.response && contact.response.trim().length > 0) {
+            contact.response = `${block}\n\n— — —\n\n${contact.response.trim()}`;
+          } else {
+            contact.response = block;
+          }
+
+          // Always update "responded" metadata on each reply
           contact.respondedAt = new Date();
           contact.respondedBy = userId;
         }
@@ -301,22 +357,33 @@ export class ContactsController {
 
       await MailService.send({
         to: contact.email,
-        subject: 'Votre demande de contact a été reçue',
+        subject: 'Nous avons bien reçu votre message — Unlock',
         templateData: {
-          header: 'Demande de contact reçue',
+          header: 'Message reçu',
           greeting: `Bonjour ${userName},`,
-          mainMessage: 'Nous avons bien reçu votre demande de contact et nous vous répondrons dans les plus brefs délais.',
+          mainMessage:
+            `Merci de nous avoir contactés.\n` +
+            `Nous avons bien reçu votre message et un conseiller vous répond sous 24–48h (jours ouvrés).`,
           infoBox: {
-            title: 'Résumé de votre demande',
+            title: 'Récapitulatif',
             details: [
               { label: 'Type de contact', value: contact.contactType },
               { label: 'Type de demande', value: contact.requestType },
               { label: 'Catégorie', value: contact.subjectCategory },
+              {
+                label: 'Référence',
+                value: contact.id,
+              },
               { label: 'Date', value: new Date(contact.createdAt).toLocaleDateString('fr-FR') },
             ],
           },
           messageBox: contact.message,
-          conclusion: 'Merci de votre confiance. Nous vous contacterons prochainement.',
+          additionalMessage:
+            `Pour accélérer le traitement, n’hésitez pas à préciser :\n` +
+            `- votre disponibilité\n` +
+            `- votre contrainte de calendrier\n` +
+            `- le mode souhaité (distanciel / présentiel / hybride)\n`,
+          conclusion: 'Merci de votre confiance — à très vite.',
           signature: "L'équipe Unlock",
         },
       });
@@ -378,7 +445,7 @@ export class ContactsController {
             ],
           },
           messageBox: contact.message,
-          buttonUrl: `${env.allowedOrigins.split(',')[0]}/bo/contacts`,
+          buttonUrl: `${env.allowedOrigins.split(',')[0].replace(/\/$/, '')}/backoffice/contacts`,
           buttonText: 'Voir la demande',
           conclusion: 'Merci de traiter cette demande dans les plus brefs délais.',
           signature: 'Système de notification Unlock',

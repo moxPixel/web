@@ -1,2 +1,186 @@
-/* Styles spécifiques inutiles pour le moment : tout est géré en Tailwind */
+/* ============================================
+   QUALITY SECTION - Compact & Clean
+   ============================================ */
 
+.ui-quality {
+  position: relative;
+  z-index: 2;
+  padding: clamp(3rem, 6vw, 4.5rem) 0;
+}
+
+.ui-quality__container {
+  max-width: var(--ui-container-max);
+  margin-inline: auto;
+  padding: 0 var(--ui-gutter-x);
+}
+
+/* ============================================
+   HEADER COMPACT
+   ============================================ */
+
+.ui-quality__header {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ui-quality__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.1rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: var(--ui-hairline) solid var(--ui-border);
+  background: color-mix(in srgb, var(--ui-surface) 40%, transparent);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+.ui-quality__title {
+  margin: 1.25rem 0 0.75rem;
+  font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  color: var(--ui-fg);
+}
+
+.ui-quality__title-accent {
+  color: var(--ui-accent, var(--ui-fg));
+}
+
+.ui-quality__subtitle {
+  margin: 0;
+  font-size: clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem);
+  line-height: 1.65;
+  color: var(--ui-muted);
+  max-width: 70ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================
+   INDICATEURS QUALIOPI
+   ============================================ */
+
+.ui-quality__indicators {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.ui-quality__indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(2rem, 4vw, 3rem);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ui-quality__indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0;
+  text-align: center;
+}
+
+.ui-quality__indicator-circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.ui-quality__indicator-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ui-quality__indicator-bg {
+  stroke: color-mix(in srgb, var(--ui-border) 25%, transparent);
+}
+
+.ui-quality__indicator-progress {
+  stroke: var(--ui-accent, var(--ui-fg));
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.ui-quality__indicator-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ui-fg);
+  letter-spacing: -0.02em;
+}
+
+.ui-quality__indicator-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.ui-quality__indicator-label {
+  margin: 0;
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--ui-fg);
+  letter-spacing: -0.01em;
+}
+
+.ui-quality__indicator-desc {
+  margin: 0;
+  font-size: clamp(0.8125rem, 0.78rem + 0.18vw, 0.875rem);
+  line-height: 1.5;
+  color: var(--ui-muted);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .ui-quality__indicators-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .ui-quality {
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+  }
+
+  .ui-quality__header {
+    margin-bottom: clamp(2rem, 4vw, 2.5rem);
+  }
+
+  .ui-quality__indicators-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .ui-quality__indicator-circle {
+    width: 90px;
+    height: 90px;
+  }
+
+  .ui-quality__indicator-value {
+    font-size: 1.375rem;
+  }
+}

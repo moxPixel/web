@@ -10,7 +10,7 @@ const router = Router();
  */
 router.get('/sitemap.xml', async (_req: Request, res: Response) => {
   try {
-    const baseUrl = 'https://www.unlock-technologies.fr';
+    const baseUrl = 'https://www.unlock-formation.fr';
     const currentDate = new Date().toISOString().split('T')[0];
 
     // Récupérer toutes les formations publiées
@@ -44,8 +44,9 @@ router.get('/sitemap.xml', async (_req: Request, res: Response) => {
 `;
 
     // Ajouter les pages statiques
+    // Note: keep lastmod dynamic rather than hardcoding a fixed date.
     for (const page of staticPages) {
-      const lastmod = page.url === '/' ? currentDate : '2025-12-10';
+      const lastmod = currentDate;
       xml += `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${lastmod}</lastmod>
@@ -80,6 +81,31 @@ router.get('/sitemap.xml', async (_req: Request, res: Response) => {
     logger.error('Error generating sitemap:', error);
     res.status(500).send('Error generating sitemap');
   }
+});
+
+/**
+ * GET /robots.txt
+ * Robots policy + sitemap URL.
+ */
+router.get('/robots.txt', (_req: Request, res: Response) => {
+  const baseUrl = 'https://www.unlock-formation.fr';
+  const lines = [
+    'User-agent: *',
+    'Allow: /',
+    '',
+    'Disallow: /backoffice',
+    'Disallow: /profile',
+    'Disallow: /login',
+    'Disallow: /forgot-password',
+    'Disallow: /reset-password',
+    'Disallow: /api/',
+    '',
+    `Sitemap: ${baseUrl}/sitemap.xml`,
+    '',
+  ];
+  res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.status(200).send(lines.join('\n'));
 });
 
 export default router;

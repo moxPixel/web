@@ -1,0 +1,73 @@
+.ui-choice-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ui-choice-group--nowrap {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Give breathing room so focus rings / borders never look clipped */
+  padding: 0.2rem;
+}
+
+.ui-choice-group--nowrap::-webkit-scrollbar {
+  display: none;
+}
+
+.ui-choice-group__btn {
+  appearance: none;
+  border: 1.5px solid color-mix(in srgb, var(--ui-border) 55%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 78%, transparent);
+  color: color-mix(in srgb, var(--ui-fg) 85%, transparent);
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background var(--ui-dur-2) var(--ui-ease-out), border-color var(--ui-dur-2) var(--ui-ease-out),
+    transform var(--ui-dur-2) var(--ui-ease-out);
+}
+
+.ui-choice-group__label {
+  white-space: nowrap;
+}
+
+.ui-choice-group--sm .ui-choice-group__btn {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.ui-choice-group__btn:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 35%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 10%, var(--ui-bg));
+  transform: translateY(-1px);
+}
+
+.ui-choice-group__btn.is-active {
+  border-color: color-mix(in srgb, var(--ui-nebula-accent) 60%, transparent);
+  background: color-mix(in srgb, var(--ui-nebula-accent) 16%, var(--ui-bg));
+  color: color-mix(in srgb, var(--ui-fg) 95%, transparent);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--ui-nebula-accent) 15%, transparent);
+}
+
+/* In nowrap mode, avoid big shadows/transforms that get clipped by scrolling containers */
+.ui-choice-group--nowrap .ui-choice-group__btn:hover:not(:disabled) {
+  transform: none;
+}
+
+.ui-choice-group--nowrap .ui-choice-group__btn.is-active {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-nebula-accent) 22%, transparent);
+}
+
+.ui-choice-group__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+

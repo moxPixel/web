@@ -1,0 +1,509 @@
+@layer base {
+  :root {
+    /* ============================================
+       TYPOGRAPHY - Premium & Modern
+       ============================================ */
+    --ui-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+      "Apple Color Emoji", "Segoe UI Emoji";
+    --ui-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    
+    --ui-text-xs: 0.75rem;      /* 12px */
+    --ui-text-sm: 0.875rem;     /* 14px */
+    --ui-text-md: 0.9375rem;    /* 15px */
+    --ui-text-lg: 1.0625rem;    /* 17px */
+    --ui-text-xl: 1.25rem;      /* 20px */
+    --ui-text-2xl: 1.5rem;      /* 24px */
+    --ui-text-3xl: 1.875rem;    /* 30px */
+    
+    --ui-leading-tight: 1.2;
+    --ui-leading-normal: 1.5;
+    --ui-leading-relaxed: 1.7;
+    --ui-leading: 1.5;
+    
+    --ui-tracking-tight: -0.025em;
+    --ui-tracking-normal: -0.01em;
+    --ui-tracking-wide: 0.025em;
+    --ui-tracking: -0.01em;
+    
+    --ui-weight-light: 400;
+    --ui-weight-regular: 450;
+    --ui-weight-medium: 560;
+    --ui-weight-semibold: 650;
+    --ui-weight-bold: 700;
+
+    /* ============================================
+       RADIUS - Generous & Consistent
+       ============================================ */
+    --ui-radius-xs: 8px;
+    --ui-radius-sm: 12px;
+    --ui-radius-md: 16px;
+    --ui-radius-lg: 20px;
+    --ui-radius-xl: 24px;
+    --ui-radius-2xl: 28px;
+    --ui-radius-control: 999px;  /* Pill shape */
+    --ui-radius-card: 24px;
+
+    /* ============================================
+       SPACING - Consistent Scale
+       ============================================ */
+    --ui-space-0: 0;
+    --ui-space-1: 0.25rem;   /* 4px */
+    --ui-space-2: 0.5rem;    /* 8px */
+    --ui-space-3: 0.75rem;   /* 12px */
+    --ui-space-4: 1rem;     /* 16px */
+    --ui-space-5: 1.25rem;   /* 20px */
+    --ui-space-6: 1.5rem;   /* 24px */
+    --ui-space-8: 2rem;      /* 32px */
+    --ui-space-10: 2.5rem;   /* 40px */
+    --ui-space-12: 3rem;     /* 48px */
+    --ui-space-16: 4rem;     /* 64px */
+    --ui-space-20: 5rem;     /* 80px */
+
+    /* ============================================
+       LAYOUT (SSOT) - Gutters & containers
+       Home uses these gutters; apply everywhere for consistency.
+       ============================================ */
+    --ui-gutter-x: clamp(1.5rem, 5vw, 4rem);
+    --ui-page-pad-bottom: 4rem;
+    --ui-container-max: 1200px;
+    --ui-container-max-narrow: 1060px;
+    
+    /* Hero spacing (SSOT) - Uniform across all pages */
+    --ui-hero-card-margin-bottom: clamp(3rem, 5vw, 6rem);
+    --ui-hero-inner-padding-y: clamp(3rem, 4vw, 5.5rem);
+    
+    /* Back button (SSOT) - Uniform across all pages */
+    --ui-back-button-margin-left: 0.25rem;
+    --ui-back-row-margin-bottom: 1.25rem;
+
+    /* ============================================
+       MOTION - Smooth & Premium
+       ============================================ */
+    --ui-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ui-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+    --ui-ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ui-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    --ui-dur-fast: 100ms;
+    --ui-dur-1: 150ms;
+    --ui-dur-2: 200ms;
+    --ui-dur-3: 300ms;
+    --ui-dur-4: 400ms;
+
+    /* ============================================
+       COLORS - Dark Theme (Default)
+       ============================================ */
+    color-scheme: dark;
+    
+    /* Base colors */
+    --ui-bg: #050506;
+    --ui-fg: #f1f1f2;
+    --ui-fg-subtle: rgba(241, 241, 242, 0.5);
+    --ui-muted: rgba(241, 241, 242, 0.7);
+    --ui-subtle: rgba(241, 241, 242, 0.5);
+
+    /* Back-compat aliases (some pages use legacy tokens) */
+    --ui-text: var(--ui-fg);
+    --ui-text-muted: var(--ui-muted);
+    --ui-text-subtle: var(--ui-fg-subtle);
+    
+    /* Borders */
+    --ui-border: rgba(241, 241, 242, 0.1);
+    --ui-border-strong: rgba(241, 241, 242, 0.16);
+    --ui-border-subtle: rgba(241, 241, 242, 0.06);
+
+    /* ============================================
+       GLASSMORPHISM - Premium Material
+       ============================================ */
+    --ui-hairline: 1px;
+    --ui-glass-blur: 24px;
+    --ui-glass-sat: 150%;
+
+    /* Glass surfaces (dark) */
+    --ui-glass-bg: rgba(14, 14, 16, 0.58);
+    --ui-glass-bg-strong: rgba(14, 14, 16, 0.75);
+    --ui-glass-bg-subtle: rgba(14, 14, 16, 0.42);
+    
+    --ui-glass-border: rgba(241, 241, 242, 0.08);
+    --ui-glass-border-strong: rgba(241, 241, 242, 0.12);
+    --ui-glass-border-subtle: rgba(241, 241, 242, 0.05);
+
+    /* App-level overlays */
+    --ui-scrim: rgba(0, 0, 0, 0.4);
+
+    /* Back-compat aliases */
+    --ui-surface: var(--ui-glass-bg);
+    --ui-surface-2: var(--ui-glass-bg-strong);
+    --ui-surface-border: var(--ui-glass-border);
+    --ui-backdrop-blur: var(--ui-glass-blur);
+    --ui-backdrop-sat: var(--ui-glass-sat);
+
+    /* ============================================
+       CONTROLS - iOS-like Corporate
+       ============================================ */
+    --ui-control-bg: rgba(11, 11, 12, 0.84);
+    --ui-control-bg-hover: rgba(16, 16, 18, 0.88);
+    --ui-control-border: rgba(241, 241, 242, 0.12);
+    --ui-control-border-hover: rgba(241, 241, 242, 0.2);
+
+    /* ============================================
+       BUTTONS - Solid Corporate Style
+       ============================================ */
+    /* Default button */
+    --ui-btn-bg: rgba(11, 11, 12, 0.9);
+    --ui-btn-fg: #ffffff;
+    --ui-btn-bg-hover: rgba(16, 16, 18, 0.94);
+    --ui-btn-border: rgba(241, 241, 242, 0.14);
+    --ui-btn-border-hover: rgba(241, 241, 242, 0.24);
+
+    /* Primary button (strong) */
+    --ui-btn-strong-bg: #ffffff;
+    --ui-btn-strong-fg: #0b0b0c;
+    --ui-btn-strong-bg-hover: #f5f5f6;
+    --ui-btn-strong-border: rgba(241, 241, 242, 0.6);
+    --ui-btn-strong-border-hover: rgba(241, 241, 242, 0.75);
+
+    /* ============================================
+       ELEVATION - Minimal Matte
+       ============================================ */
+    --ui-shadow-1: none;
+    --ui-shadow-2: none;
+    --ui-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --ui-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --ui-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+
+    /* ============================================
+       FOCUS RINGS
+       ============================================ */
+    --ui-ring: rgba(241, 241, 242, 0.24);
+    --ui-ring-strong: rgba(241, 241, 242, 0.32);
+    --ui-ring-width: 1px;
+
+    /* ============================================
+       NEBULA SPHERES - Modern AI/Tech Theme
+       ============================================ */
+    /*
+      SSOT — Dynamic palettes
+      - One place to tune ALL colors (Three.js + backgrounds + accents).
+      - DynamicPaletteService will set --ui-nebula-* to one of these palettes.
+    */
+
+    /* Base (Hero) — AI white-blue accent (slightly more blue + bright) */
+    --ui-palette-base-accent: #cfeeff;
+    --ui-palette-base-secondary: #3b82f6;
+    --ui-palette-base-tertiary: #070b14;
+    --ui-palette-base-teal: #8b5cf6;
+
+    /* About — Violet / Magenta */
+    --ui-palette-about-accent: #a855f7;
+    --ui-palette-about-secondary: #e879f9;
+    --ui-palette-about-tertiary: #1a0a2e;
+    --ui-palette-about-teal: #f0d8ff;
+
+    /* Business — Teal / Cyan */
+    --ui-palette-business-accent: #5eead4;
+    --ui-palette-business-secondary: #2dd4bf;
+    --ui-palette-business-tertiary: #0f172a;
+    --ui-palette-business-teal: #a7f3d0;
+
+    /* Reviews — Pink / Rose */
+    --ui-palette-reviews-accent: #f472b6;
+    --ui-palette-reviews-secondary: #ec4899;
+    --ui-palette-reviews-tertiary: #1f0a1a;
+    --ui-palette-reviews-teal: #fce7f3;
+
+    /* Apprenticeship — Amber (must feel warm) */
+    --ui-palette-apprenticeship-accent: #fbbf24;
+    --ui-palette-apprenticeship-secondary: #f59e0b;
+    --ui-palette-apprenticeship-tertiary: #1a0a0a;
+    --ui-palette-apprenticeship-teal: #fef3c7;
+
+    /* Quality — Amber / Gold (for the quality model + list) */
+    --ui-palette-quality-accent: #fbbf24;
+    --ui-palette-quality-secondary: #f59e0b;
+    --ui-palette-quality-tertiary: #120a05;
+    --ui-palette-quality-teal: #fff3c4;
+
+    /* Events — Sky / Electric (distinct, premium) */
+    --ui-palette-events-accent: #38bdf8;
+    --ui-palette-events-secondary: #0ea5e9;
+    --ui-palette-events-tertiary: #06121f;
+    --ui-palette-events-teal: #bae6fd;
+
+    /* Locky Games — Red (rouge) */
+    --ui-palette-locky-games-accent: #dc2626;
+    --ui-palette-locky-games-secondary: #ef4444;
+    --ui-palette-locky-games-tertiary: #1a0a0a;
+    --ui-palette-locky-games-teal: #fecaca;
+
+    /* Programs stepper — per-step accents (SSOT) */
+    --ui-step-1-accent: #ec4899; /* magenta */
+    --ui-step-2-accent: #3b82f6; /* blue */
+    --ui-step-3-accent: #a855f7; /* violet */
+    --ui-step-4-accent: #f59e0b; /* amber */
+
+    /* Default: base palette */
+    --ui-nebula-accent: var(--ui-palette-base-accent);
+    --ui-nebula-secondary: var(--ui-palette-base-secondary);
+    --ui-nebula-tertiary: var(--ui-palette-base-tertiary);
+    --ui-nebula-teal: var(--ui-palette-base-teal);
+    
+    /* Smooth transitions for dynamic palette changes */
+    transition: --ui-nebula-accent 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                --ui-nebula-secondary 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                --ui-nebula-tertiary 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                --ui-nebula-teal 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /*
+    Accent is OPTIONAL and must be explicitly activated.
+    Default state: it does not exist (no hidden tints).
+  */
+  html[data-accent="primary"] {
+    /* When accent is activated, reuse the cyberpunk palette (no global tint by default). */
+    --ui-accent: var(--ui-nebula-accent);
+    --ui-accent-ink: #0b0b0c;
+    --ui-accent-ring: color-mix(in srgb, var(--ui-accent) 60%, transparent);
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    font-family: var(--ui-font-sans);
+    font-size: var(--ui-text-md);
+    line-height: var(--ui-leading);
+    letter-spacing: var(--ui-tracking);
+    font-weight: var(--ui-weight-regular);
+    background: var(--ui-bg);
+    color: var(--ui-fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+  }
+
+  /* ============================================
+     BODY OVERLAY - Subtle Tint Only
+     ============================================ */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    /*
+      IMPORTANT: Do NOT blur at body layer.
+      Component glass (header/menus/cards) handles the real blur.
+      This is only a subtle tint for depth.
+    */
+    background: rgba(5, 5, 6, 0.24);
+    pointer-events: none;
+    transition: opacity var(--ui-dur-3) var(--ui-ease-out);
+  }
+
+  body.overflow-hidden {
+    overflow: hidden;
+  }
+
+  /* ------------------------------------------------------------------
+    Global Nebula Background (fixed, shared across all pages)
+    - Pure CSS (no PNG), controlled by --ui-nebula-* tokens
+    - Stays fixed during scroll
+  -------------------------------------------------------------------*/
+  .ui-app-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ui-bg-spheres {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+  }
+
+  .ui-bg-sphere-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------------
+    Dots Pattern Overlay
+    - Dense, closely-spaced dots pattern
+    - Subtle texture over the nebula spheres
+  -------------------------------------------------------------------*/
+  .ui-bg-pattern {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    /* More modern / subdued (NVIDIA-ish): visible texture without "snow" */
+    opacity: 0.38;
+    mix-blend-mode: soft-light;
+  }
+
+  .ui-bg-pattern-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    color: var(--ui-nebula-accent);
+    /* Smooth transition for color changes */
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: saturate(110%);
+  }
+
+  .ui-bg-pattern pattern circle {
+    transition: fill 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ui-bg-sphere {
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+    will-change: transform, opacity, filter, background;
+    mix-blend-mode: screen;
+    transform-origin: center center;
+    /* Smooth transition for background color changes */
+    transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Mouse parallax variables (initialized to 0) */
+    --mouse-x: 0px;
+    --mouse-y: 0px;
+  }
+
+  .ui-bg-sphere--1 {
+    width: clamp(280px, 34vw, 560px);
+    height: clamp(280px, 34vw, 560px);
+    top: -12%;
+    right: 10%;
+    /* Modern nebula: 2-layer glow, fewer colors, more depth */
+    background:
+      radial-gradient(ellipse at 30% 35%,
+        color-mix(in srgb, var(--ui-nebula-accent) 70%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-accent) 28%, transparent) 34%,
+        transparent 70%),
+      radial-gradient(ellipse at 70% 68%,
+        color-mix(in srgb, var(--ui-nebula-accent) 40%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-accent) 16%, transparent) 38%,
+        transparent 72%);
+    opacity: 0.52;
+    filter: blur(98px) saturate(115%);
+    animation: ui-bg-float-1 60s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .ui-bg-sphere--2 {
+    width: clamp(420px, 54vw, 920px);
+    height: clamp(420px, 54vw, 920px);
+    top: 8%;
+    right: -8%;
+    /* Keep it restrained: secondary is present but not rainbow */
+    background:
+      radial-gradient(ellipse at 48% 42%,
+        color-mix(in srgb, var(--ui-nebula-secondary) 52%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-secondary) 18%, transparent) 40%,
+        transparent 74%),
+      radial-gradient(ellipse at 60% 62%,
+        color-mix(in srgb, var(--ui-nebula-accent) 22%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-accent) 8%, transparent) 46%,
+        transparent 78%);
+    opacity: 0.42;
+    filter: blur(120px) saturate(110%);
+    animation: ui-bg-float-2 74s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .ui-bg-sphere--3 {
+    width: clamp(260px, 30vw, 520px);
+    height: clamp(260px, 30vw, 520px);
+    top: 56%;
+    right: 12%;
+    background:
+      radial-gradient(ellipse at 55% 40%,
+        color-mix(in srgb, var(--ui-nebula-teal) 40%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-teal) 14%, transparent) 42%,
+        transparent 76%),
+      radial-gradient(ellipse at 35% 70%,
+        color-mix(in srgb, var(--ui-nebula-accent) 18%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-accent) 6%, transparent) 48%,
+        transparent 78%);
+    opacity: 0.34;
+    filter: blur(92px) saturate(110%);
+    animation: ui-bg-float-3 68s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .ui-bg-sphere--4 {
+    width: clamp(220px, 22vw, 420px);
+    height: clamp(220px, 22vw, 420px);
+    top: 2%;
+    right: 26%;
+    /* Very subtle tertiary, just to avoid a flat look */
+    background:
+      radial-gradient(ellipse at 40% 48%,
+        color-mix(in srgb, var(--ui-nebula-tertiary) 26%, transparent) 0%,
+        color-mix(in srgb, var(--ui-nebula-tertiary) 9%, transparent) 44%,
+        transparent 78%),
+      radial-gradient(ellipse at 62% 62%,
+        color-mix(in srgb, var(--ui-nebula-accent) 10%, transparent) 0%,
+        transparent 70%);
+    opacity: 0.22;
+    filter: blur(84px) saturate(105%);
+    animation: ui-bg-float-4 86s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ui-bg-float-1 {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+      opacity: 0.52;
+      filter: blur(98px) saturate(115%);
+    }
+    35% { transform: translate(26px, -22px) scale(1.06) rotate(1.2deg); opacity: 0.58; }
+    70% { transform: translate(-20px, 16px) scale(0.98) rotate(-0.8deg); opacity: 0.46; }
+  }
+  
+
+  @keyframes ui-bg-float-2 {
+    0%,
+    100% {
+      transform: translate(calc(0px + var(--mouse-x, 0px)), calc(0px + var(--mouse-y, 0px))) scale(1) rotate(0deg);
+      opacity: 0.42;
+      filter: blur(120px) saturate(110%);
+    }
+    33% { transform: translate(calc(-34px + var(--mouse-x, 0px)), calc(22px + var(--mouse-y, 0px))) scale(1.04) rotate(2.2deg); opacity: 0.46; }
+    66% { transform: translate(calc(28px + var(--mouse-x, 0px)), calc(-20px + var(--mouse-y, 0px))) scale(0.98) rotate(-2deg); opacity: 0.38; }
+  }
+
+  @keyframes ui-bg-float-3 {
+    0%,
+    100% {
+      transform: translate(calc(0px + var(--mouse-x, 0px)), calc(0px + var(--mouse-y, 0px))) scale(1) rotate(0deg);
+      opacity: 0.34;
+      filter: blur(92px) saturate(110%);
+    }
+    40% { transform: translate(calc(22px + var(--mouse-x, 0px)), calc(28px + var(--mouse-y, 0px))) scale(1.05) rotate(1.4deg); opacity: 0.38; }
+    80% { transform: translate(calc(-18px + var(--mouse-x, 0px)), calc(-12px + var(--mouse-y, 0px))) scale(0.99) rotate(-1deg); opacity: 0.3; }
+  }
+
+  @keyframes ui-bg-float-4 {
+    0%,
+    100% {
+      transform: translate(calc(0px + var(--mouse-x, 0px)), calc(0px + var(--mouse-y, 0px))) scale(1) rotate(0deg);
+      opacity: 0.22;
+      filter: blur(84px) saturate(105%);
+    }
+    50% { transform: translate(calc(-14px + var(--mouse-x, 0px)), calc(12px + var(--mouse-y, 0px))) scale(1.03) rotate(2.6deg); opacity: 0.26; }
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+

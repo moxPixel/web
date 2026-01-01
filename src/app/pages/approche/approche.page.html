@@ -1,0 +1,233 @@
+<section class="ui-approche-page">
+  <div class="ui-approche-page__hero-wrap">
+    <div class="ui-approche-page__hero-spheres" aria-hidden="true">
+      <div class="ui-approche-page__sphere approche-sphere-1"></div>
+      <div class="ui-approche-page__sphere approche-sphere-2"></div>
+      <div class="ui-approche-page__sphere approche-sphere-3"></div>
+    </div>
+    <div class="ui-approche-page__hero-card">
+      <div class="ui-approche-page__hero-inner">
+        <div class="ui-approche-page__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-approche-page__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+        <div class="ui-approche-page__hero-grid">
+          <div class="ui-approche-page__hero-copy">
+            <div class="ui-approche-page__badge-row">
+              <span class="ui-approche-page__badge">Notre approche</span>
+            </div>
+            <h1 class="ui-approche-page__h1">
+              Apprendre en <span class="ui-approche-page__h1-accent">faisant</span>, pas en regardant
+            </h1>
+            <p class="ui-approche-page__p">
+              Chez Unlock, on croit qu'on apprend mieux en mettant les mains dans le code, en testant, en se trompant et en recommençant.
+              Nos formateurs sont des <strong>pros passionnés</strong> qui partagent leur savoir-faire terrain. Et <strong>EVA</strong> est là 24/7 pour vous débloquer quand vous en avez besoin.
+            </p>
+            <div class="ui-approche-page__cta-row">
+              <a routerLink="/trainings" uiButton variant="primary" class="ui-approche-page__cta">
+                <span>Découvrir les formations</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+              <a routerLink="/contact" uiButton variant="outline" class="ui-approche-page__cta">
+                <span>Discuter avec nous</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+            </div>
+          </div>
+          <div class="ui-approche-page__hero-stats">
+            <div uiCard class="ui-approche-page__stat-card">
+              <div class="ui-approche-page__stat-icon">
+                <app-tabler-icon name="code" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__stat-title">Projets concrets</p>
+              <p class="ui-approche-page__stat-text">Vous créez de vraies applis, scripts, pipelines, audits. Pas juste des exercices théoriques.</p>
+            </div>
+            <div uiCard class="ui-approche-page__stat-card">
+              <div class="ui-approche-page__stat-icon">
+                <app-tabler-icon name="users" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__stat-title">Experts du terrain</p>
+              <p class="ui-approche-page__stat-text">Nos formateurs exercent le métier : ils connaissent les défis réels et les solutions qui marchent.</p>
+            </div>
+            <div uiCard class="ui-approche-page__stat-card">
+              <div class="ui-approche-page__stat-icon">
+                <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__stat-title">EVA, votre copilote IA</p>
+              <p class="ui-approche-page__stat-text">Besoin d'une explication ? D'un exemple ? EVA reformule, clarifie et vous aide à avancer.</p>
+            </div>
+            <div uiCard class="ui-approche-page__stat-card">
+              <div class="ui-approche-page__stat-icon">
+                <app-tabler-icon name="chart-line" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__stat-title">Suivi personnalisé</p>
+              <p class="ui-approche-page__stat-text">Points réguliers, feedback bienveillant, et une vraie écoute de votre progression.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-approche-page__body ui-container">
+    <div class="ui-approche-page__layout">
+      <div class="ui-approche-page__main">
+        <section id="principes" uiCard class="ui-approche-page__block">
+          <h2>
+            <app-tabler-icon name="checklist" [size]="18" class="ui-approche-page__h2-icon"></app-tabler-icon>
+            <span>Comment on vous fait progresser</span>
+          </h2>
+          <p>
+            Nos formations sont construites sur des principes simples : on vous apprend les bases solides, puis on vous fait pratiquer tout de suite.
+            Chaque séance a un objectif clair, et vous repartez avec quelque chose de concret que vous avez créé.
+          </p>
+          <ul>
+            <li>Des cours structurés mais vivants, avec des démos et des mises en pratique immédiates.</li>
+            <li>Des cas d'usage inspirés de situations réelles en entreprise.</li>
+            <li>Des validations régulières pour s'assurer que vous maîtrisez bien chaque étape.</li>
+            <li>La possibilité d'intégrer vos propres projets comme fil rouge si ça a du sens.</li>
+          </ul>
+        </section>
+
+        <section id="experts" uiCard class="ui-approche-page__block">
+          <h2>
+            <app-tabler-icon name="users" [size]="18" class="ui-approche-page__h2-icon"></app-tabler-icon>
+            <span>Nos formateurs : des pros qui vivent le métier</span>
+          </h2>
+          <p>
+            On ne recrute pas n'importe qui. Nos formateurs sont choisis parce qu'ils sont bons techniquement ET bons pédagogiquement.
+            Ils travaillent sur de vrais projets en prod tous les jours, donc ils savent ce qui marche vraiment (et ce qui ne marche pas).
+          </p>
+          <ul>
+            <li>Ils conçoivent les programmes en fonction de ce que le marché recherche aujourd'hui.</li>
+            <li>Ils animent les sessions avec passion et partagent leurs retours d'expérience concrets.</li>
+            <li>Ils relisent vos projets et vous donnent des feedbacks constructifs pour vous améliorer.</li>
+            <li>Ils vous conseillent sur votre orientation et votre positionnement pro.</li>
+          </ul>
+        </section>
+
+        <section id="eva" uiCard class="ui-approche-page__block">
+          <h2>
+            <app-tabler-icon name="sparkles" [size]="18" class="ui-approche-page__h2-icon"></app-tabler-icon>
+            <span>EVA : votre assistant IA qui ne dort jamais</span>
+          </h2>
+          <p>
+            EVA, c'est notre assistant IA développé spécialement pour les étudiants. Il ne remplace pas le formateur, mais il vous aide
+            quand vous êtes bloqué à 23h un dimanche soir. Reformulation, exemples, explications pas-à-pas : EVA est là pour vous.
+          </p>
+          <ul>
+            <li>Vous expliquer un concept technique que vous n'avez pas compris en cours.</li>
+            <li>Générer des exemples supplémentaires ou des variantes d'exercices pour vous entraîner.</li>
+            <li>Vous aider à structurer un projet, rédiger une doc, préparer une présentation.</li>
+            <li>Vous soutenir dans vos révisions entre les sessions, à votre rythme.</li>
+          </ul>
+        </section>
+
+        <section id="formats" uiCard class="ui-approche-page__block">
+          <h2>
+            <app-tabler-icon name="calendar" [size]="18" class="ui-approche-page__h2-icon"></app-tabler-icon>
+            <span>Des formats qui s'adaptent à votre vie</span>
+          </h2>
+          <p>
+            On sait que tout le monde n'a pas les mêmes contraintes. Du coup, on propose plusieurs formats pour que vous puissiez apprendre
+            à votre rythme, sans sacrifier la qualité.
+          </p>
+          <div class="ui-approche-page__formats">
+            <div uiCard class="ui-approche-page__format-card">
+              <div class="ui-approche-page__format-icon">
+                <app-tabler-icon name="rocket" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__format-title">Bootcamps intensifs</p>
+              <p class="ui-approche-page__format-text">
+                Formats courts et concentrés sur quelques semaines : vous vous immergez à fond, et vous ressortez avec une nouvelle compétence opérationnelle.
+              </p>
+            </div>
+            <div uiCard class="ui-approche-page__format-card">
+              <div class="ui-approche-page__format-icon">
+                <app-tabler-icon name="graduation-cap" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__format-title">Parcours longs certifiants</p>
+              <p class="ui-approche-page__format-text">
+                Des formations structurées sur plusieurs mois, avec une vraie progression et un diplôme reconnu à la clé.
+              </p>
+            </div>
+            <div uiCard class="ui-approche-page__format-card">
+              <div class="ui-approche-page__format-icon">
+                <app-tabler-icon name="building" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-approche-page__format-title">Formations sur mesure entreprise</p>
+              <p class="ui-approche-page__format-text">
+                On construit un programme spécifique pour vos équipes, sur vos outils, vos besoins, vos contraintes.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="pour-qui" uiCard class="ui-approche-page__block">
+          <h2>
+            <app-tabler-icon name="user" [size]="18" class="ui-approche-page__h2-icon"></app-tabler-icon>
+            <span>C'est fait pour qui ?</span>
+          </h2>
+          <div class="ui-approche-page__audience-grid">
+            <div>
+              <h3>Pour vous, individuellement</h3>
+              <p>
+                Que vous soyez en reconversion, que vous vouliez monter en compétences, ou que vous cherchiez à vous spécialiser,
+                notre approche est pensée pour que chaque compétence apprise soit directement utilisable dans votre futur job.
+              </p>
+              <ul>
+                <li>Des parcours adaptés à votre niveau de départ et vos objectifs.</li>
+                <li>Des projets que vous pouvez présenter fièrement en entretien ou sur LinkedIn.</li>
+                <li>Des conseils pour vous positionner et valoriser ce que vous avez appris.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Pour les entreprises</h3>
+              <p>
+                On construit des formations qui collent vraiment à vos besoins : vos outils, vos processus, vos enjeux stratégiques.
+                Pas de blabla théorique, juste ce qui va faire avancer vos équipes et vos projets.
+              </p>
+              <ul>
+                <li>On commence par comprendre vos vrais besoins et définir des objectifs mesurables.</li>
+                <li>On adapte les programmes à vos techs, votre contexte, votre planning.</li>
+                <li>On vous tient informés avec des reportings clairs sur la progression et les compétences acquises.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="ui-approche-page__side" aria-label="Sommaire">
+        <div uiCard class="ui-approche-page__side-card">
+          <figure class="ui-approche-page__side-image">
+            <img
+              src="/assets/images/img/g6.jpg"
+              alt="Notre approche pédagogique"
+              width="400"
+              height="300"
+              loading="lazy"
+            />
+          </figure>
+          <p class="ui-approche-page__side-title">Sommaire</p>
+          <nav class="ui-approche-page__toc" aria-label="Sommaire approche">
+            <a class="ui-approche-page__toc-link" href="#principes">Notre méthode</a>
+            <a class="ui-approche-page__toc-link" href="#experts">Nos formateurs</a>
+            <a class="ui-approche-page__toc-link" href="#eva">EVA, l'assistant IA</a>
+            <a class="ui-approche-page__toc-link" href="#formats">Nos formats</a>
+            <a class="ui-approche-page__toc-link" href="#pour-qui">C'est pour qui ?</a>
+          </nav>
+          <div class="ui-approche-page__side-cta">
+            <a routerLink="/trainings" uiButton variant="primary" class="ui-approche-page__side-btn">
+              <span>Voir les formations</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+            <a routerLink="/contact" uiButton variant="outline" class="ui-approche-page__side-btn">
+              <span>Discuter avec nous</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

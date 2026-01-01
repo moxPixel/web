@@ -1,0 +1,177 @@
+<section class="ui-recrutement-page">
+  <div class="ui-recrutement-page__hero-wrap">
+    <div class="ui-recrutement-page__hero-spheres" aria-hidden="true">
+      <div class="ui-recrutement-page__sphere recrutement-sphere-1"></div>
+      <div class="ui-recrutement-page__sphere recrutement-sphere-2"></div>
+      <div class="ui-recrutement-page__sphere recrutement-sphere-3"></div>
+    </div>
+    <div class="ui-recrutement-page__hero-card">
+      <div class="ui-recrutement-page__hero-inner">
+        <div class="ui-recrutement-page__back-row">
+          <button uiButton variant="ghost" type="button" class="ui-recrutement-page__back ui-icon-button" [routerLink]="['/']">
+            <app-tabler-icon name="arrow-left" [size]="20"></app-tabler-icon>
+          </button>
+        </div>
+        <div class="ui-recrutement-page__hero-grid">
+          <div class="ui-recrutement-page__hero-copy">
+            <div class="ui-recrutement-page__badge-row">
+              <span class="ui-recrutement-page__badge">Processus de recrutement</span>
+            </div>
+            <h1 class="ui-recrutement-page__h1">
+              Un recrutement <span class="ui-recrutement-page__h1-accent">exigeant</span> pour votre réussite
+            </h1>
+            <p class="ui-recrutement-page__p">
+              Chez Unlock, on ne recrute pas n'importe qui. Notre processus de sélection est rigoureux parce qu'on veut vous donner
+              toutes les chances de réussir. On évalue votre motivation, vos compétences, et on s'assure que vous allez vous épanouir
+              dans un groupe cohérent et stimulant. Bienvenue dans <strong>"La Ruche"</strong>, notre espace où les talents se révèlent.
+            </p>
+            <div class="ui-recrutement-page__cta-row">
+              <a routerLink="/contact" uiButton variant="primary" class="ui-recrutement-page__cta">
+                <span>Postuler maintenant</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+              <a routerLink="/trainings" uiButton variant="outline" class="ui-recrutement-page__cta">
+                <span>Voir les formations</span>
+                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+              </a>
+            </div>
+          </div>
+          <div class="ui-recrutement-page__hero-stats">
+            <div uiCard class="ui-recrutement-page__stat-card">
+              <div class="ui-recrutement-page__stat-icon">
+                <app-tabler-icon name="flame" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-recrutement-page__stat-title">Sélection exigeante</p>
+              <p class="ui-recrutement-page__stat-text">Un process clair, en plusieurs étapes, pour valider la motivation et les bases.</p>
+            </div>
+            <div uiCard class="ui-recrutement-page__stat-card">
+              <div class="ui-recrutement-page__stat-icon">
+                <app-tabler-icon name="building-community" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-recrutement-page__stat-title">La Ruche</p>
+              <p class="ui-recrutement-page__stat-text">Un cadre collaboratif qui développe l’entraide, l’exigence et le rythme.</p>
+            </div>
+            <div uiCard class="ui-recrutement-page__stat-card">
+              <div class="ui-recrutement-page__stat-icon">
+                <app-tabler-icon name="chart-dots" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-recrutement-page__stat-title">Groupes cohérents</p>
+              <p class="ui-recrutement-page__stat-text">Évaluation individuelle pour constituer des promotions équilibrées et complémentaires.</p>
+            </div>
+            <div uiCard class="ui-recrutement-page__stat-card">
+              <div class="ui-recrutement-page__stat-icon">
+                <app-tabler-icon name="clock" [size]="18"></app-tabler-icon>
+              </div>
+              <p class="ui-recrutement-page__stat-title">Retour rapide</p>
+              <p class="ui-recrutement-page__stat-text">Une réponse structurée et un retour clair sur les prochaines étapes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-recrutement-page__body ui-container">
+    <div class="ui-recrutement-page__layout">
+      <div class="ui-recrutement-page__main">
+        <section uiCard class="ui-recrutement-page__block">
+          <h2>
+            <app-tabler-icon name="info-circle" [size]="18" class="ui-recrutement-page__h2-icon"></app-tabler-icon>
+            <span>Pourquoi un recrutement aussi exigeant ?</span>
+          </h2>
+          <p>
+            Parce que votre réussite dépend autant de votre motivation que de la qualité du groupe dans lequel vous allez évoluer.
+            Ici, on vise une progression rapide — et ça demande un cadre clair, une exigence assumée, et une équipe qui vous tire vers le haut.
+          </p>
+          <p>
+            On ne cherche pas “le meilleur CV”. On cherche des profils qui ont envie d'apprendre, de construire, de collaborer,
+            et qui sont prêts à s’investir. C’est aussi ce qui nous permet de composer des groupes cohérents.
+          </p>
+        </section>
+
+        <section uiCard class="ui-recrutement-page__block">
+          <h2>
+            <app-tabler-icon name="checklist" [size]="18" class="ui-recrutement-page__h2-icon"></app-tabler-icon>
+            <span>Les étapes du processus</span>
+          </h2>
+          <p>Chaque étape est pensée pour évaluer un aspect essentiel : motivation, bases, posture, et capacité à travailler en équipe.</p>
+          <ol class="ui-recrutement-page__steps-list">
+            <li class="ui-recrutement-page__step-item" *ngFor="let step of steps">
+              <div class="ui-recrutement-page__step-kicker">
+                <span class="ui-recrutement-page__step-n">{{ step.number }}</span>
+                <span class="ui-recrutement-page__step-dot" aria-hidden="true"></span>
+                <span class="ui-recrutement-page__step-name">{{ step.title }}</span>
+              </div>
+              <p class="ui-recrutement-page__step-desc">{{ step.description }}</p>
+              <ul class="ui-recrutement-page__step-bullets">
+                <li *ngFor="let detail of step.details">{{ detail }}</li>
+              </ul>
+            </li>
+          </ol>
+        </section>
+
+        <section uiCard class="ui-recrutement-page__block">
+          <h2>
+            <app-tabler-icon name="building-community" [size]="18" class="ui-recrutement-page__h2-icon"></app-tabler-icon>
+            <span>La Ruche : notre système de groupe</span>
+          </h2>
+          <p>
+            <strong>La Ruche</strong>, c’est notre manière de composer des promotions efficaces : on évalue chaque profil individuellement,
+            puis on construit des groupes équilibrés (niveaux, objectifs, posture) pour maximiser l’entraide et l’émulation.
+          </p>
+          <ul>
+            <li><strong>Évaluation individuelle</strong> : on regarde votre profil dans sa globalité (tech, soft skills, rythme, objectifs).</li>
+            <li><strong>Groupes cohérents</strong> : complémentaires et alignés sur un niveau de progression commun.</li>
+            <li><strong>Entraide</strong> : un cadre qui favorise le partage, les retours, et la montée en compétences.</li>
+            <li><strong>Exigence saine</strong> : on avance vite, mais jamais seul.</li>
+          </ul>
+        </section>
+
+        <section uiCard class="ui-recrutement-page__block">
+          <h2>
+            <app-tabler-icon name="flame" [size]="18" class="ui-recrutement-page__h2-icon"></app-tabler-icon>
+            <span>Ce qu’on attend de vous</span>
+          </h2>
+          <ul>
+            <li><strong>Motivation réelle</strong> : l’envie d’apprendre, de comprendre et de livrer.</li>
+            <li><strong>Engagement</strong> : présence, participation, travail personnel régulier.</li>
+            <li><strong>Esprit d’équipe</strong> : savoir demander, aider, et communiquer.</li>
+            <li><strong>Autonomie</strong> : curiosité, recherche, expérimentation.</li>
+          </ul>
+        </section>
+
+        <section uiCard class="ui-recrutement-page__notice">
+          <h3>Transparence</h3>
+          <p>
+            Notre objectif n’est pas de “trier” : c’est d’assurer la cohérence des promotions, et de créer les meilleures conditions
+            possibles pour que chaque étudiant progresse. Si votre candidature n’est pas retenue, on vous indique clairement pourquoi
+            et ce qu’il faut renforcer.
+          </p>
+        </section>
+      </div>
+
+      <aside class="ui-recrutement-page__side" aria-label="Résumé recrutement">
+        <div uiCard class="ui-recrutement-page__side-card">
+          <h3 class="ui-recrutement-page__side-title">En bref</h3>
+          <ul class="ui-recrutement-page__side-list">
+            <li><strong>Process</strong> : étapes claires + retour structuré</li>
+            <li><strong>Ruche</strong> : groupes équilibrés et cohérents</li>
+            <li><strong>Cadre</strong> : entraide + exigence + rythme</li>
+            <li><strong>Objectif</strong> : maximiser votre réussite</li>
+          </ul>
+          <div class="ui-recrutement-page__side-cta">
+            <a routerLink="/contact" uiButton variant="primary" class="ui-recrutement-page__side-btn">
+              <span>Postuler</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+            <a routerLink="/trainings" uiButton variant="outline" class="ui-recrutement-page__side-btn">
+              <span>Voir les formations</span>
+              <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+

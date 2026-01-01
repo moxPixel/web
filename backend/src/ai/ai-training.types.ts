@@ -69,6 +69,7 @@ export interface AiGeneratedTraining {
   priceFrom?: number;
   currency?: string;
   nextSessionHighlight?: string;
+  fundingOptions?: string[];
   heroImage?: string; // DOIT RESTER VIDE
   watermarkLogo?: string; // DOIT RESTER VIDE
   status?: 'draft' | 'published' | 'archived';

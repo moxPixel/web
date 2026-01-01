@@ -1,4 +1,4 @@
-// Interfaces pour les formations (API)
+// Backend API Training shapes (mirrors `web/`).
 
 export enum TrainingLevel {
   INITIATION = 'initiation',
@@ -26,7 +26,7 @@ export enum LocationType {
   HYBRIDE = 'hybride',
 }
 
-export interface TrainingModule {
+export interface TrainingModuleApi {
   id: string;
   trainingId: string;
   title: string;
@@ -37,7 +37,7 @@ export interface TrainingModule {
   updatedAt: string;
 }
 
-export interface TrainingSession {
+export interface TrainingSessionApi {
   id: string;
   trainingId: string;
   startDate: string;
@@ -52,7 +52,7 @@ export interface TrainingSession {
   updatedAt: string;
 }
 
-export interface Training {
+export interface TrainingApi {
   id: string;
   title: string;
   shortTitle: string;
@@ -76,13 +76,26 @@ export interface Training {
   priceFrom?: number;
   currency?: string;
   nextSessionHighlight?: string;
+  fundingOptions?: string[];
   heroImage?: string;
   watermarkLogo?: string;
   status: 'draft' | 'published' | 'archived';
-  modules?: TrainingModule[];
-  sessions?: TrainingSession[];
+  modules?: TrainingModuleApi[];
+  sessions?: TrainingSessionApi[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TrainingQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  level?: TrainingLevel;
+  trainingType?: TrainingType;
+  audienceType?: AudienceType;
+  status?: 'draft' | 'published' | 'archived';
+  sortBy?: string;
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface CreateTrainingDto {
@@ -108,6 +121,7 @@ export interface CreateTrainingDto {
   priceFrom?: number;
   currency?: string;
   nextSessionHighlight?: string;
+  fundingOptions?: string[];
   heroImage?: string;
   watermarkLogo?: string;
   status?: 'draft' | 'published' | 'archived';
@@ -121,15 +135,4 @@ export interface CreateTrainingDto {
 
 export interface UpdateTrainingDto extends Partial<CreateTrainingDto> {}
 
-export interface TrainingQueryParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  level?: TrainingLevel;
-  trainingType?: TrainingType;
-  audienceType?: AudienceType;
-  status?: 'draft' | 'published' | 'archived';
-  sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
-}
 

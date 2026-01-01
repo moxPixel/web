@@ -71,6 +71,13 @@ TrainingSession.init(
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
+      // Sequelize DECIMAL often serializes to string; ensure API returns a number (front expects number).
+      get() {
+        const raw = this.getDataValue('price') as unknown as string | number | null;
+        if (raw === null || raw === undefined) return null;
+        const n = typeof raw === 'number' ? raw : Number(raw);
+        return Number.isFinite(n) ? n : null;
+      },
     },
     status: {
       type: DataTypes.ENUM(...Object.values(SessionStatus)),

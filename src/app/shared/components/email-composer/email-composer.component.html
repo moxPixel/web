@@ -1,0 +1,60 @@
+<div class="ui-email">
+  <div class="ui-email__row">
+    <ng-container *ngIf="!editableTo; else toEdit">
+      <div class="ui-email__to">
+        <div class="ui-email__label">À</div>
+        <div class="ui-email__value">{{ to }}</div>
+      </div>
+    </ng-container>
+    <ng-template #toEdit>
+      <div class="ui-email__field ui-email__field--inline">
+        <label class="ui-email__label" for="email-to">À</label>
+        <input uiInput id="email-to" type="email" [disabled]="disabled || sending" [formControl]="form.controls.to" placeholder="destinataire@exemple.com" />
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="ui-email__field">
+    <label class="ui-email__label" for="email-cc">Cc (optionnel)</label>
+    <input uiInput id="email-cc" type="text" [disabled]="disabled || sending" [formControl]="form.controls.cc" placeholder="copie@exemple.com" />
+  </div>
+
+  <div class="ui-email__field">
+    <label class="ui-email__label" for="email-subject">Objet</label>
+    <input uiInput id="email-subject" type="text" [disabled]="disabled || sending" [formControl]="form.controls.subject" placeholder="Objet…" />
+  </div>
+
+  <div class="ui-email__field">
+    <label class="ui-email__label" for="email-message">Message</label>
+    <textarea
+      uiInput
+      id="email-message"
+      rows="7"
+      [disabled]="disabled || sending"
+      [formControl]="form.controls.message"
+      placeholder="Écrivez votre message…"
+    ></textarea>
+  </div>
+
+  <div class="ui-email__actions">
+    <div class="ui-email__actions-left">
+      <button uiButton variant="ghost" type="button" (click)="cancel.emit()" [disabled]="sending">Annuler</button>
+      <button uiButton variant="ghost" type="button" (click)="onPickAttachment(fileInput)" [disabled]="disabled || sending">
+        Joindre
+      </button>
+      <input #fileInput type="file" class="ui-email__file" (change)="onFilesSelected($event)" />
+    </div>
+
+    <button uiButton variant="primary" type="button" (click)="onSend()" [loading]="sending" [disabled]="disabled || sending || form.invalid">
+      <span>Envoyer</span>
+      <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+    </button>
+  </div>
+
+  <div *ngIf="attachment" class="ui-email__attachment">
+    <span class="ui-email__attachment-name">{{ attachment.filename }}</span>
+    <button uiButton variant="ghost" type="button" class="ui-email__attachment-remove" (click)="clearAttachment()" [disabled]="sending">Retirer</button>
+  </div>
+</div>
+
+

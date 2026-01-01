@@ -1,0 +1,158 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.ui-toasts {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  left: auto;
+  pointer-events: none;
+}
+
+.ui-toasts__stack {
+  display: grid;
+  gap: 10px;
+  width: min(420px, calc(100vw - 24px));
+}
+
+.ui-toast {
+  pointer-events: auto;
+  border-radius: var(--ui-radius-xl);
+  border: var(--ui-hairline) solid var(--ui-glass-border-strong);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 92%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  /* iOS-like slide animation */
+  transform: translate3d(120%, 0, 0);
+  opacity: 0;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Mobile: slide from bottom */
+@media (max-width: 639px) {
+  .ui-toast {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+/* Entering state */
+.ui-toast--entering {
+  opacity: 0;
+}
+
+/* Visible state - slide in from right (iOS-like) */
+.ui-toast--visible {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+/* Mobile: slide in from bottom */
+@media (max-width: 639px) {
+  .ui-toast--visible {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Leaving state - slide out to right (iOS-like) */
+.ui-toast--leaving {
+  transform: translate3d(120%, 0, 0);
+  opacity: 0;
+}
+
+/* Mobile: slide out to bottom */
+@media (max-width: 639px) {
+  .ui-toast--leaving {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+.ui-toast__inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 12px 14px 14px;
+}
+
+.ui-toast__icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--ui-radius-md);
+  display: grid;
+  place-items: center;
+  border: var(--ui-hairline) solid var(--ui-glass-border);
+  background: color-mix(in srgb, var(--ui-accent) 14%, transparent);
+  color: var(--ui-accent);
+}
+
+.ui-toast--success .ui-toast__icon {
+  background: color-mix(in srgb, rgba(34, 197, 94, 1) 18%, transparent);
+  color: rgba(134, 239, 172, 1);
+}
+
+.ui-toast--warning .ui-toast__icon {
+  background: color-mix(in srgb, rgba(245, 158, 11, 1) 18%, transparent);
+  color: rgba(253, 230, 138, 1);
+}
+
+.ui-toast--error .ui-toast__icon {
+  background: color-mix(in srgb, rgba(239, 68, 68, 1) 18%, transparent);
+  color: rgba(254, 202, 202, 1);
+}
+
+.ui-toast__copy {
+  min-width: 0;
+}
+
+.ui-toast__title {
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-semibold);
+  letter-spacing: var(--ui-tracking-normal);
+  line-height: 1.25;
+}
+
+.ui-toast__msg {
+  margin-top: 4px;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-relaxed);
+}
+
+.ui-toast__close {
+  margin-top: -6px;
+  margin-right: -4px;
+}
+
+@media (max-width: 640px) {
+  .ui-toasts {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+  }
+
+  .ui-toasts__stack {
+    width: auto;
+  }
+}
+
+@keyframes ui-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+

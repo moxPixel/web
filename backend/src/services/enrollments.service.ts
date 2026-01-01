@@ -19,6 +19,161 @@ const ROLE_TO_USER_ROLE: Record<EnrollmentRole, UserRole> = {
 };
 
 export class EnrollmentsService {
+  private formatEnrollmentStatus(status: EnrollmentStatus): string {
+    if (status === EnrollmentStatus.SUBMITTED) return 'Soumise';
+    if (status === EnrollmentStatus.IN_REVIEW) return 'En revue';
+    if (status === EnrollmentStatus.ACCEPTED) return 'Acceptée';
+    if (status === EnrollmentStatus.REJECTED) return 'Non retenue';
+    if (status === EnrollmentStatus.CANCELLED) return 'Annulée';
+    return String(status);
+  }
+
+  private formatSessionLabel(session?: TrainingSession | null): string {
+    if (!session?.startDate) return 'À planifier';
+    const start = new Date(session.startDate);
+    const end = session.endDate ? new Date(session.endDate) : null;
+    const fmt: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    const startLabel = Number.isNaN(start.getTime()) ? String(session.startDate) : start.toLocaleDateString('fr-FR', fmt);
+    if (!end || Number.isNaN(end.getTime()) || end.getTime() === start.getTime()) return startLabel;
+    return `Du ${startLabel} au ${end.toLocaleDateString('fr-FR', fmt)}`;
+  }
+
+  private buildStatusEmail(
+    enrollment: TrainingEnrollment,
+    training?: Training | null,
+    session?: TrainingSession | null,
+    adminNote?: string,
+  ): { subject: string; templateData: any } {
+    const trainingLabel = training?.shortTitle || training?.title || 'votre formation';
+    const greetingName = `${enrollment.firstName || ''} ${enrollment.lastName || ''}`.trim();
+    const greeting = greetingName ? `Bonjour ${greetingName},` : 'Bonjour,';
+    const statusLabel = this.formatEnrollmentStatus(enrollment.status);
+
+    const frontendBase = (env.allowedOrigins || 'http://localhost:4200').split(',')[0].replace(/\/$/, '');
+    const profileUrl = `${frontendBase}/profile`;
+    const trainingUrl = training?.slug ? `${frontendBase}/trainings/${training.slug}` : undefined;
+    const orientationUrl = `${frontendBase}/orientation`;
+
+    const infoDetails = [
+      { label: 'Formation', value: trainingLabel },
+      { label: 'Session', value: this.formatSessionLabel(session) },
+      { label: 'Statut', value: statusLabel },
+    ];
+
+    const safeNote = (adminNote || '').trim();
+
+    if (enrollment.status === EnrollmentStatus.ACCEPTED) {
+      return {
+        subject: `Félicitations — dossier accepté (${trainingLabel})`,
+        templateData: {
+          header: 'Votre dossier est accepté',
+          greeting,
+          mainMessage:
+            `Excellente nouvelle : votre demande d'inscription pour « ${trainingLabel} » a été acceptée.\n` +
+            `Votre compte est désormais prêt pour la suite (accès, échanges, suivi).`,
+          infoBox: { title: 'Récapitulatif', details: infoDetails },
+          ...(safeNote
+            ? { messageBox: `Message de l’équipe:\n${safeNote}` }
+            : {
+                additionalMessage:
+                  `Prochaines étapes :\n` +
+                  `- Nous confirmons le format et la session (ou nous vous proposons un créneau)\n` +
+                  `- Vous recevez les informations pratiques (accès, prérequis, organisation)\n` +
+                  `- Nous restons disponibles pour le financement (OPCO/CPF/entreprise)`,
+              }),
+          buttonUrl: profileUrl,
+          buttonText: 'Ouvrir mon espace',
+          linkInfo: { label: 'Voir le détail de la formation', url: trainingUrl || orientationUrl },
+          conclusion: 'Bienvenue chez Unlock — on s’occupe de la suite avec vous.',
+          signature: "L'équipe Unlock",
+        },
+      };
+    }
+
+    if (enrollment.status === EnrollmentStatus.IN_REVIEW) {
+      return {
+        subject: `Votre dossier est en cours d’étude (${trainingLabel})`,
+        templateData: {
+          header: 'Votre demande est en cours d’étude',
+          greeting,
+          mainMessage:
+            `Nous analysons actuellement votre demande d'inscription pour « ${trainingLabel} ».\n` +
+            `Un conseiller peut vous contacter sous 24–48h pour confirmer vos objectifs, le format et la session.`,
+          infoBox: { title: 'Récapitulatif', details: infoDetails },
+          ...(safeNote ? { messageBox: `Info de l’équipe:\n${safeNote}` } : {}),
+          buttonUrl: profileUrl,
+          buttonText: 'Suivre ma demande',
+          conclusion: 'Merci de votre patience — nous revenons vers vous très vite.',
+          signature: "L'équipe Unlock",
+        },
+      };
+    }
+
+    if (enrollment.status === EnrollmentStatus.REJECTED) {
+      return {
+        subject: `Retour sur votre demande (${trainingLabel})`,
+        templateData: {
+          header: 'Retour sur votre demande',
+          greeting,
+          mainMessage:
+            `Après étude, nous ne pouvons pas valider votre inscription à « ${trainingLabel} » à ce stade.\n` +
+            `Cela ne remet pas en cause votre potentiel : nous voulons simplement garantir le bon niveau et le bon cadre pour votre réussite.`,
+          infoBox: { title: 'Récapitulatif', details: infoDetails },
+          ...(safeNote
+            ? { messageBox: `Message de l’équipe:\n${safeNote}` }
+            : {
+                additionalMessage:
+                  `Ce que nous vous proposons :\n` +
+                  `- Faire le test d’orientation pour identifier le parcours le plus adapté\n` +
+                  `- Nous contacter pour un échange rapide (objectif, contraintes, financement)\n` +
+                  `- Refaire une demande dès que vous êtes prêt (nous vous guiderons)`,
+              }),
+          buttonUrl: orientationUrl,
+          buttonText: 'Faire le test d’orientation',
+          linkInfo: { label: 'Voir nos formations', url: `${frontendBase}/trainings` },
+          conclusion: 'On reste à votre disposition pour construire un parcours qui vous correspond.',
+          signature: "L'équipe Unlock",
+        },
+      };
+    }
+
+    if (enrollment.status === EnrollmentStatus.CANCELLED) {
+      return {
+        subject: `Votre demande a été annulée (${trainingLabel})`,
+        templateData: {
+          header: 'Demande annulée',
+          greeting,
+          mainMessage:
+            `Votre demande d'inscription pour « ${trainingLabel} » a été marquée comme annulée.\n` +
+            `Si c’est une erreur ou si votre projet évolue, vous pouvez refaire une demande à tout moment.`,
+          infoBox: { title: 'Récapitulatif', details: infoDetails },
+          ...(safeNote ? { messageBox: `Info de l’équipe:\n${safeNote}` } : {}),
+          buttonUrl: `${frontendBase}/trainings`,
+          buttonText: 'Voir les formations',
+          conclusion: 'Merci — et à bientôt si vous souhaitez reprendre le projet.',
+          signature: "L'équipe Unlock",
+        },
+      };
+    }
+
+    // SUBMITTED (or any fallback)
+    return {
+      subject: `Mise à jour de votre demande (${trainingLabel})`,
+      templateData: {
+        header: 'Mise à jour de votre demande',
+        greeting,
+        mainMessage:
+          `Le statut de votre demande d'inscription pour « ${trainingLabel} » est maintenant : ${statusLabel}.`,
+        infoBox: { title: 'Récapitulatif', details: infoDetails },
+        ...(safeNote ? { messageBox: safeNote } : {}),
+        buttonUrl: profileUrl,
+        buttonText: 'Voir mon espace',
+        conclusion: 'Merci de votre confiance.',
+        signature: "L'équipe Unlock",
+      },
+    };
+  }
+
   private async ensureTrainingAndSession(trainingId: string, sessionId?: string | null): Promise<void> {
     const training = await Training.findByPk(trainingId);
     if (!training) {
@@ -50,9 +205,8 @@ export class EnrollmentsService {
     const chars = 'abcdefghijkmnpqrstuvwxyz23456789'; // Sans 0, o, l, 1 pour éviter confusion
     const randomChars = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     const randomPassword = `${randomChars.charAt(0).toUpperCase()}${randomChars.slice(1)}@${Math.floor(Math.random() * 99)}`;
-    logger.info(`[Enrollments] Generated password for ${email}: "${randomPassword}" (length: ${randomPassword.length})`);
     const hashed = await hashPassword(randomPassword);
-    logger.info(`[Enrollments] Password hashed: ${hashed.substring(0, 20)}...`);
+    // Never log generated passwords or password hashes
     // ✅ POLITIQUE PENDING : Créer l'utilisateur avec status PENDING
     // L'utilisateur pourra se connecter immédiatement avec son mot de passe temporaire
     // Son compte sera automatiquement activé (PENDING -> ACTIVE) quand un admin accepte son enrollment
@@ -112,12 +266,20 @@ export class EnrollmentsService {
     ];
 
     const frontendBase = (env.allowedOrigins || 'http://localhost:4200').split(',')[0];
+
+    const messageBoxParts: string[] = [];
+    const msg = String((enrollment as any).message || '').trim();
+    const objectives = String((enrollment as any).objectives || '').trim();
+    if (msg) messageBoxParts.push(`Message / motivation :\n${msg}`);
+    if (objectives) messageBoxParts.push(`Objectifs spécifiques :\n${objectives}`);
+    const messageBox = messageBoxParts.length ? messageBoxParts.join('\n\n') : undefined;
     
     const userTemplate = {
       header: 'Confirmation de votre demande',
       greeting: `Bonjour ${enrollment.firstName || ''} ${enrollment.lastName || ''}`.trim(),
       mainMessage: `Nous avons bien reçu votre demande d'inscription pour la formation "${training.shortTitle || training.title}".`,
       infoBox: { title: 'Récapitulatif', details: infoDetails },
+      ...(messageBox ? { messageBox } : {}),
       conclusion: 'Nous revenons vers vous rapidement pour valider votre inscription.',
       signature: "L'équipe Unlock",
       buttonUrl: training.slug ? `${frontendBase}/trainings/${training.slug}` : undefined,
@@ -129,9 +291,10 @@ export class EnrollmentsService {
       greeting: 'Bonjour équipe,',
       mainMessage: `Une nouvelle demande d'inscription a été soumise pour "${training.shortTitle || training.title}".`,
       infoBox: { title: 'Détails', details: infoDetails },
+      ...(messageBox ? { messageBox } : {}),
       conclusion: 'Merci de traiter la demande dans le backoffice.',
       signature: 'Système Unlock',
-      buttonUrl: `${frontendBase}/bo/enrollments`,
+      buttonUrl: `${frontendBase.replace(/\/$/, '')}/backoffice/enrollments`,
       buttonText: 'Gérer les inscriptions',
     };
 
@@ -167,24 +330,15 @@ export class EnrollmentsService {
     }
   }
 
-  private async notifyStatusChange(enrollment: TrainingEnrollment, training?: Training | null): Promise<void> {
+  private async notifyStatusChange(
+    enrollment: TrainingEnrollment,
+    training?: Training | null,
+    session?: TrainingSession | null,
+    adminNote?: string,
+  ): Promise<void> {
     if (!enrollment.email) return;
-    const statusLabel = enrollment.status;
-    const trainingLabel = training?.shortTitle || training?.title || '';
-
-    const template = {
-      header: 'Mise à jour de votre demande',
-      greeting: `Bonjour ${enrollment.firstName || ''} ${enrollment.lastName || ''}`.trim(),
-      mainMessage: `Le statut de votre demande d'inscription${trainingLabel ? ` pour "${trainingLabel}"` : ''} est maintenant : ${statusLabel}.`,
-      conclusion: 'Merci de votre patience.',
-      signature: "L'équipe Unlock",
-    };
-
-    await MailService.send({
-      to: enrollment.email,
-      subject: 'Mise à jour de votre demande',
-      templateData: template,
-    });
+    const { subject, templateData } = this.buildStatusEmail(enrollment, training, session, adminNote);
+    await MailService.send({ to: enrollment.email, subject, templateData });
   }
 
   async create(data: CreateEnrollmentDto): Promise<TrainingEnrollment> {
@@ -242,7 +396,7 @@ export class EnrollmentsService {
       
       // Notifications après commit - chaque email est indépendant
       logger.info(`[Enrollments] Transaction committed, sending notifications for ${data.email.toLowerCase()}`);
-      logger.info(`[Enrollments] User was ${existing ? 'existing' : 'new'}, plainPassword: ${plainPassword ? 'YES' : 'NO'}`);
+      logger.info(`[Enrollments] User was ${existing ? 'existing' : 'new'}`);
       
       // Email 1: Confirmation de demande (toujours envoyé)
       if (training) {
@@ -258,14 +412,14 @@ export class EnrollmentsService {
       // Email 2: Mot de passe (uniquement si nouveau compte)
       if (!existing && plainPassword) {
         try {
-          logger.info(`[Enrollments] Sending password email to ${data.email.toLowerCase()}, password starts with: ${plainPassword.substring(0, 3)}...`);
+          logger.info(`[Enrollments] Sending password email to ${data.email.toLowerCase()}`);
           await this.notifyUserPassword(data.email.toLowerCase(), plainPassword);
           logger.info(`[Enrollments] ✅ Password email sent successfully`);
         } catch (err) {
           logger.error(`[Enrollments] ❌ Failed to send password email:`, err);
         }
       } else {
-        logger.info(`[Enrollments] Password email NOT sent - existing: ${existing}, plainPassword: ${plainPassword ? 'YES' : 'NO'}`);
+        logger.info(`[Enrollments] Password email NOT sent - existing: ${existing}`);
       }
 
       // Attacher info existant pour le controller
@@ -284,8 +438,7 @@ export class EnrollmentsService {
       return;
     }
     
-    logger.info(`[Enrollments] notifyUserPassword - Calling MailService.send for ${email}`);
-    logger.info(`[Enrollments] Password to send: ${password.substring(0, 4)}... (length: ${password.length})`);
+    logger.info(`[Enrollments] notifyUserPassword - Sending credentials email to ${email}`);
     
     try {
       await MailService.send({
@@ -395,7 +548,8 @@ export class EnrollmentsService {
     // Notification statut
     try {
       const training = await Training.findByPk(enrollment.trainingId);
-      await this.notifyStatusChange(enrollment, training || undefined);
+      const session = enrollment.sessionId ? await TrainingSession.findByPk(enrollment.sessionId) : null;
+      await this.notifyStatusChange(enrollment, training || undefined, session || undefined, data.adminNote);
     } catch (err) {
       logger.error('Erreur envoi email statut inscription:', err);
     }
