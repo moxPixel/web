@@ -1,8 +1,9 @@
-import type { QueryInterface, Sequelize } from 'sequelize';
+import type { QueryInterface } from 'sequelize';
+import type { Sequelize } from 'sequelize';
 
 export const id = '001-create-events';
 
-export async function up(queryInterface: QueryInterface, Sequelize: typeof Sequelize): Promise<void> {
+export async function up(queryInterface: QueryInterface, Sequelize: Sequelize): Promise<void> {
   // Create table only if it doesn't exist (safe re-run)
   const tables = await queryInterface.showAllTables();
   const has = (tables as any[]).some((t) => String(t).toLowerCase() === 'events');

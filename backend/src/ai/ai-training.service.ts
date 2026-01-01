@@ -229,10 +229,10 @@ export class AiTrainingService {
   }
 
   private getGeneratedTrainingSchema(): z.ZodType<AiGeneratedTraining> {
-    const LevelEnum = z.enum(['initiation', 'intermediaire', 'avance', 'expert']);
-    const TrainingTypeEnum = z.enum(['bootcamp', 'alternance', 'diplomante', 'certifiante']);
-    const AudienceEnum = z.enum(['entreprise', 'monter-en-competence', 'reconversion']);
-    const LocationEnum = z.enum(['distanciel', 'presentiel', 'hybride']);
+    const LevelEnum = z.nativeEnum(TrainingLevel);
+    const TrainingTypeEnum = z.nativeEnum(TrainingType);
+    const AudienceEnum = z.nativeEnum(AudienceType);
+    const LocationEnum = z.nativeEnum(LocationType);
 
     return z.object({
       title: z.string().min(5),
