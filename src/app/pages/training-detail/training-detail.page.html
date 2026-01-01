@@ -196,7 +196,7 @@
             <div class="ui-training-detail__kv">
               <div class="ui-training-detail__muted">Financement</div>
               <ul class="ui-training-detail__mini-list">
-                <ng-container *ngIf="training.fundingOptions?.length; else fundingFallback">
+                <ng-container *ngIf="training.fundingOptions.length; else fundingFallback">
                   <li *ngFor="let f of training.fundingOptions">• {{ f }}</li>
                 </ng-container>
                 <ng-template #fundingFallback>

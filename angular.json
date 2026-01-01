@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "web-new": {
+    "unlock-web": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,10 +56,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "web-new:build:production"
+              "buildTarget": "unlock-web:build:production"
             },
             "development": {
-              "buildTarget": "web-new:build:development"
+              "buildTarget": "unlock-web:build:development"
             }
           },
           "defaultConfiguration": "development"
