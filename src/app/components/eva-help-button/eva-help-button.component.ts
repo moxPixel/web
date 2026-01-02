@@ -16,14 +16,28 @@ export class EvaHelpButtonComponent implements AfterViewInit, OnDestroy {
   private scrollListener?: () => void;
   private rafId: number | null = null;
   private isVisible = false;
+  private loaderListener?: () => void;
 
   ngAfterViewInit(): void {
-    this.setupScrollAnimation();
+    if (typeof window === 'undefined') return;
+
+    // Never show / animate while the page loader is still visible.
+    // Wait for the same global signal as cookie-consent/notifications.
+    if (!document.getElementById('page-loader')) {
+      this.setupScrollAnimation();
+      return;
+    }
+
+    this.loaderListener = () => this.setupScrollAnimation();
+    window.addEventListener('app-loader-hidden', this.loaderListener as any, { once: true } as any);
   }
 
   ngOnDestroy(): void {
     if (this.scrollListener && typeof window !== 'undefined') {
       window.removeEventListener('scroll', this.scrollListener);
+    }
+    if (this.loaderListener && typeof window !== 'undefined') {
+      window.removeEventListener('app-loader-hidden', this.loaderListener as any);
     }
     if (this.rafId !== null) {
       cancelAnimationFrame(this.rafId);

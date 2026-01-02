@@ -89,7 +89,8 @@ Training.init(
       unique: true,
     },
     category: {
-      type: DataTypes.STRING(100),
+      // Free text (admin input / AI); avoid DB limit issues
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     level: {
@@ -133,7 +134,8 @@ Training.init(
       defaultValue: [],
     },
     format: {
-      type: DataTypes.STRING(200),
+      // Free text (can be long)
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     durationDays: {
@@ -145,11 +147,11 @@ Training.init(
       allowNull: true,
     },
     durationLabel: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     pace: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     locationTypes: {
@@ -174,7 +176,7 @@ Training.init(
       defaultValue: 'EUR',
     },
     nextSessionHighlight: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     fundingOptions: {
@@ -183,11 +185,12 @@ Training.init(
       defaultValue: [],
     },
     heroImage: {
-      type: DataTypes.STRING(500),
+      // URLs/paths can exceed VARCHAR in real life
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     watermarkLogo: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     status: {

@@ -3,6 +3,11 @@
   bottom: 1.5rem;
   left: 1.5rem;
   z-index: 9999;
+
+  /* Default hidden: prevents any flash before JS attaches scroll logic (esp. during loader) */
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  pointer-events: none;
   
   display: inline-flex;
   align-items: center;

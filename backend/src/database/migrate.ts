@@ -4,6 +4,7 @@ import { initializeModels } from '../models';
 import { DataTypes, QueryTypes, Sequelize } from 'sequelize';
 
 import * as m001 from './migrations/001-create-events';
+import * as m002 from './migrations/002-alter-trainings-text-columns';
 
 type Migration = {
   id: string;
@@ -12,6 +13,7 @@ type Migration = {
 
 const migrations: Migration[] = [
   { id: (m001 as any).id, up: (m001 as any).up },
+  { id: (m002 as any).id, up: (m002 as any).up },
 ];
 
 const ensureMigrationsTable = async (): Promise<void> => {
