@@ -84,10 +84,11 @@
 
   <!-- Carousel removed (requested) -->
 
+  <!-- Content Grid - Layout moderne avec images superposées -->
   <div class="ui-programs__container ui-home-container">
-    <!-- Split bloc avec meilleur équilibre -->
-    <div class="ui-programs__split">
-      <div class="ui-programs__copy">
+    <div class="ui-programs__content-grid">
+      <!-- Colonne principale : Texte et CTA -->
+      <div class="ui-programs__main-content">
         <div class="ui-programs__chips" aria-label="Piliers">
           <span class="ui-programs__chip">IA & Data</span>
           <span class="ui-programs__chip">Sécurité</span>
@@ -96,15 +97,17 @@
 
         <h3 class="ui-programs__subtitle">Apprendre en créant, progresser en pratiquant</h3>
 
-        <p class="ui-programs__p">
-          Chaque formation vous fait travailler sur des projets concrets créer des applications, analyser des données,
-          sécuriser des systèmes, déployer dans le cloud. Vous apprenez avec les outils utilisés par les professionnels,
-          dans un environnement bienveillant et stimulant.
-        </p>
-        <p class="ui-programs__p">
-          Formats adaptés à votre vie (<strong>présentiel</strong>, <strong>distanciel</strong>, <strong>alternance</strong>), progression personnalisée et
-          accompagnement continu. <strong>EVA</strong> vous guide, répond à vos questions et s'adapte à votre manière d'apprendre.
-        </p>
+        <div class="ui-programs__text-content">
+          <p class="ui-programs__p">
+            Chaque formation vous fait travailler sur des projets concrets : créer des applications, analyser des données,
+            sécuriser des systèmes, déployer dans le cloud. Vous apprenez avec les outils utilisés par les professionnels,
+            dans un environnement bienveillant et stimulant.
+          </p>
+          <p class="ui-programs__p">
+            Formats adaptés à votre vie (<strong>présentiel</strong>, <strong>distanciel</strong>, <strong>alternance</strong>), progression personnalisée et
+            accompagnement continu. <strong>EVA</strong> vous guide, répond à vos questions et s'adapte à votre manière d'apprendre.
+          </p>
+        </div>
 
         <div class="ui-programs__cta">
           <a class="ui-button ui-button--primary" routerLink="/trainings">
@@ -113,32 +116,8 @@
           </a>
         </div>
 
-        <div class="ui-programs__media ui-programs__cta-media" aria-hidden="true">
-          <span class="ui-programs__media-ring">
-            <img
-              class="ui-programs__media-img"
-              src="/assets/images/img/g7.webp"
-              alt="Formation Unlock - apprentissage pratique et projets concrets"
-              loading="lazy"
-              decoding="async"
-            />
-          </span>
-        </div>
-      </div>
-
-      <div class="ui-programs__media">
-        <span class="ui-programs__media-ring">
-          <img
-            class="ui-programs__media-img"
-            src="/assets/images/img/g10.webp"
-            alt="Formation Unlock - projets réels et outils de production"
-            loading="lazy"
-            decoding="async"
-          />
-        </span>
-        
-        <!-- E-campus info -->
-        <div class="ui-programs__ecampus">
+        <!-- E-campus Card intégrée dans le contenu -->
+        <div class="ui-card ui-card--padded ui-programs__ecampus-card">
           <div class="ui-programs__ecampus-header">
             <app-tabler-icon name="monitor" [size]="18"></app-tabler-icon>
             <h4 class="ui-programs__ecampus-title">E-campus</h4>
@@ -149,6 +128,37 @@
           <div class="ui-programs__orientation-hint">
             <span class="ui-programs__orientation-text">Pas certain de votre choix ?</span>
             <a routerLink="/orientation" class="ui-programs__orientation-link">Faire le test d'orientation</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne visuelle : Images superposées de manière créative -->
+      <div class="ui-programs__visual">
+        <div class="ui-programs__image-wrapper">
+          <!-- Image principale (en arrière, décalée) -->
+          <div class="ui-programs__image-main">
+            <span class="ui-programs__image-ring">
+              <img
+                class="ui-programs__image-img"
+                src="/assets/images/img/g10.webp"
+                alt="Formation Unlock - projets réels et outils de production"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+          </div>
+
+          <!-- Image secondaire (superposée, décalée) -->
+          <div class="ui-programs__image-overlay">
+            <span class="ui-programs__image-ring">
+              <img
+                class="ui-programs__image-img"
+                src="/assets/images/img/g7.webp"
+                alt="Formation Unlock - apprentissage pratique et projets concrets"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
           </div>
         </div>
       </div>
