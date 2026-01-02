@@ -65,9 +65,15 @@ bootstrapApplication(App, appConfig)
     const elapsed = now - LOADER_BOOT_MARK;
     const minWait = Math.max(0, LOADER_MIN_VISIBLE_MS - elapsed);
 
-    // Keep loader for a minimum time only (UX), then reveal app.
-    // Preload continues in background to improve smoothness (no gating).
-    await new Promise((r) => window.setTimeout(r, minWait));
+    // Keep loader for a minimum time (UX) AND wait for the hero particles to be ready
+    // (now "ready" means the fast vertex-based point cloud is mounted, so it's visually clean).
+    // Never block forever.
+    await Promise.all([
+      new Promise((r) => window.setTimeout(r, minWait)),
+      waitForEventOnce('three-particles-ready', 3500),
+    ]);
+
+    // Preload continues in background to improve smoothness (no hard gating).
     Promise.race([preloadCriticalPromise, new Promise((r) => window.setTimeout(r, 4500))]).catch(() => {});
 
     hidePageLoader();
