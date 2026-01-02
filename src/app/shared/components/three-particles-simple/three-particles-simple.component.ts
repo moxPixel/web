@@ -131,6 +131,10 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   private raf: number | null = null;
   private readyDispatched = false;
   private didPrefetchMorphModels = false;
+  private destroyed = false;
+  private heroRefineStarted = false;
+  private morphPrefetchIO?: IntersectionObserver;
+  private morphPrefetchArmed = false;
 
   // Cross-instance (page-level) HTTP warm cache for large binary assets.
   private static readonly arrayBufferCache = new Map<string, Promise<ArrayBuffer>>();
@@ -166,6 +170,14 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   // Smooth scroll -> shader (keeps default render identical, improves scroll animation only)
   private scrollTarget = 0;
   private scrollSmoothed = 0;
+  private scrollPrev = 0;
+  private scrollVelPxPerS = 0;
+  private scrollSpeed01 = 0; // 0..1 normalized "how fast user scrolls"
+  private lastTickMs = 0;
+  private lastDprUpdateMs = 0;
+  private currentDpr = 0;
+  private viewportW = 0;
+  private viewportH = 0;
   // Track last CSS color values to detect changes
   private lastCssAccent: string | null = null;
   private colorCheckCounter = 0;
@@ -346,6 +358,12 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
+    try {
+      this.morphPrefetchIO?.disconnect();
+    } catch {
+      // ignore
+    }
     this.destroy$.next();
     this.destroy$.complete();
     this.stop();
@@ -357,6 +375,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     const rect = el.getBoundingClientRect();
     const w = Math.max(1, rect.width || el.clientWidth || window.innerWidth);
     const h = Math.max(1, rect.height || el.clientHeight || window.innerHeight);
+    this.viewportW = w;
+    this.viewportH = h;
 
     this.scene = new THREE.Scene();
     this.scene.background = this.backgroundColor === 'transparent' ? null : new THREE.Color(this.backgroundColor);
@@ -406,7 +426,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       alpha: true,
       powerPreference: 'high-performance',
     });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    this.currentDpr = Math.min(window.devicePixelRatio || 1, this.getMaxDevicePixelRatio());
+    this.renderer.setPixelRatio(this.currentDpr);
     this.renderer.setSize(w, h);
     this.renderer.setClearColor(0x000000, 0);
     el.appendChild(this.renderer.domElement);
@@ -434,9 +455,29 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     // Initialize scroll values to avoid any first-frame "jump"
     this.scrollTarget = Math.max(0, window.scrollY || 0);
     this.scrollSmoothed = this.scrollTarget;
+    this.scrollPrev = this.scrollSmoothed;
+    this.lastTickMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
     this.morphTarget = 0;
     this.morphTargetSmoothed = 0;
     this.morphSmoothed = 0;
+  }
+
+  private getMaxDevicePixelRatio(): number {
+    // Lower GPU load on low-end / data-saver / reduced-motion devices.
+    if (this.isLowEndDevice()) return 1.25;
+    return 1.5;
+  }
+
+  private isLowEndDevice(): boolean {
+    try {
+      const cores = (navigator as any).hardwareConcurrency || 4;
+      const saveData = !!(navigator as any).connection?.saveData;
+      const slowNet = ['slow-2g', '2g'].includes(String((navigator as any).connection?.effectiveType || ''));
+      const reducedMotion = !!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+      return saveData || slowNet || reducedMotion || cores <= 4;
+    } catch {
+      return false;
+    }
   }
 
   private applyThemeColorsFromCss(): void {
@@ -604,6 +645,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       const rect = el.getBoundingClientRect();
       const w = Math.max(1, rect.width || el.clientWidth || window.innerWidth);
       const h = Math.max(1, rect.height || el.clientHeight || window.innerHeight);
+      this.viewportW = w;
+      this.viewportH = h;
       this.camera.aspect = w / h;
       this.camera.updateProjectionMatrix();
       
@@ -620,7 +663,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         this.updateCameraForModel();
       }
       
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      this.currentDpr = Math.min(window.devicePixelRatio || 1, this.getMaxDevicePixelRatio());
+      this.renderer.setPixelRatio(this.currentDpr);
       this.renderer.setSize(w, h);
       this.resizeTimeout = null;
     });
@@ -668,8 +712,54 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   private load(url: string): void {
     this.loadGltfScene(url)
       .then((scene) => {
-        const built = this.buildPointCloud(scene);
-        this.setPoints(built.points, built.bounds);
+        // Instant shape: build from vertices first (very fast), then refine to surface in background.
+        // This keeps "direct la forme" without waiting for heavy surface sampling.
+        const builtFast = this.buildPointCloud(scene, 'vertex');
+        this.setPoints(builtFast.points, builtFast.bounds);
+
+        // Background refinement (non-blocking): replace positions with true surface-sampled cloud.
+        // Keeps the same point count so morphing remains stable.
+        if (this.heroRefineStarted) return;
+        this.heroRefineStarted = true;
+        const count = this.basePointCount || 0;
+        if (!count) return;
+
+        this.extractCenteredPositionsAsync(scene, count)
+          .then(({ positions, radius }) => {
+            if (this.destroyed) return;
+            if (!this.points) return;
+            const geom = this.points.geometry as THREE.BufferGeometry;
+            const posAttr = geom.getAttribute('position') as THREE.BufferAttribute;
+            if (!posAttr || (posAttr.array as Float32Array).length !== positions.length) return;
+
+            (posAttr.array as Float32Array).set(positions);
+            posAttr.needsUpdate = true;
+            geom.computeBoundingBox();
+            geom.computeBoundingSphere();
+
+            // Commit as new base (so returning to base uses the refined hero, not vertex proxy)
+            if (this.basePositions && this.basePositions.length === positions.length) {
+              this.basePositions.set(positions);
+            }
+            if (this.morphAttrFrom && (this.morphAttrFrom.array as Float32Array).length === positions.length) {
+              (this.morphAttrFrom.array as Float32Array).set(positions);
+              this.morphAttrFrom.needsUpdate = true;
+            }
+            if (this.morphAttrTo && (this.morphAttrTo.array as Float32Array).length === positions.length) {
+              (this.morphAttrTo.array as Float32Array).set(positions);
+              this.morphAttrTo.needsUpdate = true;
+            }
+
+            this.baseRadius = radius;
+            const mat = this.points.material as THREE.ShaderMaterial;
+            if ((mat.uniforms as any).uRadius) (mat.uniforms as any).uRadius.value = radius;
+
+            // Update framing now that the hero bounds are accurate
+            this.updateCameraForModel();
+          })
+          .catch(() => {
+            // ignore (keep vertex proxy)
+          });
       })
       .catch((err) => {
         if (typeof window !== 'undefined') {
@@ -726,6 +816,62 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     })();
   }
 
+  /**
+   * JIT prefetch: warm-cache morph models only when their section is approaching.
+   * This avoids downloading all models upfront on mobile/data-saver.
+   */
+  private armMorphModelPrefetch(): void {
+    if (this.morphPrefetchArmed) return;
+    this.morphPrefetchArmed = true;
+    if (typeof window === 'undefined') return;
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const keys = (this.morphKeys || []).filter((k) => !!k?.modelPath);
+    if (!keys.length) return;
+
+    const prefetch = (url: string) => {
+      try {
+        void this.fetchArrayBuffer(url);
+      } catch {
+        // ignore
+      }
+    };
+
+    // Always warm the hero model path (usually already preloaded via index.html)
+    if (this.modelPath) prefetch(this.modelPath);
+
+    this.morphPrefetchIO = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const key = (e.target as any)?.getAttribute?.('data-morph-id') as string | null;
+          if (!key) continue;
+          const k = keys.find((x) => x.id === key);
+          if (!k?.modelPath) continue;
+          prefetch(k.modelPath);
+          // Once prefetched, we don't need to observe this target anymore.
+          try { this.morphPrefetchIO?.unobserve(e.target); } catch {}
+        }
+      },
+      // Start warming before the section reaches the viewport
+      { root: null, rootMargin: '900px 0px', threshold: 0.01 }
+    );
+
+    // Attach observers. If anchor not found yet, retry a few times (route/layout can mount late).
+    const tryAttach = (attempt = 0) => {
+      if (this.destroyed) return;
+      for (const k of keys) {
+        // Create a lightweight marker element if anchorSelector matches multiple nodes.
+        const anchor = document.querySelector(k.anchorSelector || '') as HTMLElement | null;
+        if (!anchor) continue;
+        if (!anchor.getAttribute('data-morph-id')) anchor.setAttribute('data-morph-id', k.id);
+        try { this.morphPrefetchIO?.observe(anchor); } catch {}
+      }
+      if (attempt < 25) window.setTimeout(() => tryAttach(attempt + 1), 200);
+    };
+    tryAttach(0);
+  }
+
   private setPoints(points: THREE.Points, bounds: THREE.Box3): void {
     if (this.points) {
       this.scene.remove(this.points);
@@ -765,8 +911,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
 
     this.isLoaded = true;
 
-    // Warm-cache other morph models as soon as the hero is ready.
-    this.prefetchMorphModelsOnce();
+    // JIT prefetch morph models (avoid downloading everything at startup).
+    this.armMorphModelPrefetch();
 
     // Notify bootstrap loader gate once (avoids "empty hero then pop-in").
     if (!this.readyDispatched && typeof window !== 'undefined') {
@@ -883,10 +1029,45 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         uniformsCache.uOrganicStrength.value = this.organicStrength;
         uniformsCache.uOrganicSpeed.value = this.organicSpeed;
         uniformsCache.uMouseStrength.value = this.mouseInteractive ? this.mouseStrength : 0.0;
-        // Smooth scroll for shader (animation only; default state stays the same)
-        const scrollLerp = 0.14; // higher = more reactive, lower = smoother
-        this.scrollSmoothed += (this.scrollTarget - this.scrollSmoothed) * scrollLerp;
+        // ------------------------------------------------------------
+        // Scroll smoothing + speed estimation (drives adaptive morph + GPU downshift)
+        // ------------------------------------------------------------
+        const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+        const dt = Math.max(0.001, (nowMs - (this.lastTickMs || nowMs)) / 1000);
+        this.lastTickMs = nowMs;
+
+        // Smooth scroll for shader (keeps motion premium).
+        // More reactive when user scrolls fast (prevents perceived lag).
+        const baseScrollLerp = 0.14;
+        const scrollDeltaRaw = this.scrollTarget - this.scrollSmoothed;
+        const fastRaw01 = Math.max(0, Math.min(1, Math.abs(scrollDeltaRaw) / 220)); // px lag -> 0..1
+        const scrollLerp = baseScrollLerp + fastRaw01 * 0.10;
+        this.scrollSmoothed += scrollDeltaRaw * scrollLerp;
         uniformsCache.uScrollY.value = this.scrollSmoothed * 0.002;
+
+        // Velocity (px/s) from smoothed scroll (stable).
+        const v = Math.abs(this.scrollSmoothed - this.scrollPrev) / dt;
+        this.scrollPrev = this.scrollSmoothed;
+        // Smooth velocity to avoid jitter
+        this.scrollVelPxPerS += (v - this.scrollVelPxPerS) * 0.22;
+        // Normalize: ~0 at idle, ~1 at fast scroll
+        const speed01 = Math.max(0, Math.min(1, this.scrollVelPxPerS / 1800));
+        this.scrollSpeed01 += (speed01 - this.scrollSpeed01) * 0.18;
+
+        // ------------------------------------------------------------
+        // Dynamic GPU downshift: lower pixelRatio during fast scroll/morph
+        // ------------------------------------------------------------
+        const morphActive = this.morphSmoothed > 0.01 && this.morphSmoothed < 0.99;
+        const baseMaxDpr = this.getMaxDevicePixelRatio();
+        const desiredMaxDpr = Math.max(1.0, baseMaxDpr - this.scrollSpeed01 * 0.35 - (morphActive ? 0.15 : 0));
+        const desiredDpr = Math.min(window.devicePixelRatio || 1, desiredMaxDpr);
+        if (Math.abs(desiredDpr - this.currentDpr) > 0.06 && nowMs - this.lastDprUpdateMs > 220) {
+          this.currentDpr = desiredDpr;
+          this.lastDprUpdateMs = nowMs;
+          this.renderer.setPixelRatio(this.currentDpr);
+          // keep CSS size; update drawing buffer only
+          this.renderer.setSize(this.viewportW || window.innerWidth, this.viewportH || window.innerHeight, false);
+        }
 
         // ============================================================
         // SCROLL MORPH (SSOT): computed by ScrollMorphService
@@ -960,9 +1141,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           this.activeMorphKeyId = null;
         }
         
-        // TARGET SMOOTHING: make it more reactive (faster to reach the final shape)
-        // Higher = more responsive, still stable (no jitter).
-        const targetLerp = 0.16;
+        // TARGET SMOOTHING: more responsive when user scrolls fast.
+        const targetLerp = 0.16 + this.scrollSpeed01 * 0.12;
         this.morphTargetSmoothed += (this.morphTarget - this.morphTargetSmoothed) * targetLerp;
 
         // OPTIMIZED MORPH LERP: Perfectly smooth, natural progression
@@ -971,8 +1151,11 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         const morphProgress = this.morphSmoothed;
         const morphDelta = Math.abs(this.morphTargetSmoothed - this.morphSmoothed);
         
-        // MORPH LERP: speed up convergence (users perceive “formation” as too slow)
+        // MORPH LERP: adaptive speed (fast scroll = faster morph, idle = smoother)
         let baseLerp = isMorphingIn ? 0.06 : 0.075;
+        // Boost responsiveness under fast scroll; keep it capped to remain stable.
+        baseLerp *= 1.0 + this.scrollSpeed01 * 0.85;
+        baseLerp = Math.min(0.16, Math.max(0.02, baseLerp));
         
         // OPTIMIZED PROGRESSIVE SLOWDOWN: Natural, smooth deceleration
         if (isMorphingIn) {
@@ -992,7 +1175,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         // Apply optimized smooth lerp using smoothed target
         this.morphSmoothed += (this.morphTargetSmoothed - this.morphSmoothed) * baseLerp;
         
-        // Snap to exact values when very close (avoid micro-drift)
+        // Snap to exact values when very close (avoid micro-drift / "never finishes")
         if (this.morphTargetSmoothed < 0.0002 && Math.abs(this.morphSmoothed) < 0.0002) {
           this.morphSmoothed = 0;
           this.morphTargetSmoothed = 0;
@@ -1110,9 +1293,15 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    // Avoid forcing layout every single RAF: cache rects ~30fps (more than enough for smooth placement).
+    // Avoid forcing layout every single RAF:
+    // - cache rects ~30fps when slow
+    // - cache less often when user scrolls fast (keeps main thread free for morph)
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
-    if (nowMs - this.lastTargetRectMs > 33 || !this.cachedTargetRect || !this.cachedCanvasRect) {
+    const rectInterval =
+      this.scrollSpeed01 > 0.65 ? 90 :
+      this.scrollSpeed01 > 0.35 ? 60 :
+      33;
+    if (nowMs - this.lastTargetRectMs > rectInterval || !this.cachedTargetRect || !this.cachedCanvasRect) {
       this.cachedCanvasRect = this.renderer.domElement.getBoundingClientRect();
       this.cachedTargetRect = this.morphTargetEl.getBoundingClientRect();
       this.lastTargetRectMs = nowMs;
@@ -1242,23 +1431,33 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private buildPointCloud(root: THREE.Object3D): { points: THREE.Points; bounds: THREE.Box3 } {
+  private buildPointCloud(
+    root: THREE.Object3D,
+    mode: 'surface' | 'vertex' = 'surface',
+  ): { points: THREE.Points; bounds: THREE.Box3 } {
     root.updateWorldMatrix(true, true);
 
     const dpr = window.devicePixelRatio || 1;
     const cores = (navigator as any).hardwareConcurrency || 4;
     const isSmall = window.innerWidth < 768;
+    const isLowEnd = this.isLowEndDevice();
     const autoCap =
-      isSmall || dpr > 1.5
-        ? 80000
-        : cores <= 4
-          ? 120000
-          : 150000;
+      isLowEnd
+        ? 70000
+        : isSmall || dpr > 1.5
+          ? 80000
+          : cores <= 4
+            ? 120000
+            : 150000;
     // Increased minimum for better silhouette definition during morph
     const targetCount = Math.max(20000, Math.min(this.maxPoints, autoCap));
 
-    // Sample points ON SURFACE (crisper silhouette than vertex skipping)
-    const { positions: worldPositions, bounds } = this.sampleSurfacePositions(root, targetCount, this.SAMPLE_SEED);
+    // Fast path for instant display: sample vertices (no MeshSurfaceSampler build)
+    // Then we refine to surface sampling asynchronously in `load()`.
+    const { positions: worldPositions, bounds } =
+      mode === 'vertex'
+        ? this.sampleVertexPositions(root, targetCount, this.SAMPLE_SEED)
+        : this.sampleSurfacePositions(root, targetCount, this.SAMPLE_SEED);
     const positions = new Float32Array(worldPositions.length);
     positions.set(worldPositions);
     const seeds = new Float32Array(targetCount);
@@ -2464,6 +2663,81 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         const sampler = new MeshSurfaceSampler(mesh).build();
         for (let i = 0; i < n; i++) {
           sampler.sample(tmp);
+          tmp.applyMatrix4(mesh.matrixWorld);
+          const k = write * 3;
+          positions[k] = tmp.x;
+          positions[k + 1] = tmp.y;
+          positions[k + 2] = tmp.z;
+          bounds.expandByPoint(tmp);
+          write++;
+          if (write >= count) break;
+        }
+        if (write >= count) break;
+      }
+    });
+
+    return { positions, bounds };
+  }
+
+  /**
+   * Ultra-fast sampling: pick random vertices from meshes.
+   * This is used only for the FIRST visible frame of the hero so users see the true silhouette ASAP.
+   * Then we refine to surface sampling asynchronously (MeshSurfaceSampler) without blocking.
+   */
+  private sampleVertexPositions(
+    root: THREE.Object3D,
+    desiredCount: number,
+    seed: number,
+  ): { positions: Float32Array; bounds: THREE.Box3 } {
+    const meshes: THREE.Mesh[] = [];
+    const weights: number[] = [];
+    let totalWeight = 0;
+
+    root.traverse((o) => {
+      const m = o as any;
+      if (!m?.isMesh) return;
+      const mesh = m as THREE.Mesh;
+      const geom = mesh.geometry as THREE.BufferGeometry | undefined;
+      const p = geom?.getAttribute('position') as THREE.BufferAttribute | undefined;
+      if (!geom || !p || p.count < 3) return;
+      meshes.push(mesh);
+      const w = p.count;
+      weights.push(w);
+      totalWeight += w;
+    });
+
+    const count = Math.max(1, desiredCount);
+    const positions = new Float32Array(count * 3);
+    const bounds = new THREE.Box3();
+    if (!meshes.length || totalWeight <= 0) return { positions, bounds };
+
+    // Allocate picks per mesh proportional to vertex count.
+    const perMesh = weights.map((w) => Math.floor((w / totalWeight) * count));
+    let assigned = perMesh.reduce((a, b) => a + b, 0);
+    const order = weights
+      .map((w, i) => ({ w, i }))
+      .sort((a, b) => b.w - a.w)
+      .map((x) => x.i);
+    let oi = 0;
+    while (assigned < count) {
+      perMesh[order[oi % order.length]]++;
+      assigned++;
+      oi++;
+    }
+
+    const tmp = new THREE.Vector3();
+    let write = 0;
+
+    this.withDeterministicRandom(seed, () => {
+      for (let mi = 0; mi < meshes.length; mi++) {
+        const n = perMesh[mi];
+        if (n <= 0) continue;
+        const mesh = meshes[mi];
+        const geom = mesh.geometry as THREE.BufferGeometry;
+        const p = geom.getAttribute('position') as THREE.BufferAttribute;
+        for (let i = 0; i < n; i++) {
+          const vi = (Math.random() * p.count) | 0;
+          tmp.fromBufferAttribute(p, vi);
           tmp.applyMatrix4(mesh.matrixWorld);
           const k = write * 3;
           positions[k] = tmp.x;

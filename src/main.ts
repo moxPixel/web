@@ -59,19 +59,16 @@ bootstrapApplication(App, appConfig)
     })();
 
     // Ensure the loader stays visible a minimum time (even on fast loads),
-    // and keep it until the hero Three.js has produced its first point cloud
-    // (prevents the "first load is empty / then pops" perception).
+    // but do NOT block on Three.js models. Particles will now appear immediately
+    // and refine in the background (instant perceived load).
     const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     const elapsed = now - LOADER_BOOT_MARK;
     const minWait = Math.max(0, LOADER_MIN_VISIBLE_MS - elapsed);
 
-    // Wait for hero particles to be ready, and warm critical assets,
-    // but never block forever.
-    await Promise.all([
-      new Promise((r) => window.setTimeout(r, minWait)),
-      waitForEventOnce('three-particles-ready', 8000),
-      Promise.race([preloadCriticalPromise, new Promise((r) => window.setTimeout(r, 4500))]),
-    ]);
+    // Keep loader for a minimum time only (UX), then reveal app.
+    // Preload continues in background to improve smoothness (no gating).
+    await new Promise((r) => window.setTimeout(r, minWait));
+    Promise.race([preloadCriticalPromise, new Promise((r) => window.setTimeout(r, 4500))]).catch(() => {});
 
     hidePageLoader();
   })

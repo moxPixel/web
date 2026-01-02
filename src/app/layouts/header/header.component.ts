@@ -121,8 +121,12 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     const nav = this.trainingsNavItem?.nativeElement;
     if (!nav) return;
 
+    // Robust "is pointer inside" check across browsers:
+    // - `composedPath()` is not always reliable (can be empty in some cases)
+    // - fallback to DOM containment using `ev.target`
     const path = (typeof ev.composedPath === 'function' ? ev.composedPath() : []) as EventTarget[];
-    const isInside = path.includes(nav);
+    const target = (ev.target || null) as unknown as Node | null;
+    const isInside = path.includes(nav) || (!!target && nav.contains(target));
 
     if (!isInside) {
       this.scheduleCloseMegaMenu(0);
