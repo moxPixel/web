@@ -2241,6 +2241,32 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec4 clip0 = projectionMatrix * mvPosition;
           vec2 ndc = clip0.xy / max(0.0001, clip0.w);
           
+          // Calculer la distance radiale pour les effets (toujours disponible)
+          float distFromCenter = length(pos.xz);
+          float normalizedDist = distFromCenter / r;
+          float distFromCenter3D = length(pos);
+          float normalizedDist3D = clamp(distFromCenter3D / r, 0.0, 2.5);
+          
+          // ============================================================
+          // CALCUL DE PROXIMITÉ AU CENTRE DU MODÈLE 3D (pas de l'écran)
+          // Utilise la distance 3D depuis le centre du modèle pour fonctionner sur mobile
+          // Centre décalé vers le haut et effet plus étendu
+          // ============================================================
+          // Centre décalé vers le haut (environ 30% du rayon vers le haut)
+          vec3 centerOffset = vec3(0.0, r * 0.30, 0.0);
+          vec3 posToCenter = pos - centerOffset;
+          float distFromCenterOffset = length(posToCenter);
+          float normalizedDistOffset = clamp(distFromCenterOffset / r, 0.0, 2.5);
+          
+          // Rayon d'influence encore plus étendu (75% du rayon du modèle)
+          float influenceCenter3D = 0.75; // Rayon d'influence très étendu
+          float centerProx = smoothstep(influenceCenter3D, 0.0, normalizedDistOffset);
+          centerProx = pow(centerProx, 1.05); // Courbe plus douce pour un effet très étendu
+          // Pas de mouseDamp pour le centre (toujours actif)
+          
+          // ============================================================
+          // CALCUL DE PROXIMITÉ À LA SOURIS (Hover)
+          // ============================================================
           // Ignore mouse effect if mouse is outside valid NDC range (-1 to 1)
           // This prevents initial "focus" effect when mouse hasn't moved yet
           float mouseInRange = step(abs(uMouse.x), 1.5) * step(abs(uMouse.y), 1.5);
@@ -2260,32 +2286,36 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           float mouseDamp = mix(1.0, 0.18, midMorph2);
           prox *= mouseDamp;
           
-          vMouseProximity = prox;
+          // COMBINER: Prendre le maximum entre centre et souris
+          vMouseProximity = max(centerProx, prox);
 
           vDepth = -mvPosition.z;
-          vMotion = prox * (0.65 + 0.45 * uMouseSpeed);
-
-          // Calculer la distance radiale pour les effets (toujours disponible)
-          float distFromCenter = length(pos.xz);
-          float normalizedDist = distFromCenter / r;
+          // Motion combine centre + souris (même logique)
+          float centerMotion = centerProx * 0.65; // Pas de vitesse pour le centre
+          float mouseMotion = prox * (0.65 + 0.45 * uMouseSpeed);
+          vMotion = max(centerMotion, mouseMotion);
           
           vSpark = 0.78 + 0.35 * sin(uTime * 1.15 + aSeed * 22.0);
           // Neural: small brightness boost on synapse pulses
           vSpark += neural * 0.22;
           float sparkMask = step(0.80, fract(aSeed * 13.37));
-          vSpark += uMouseSpeed * 0.35 * sparkMask;
-          vSpark += prox * 0.4 * (1.0 + uMouseSpeed * 0.45);
+          // Spark combine centre + souris
+          float centerSpark = centerProx * 0.4; // Pas de vitesse pour le centre
+          float mouseSpark = uMouseSpeed * 0.35 * sparkMask + prox * 0.4 * (1.0 + uMouseSpeed * 0.45);
+          vSpark += max(centerSpark, mouseSpark);
           vSpark = clamp(vSpark, 0.0, 1.6);
           
-          // EFFET 1 : Scintillement/Twinkle (réduit au scroll pour isoler l'effet)
+          // EFFET 1 : Scintillement/Twinkle (harmonisé avec le scroll) - BOOSTÉ
           float twinkleSpeed = 0.8 + fract(aSeed * 7.3) * 0.6;
           float twinklePhase = uTime * twinkleSpeed + aSeed * 15.7;
           vTwinkle = sin(twinklePhase) * 0.5 + 0.5;
           vTwinkle = pow(vTwinkle, 2.5);
-          // Boost du twinkle près de la souris (seulement si pas de scroll)
+          // Boost du twinkle près de la souris + CENTRE PAR DÉFAUT
           float scrollT = clamp(uScrollY / 1.5, 0.0, 1.0);
           float scrollInfluence = 1.0 - scrollT * 0.8; // Réduit le twinkle au scroll
-          vTwinkle += prox * 0.4 * (1.0 + uMouseSpeed * 0.3) * scrollInfluence;
+          float centerTwinkle = centerProx * 0.4; // Twinkle au centre
+          float mouseTwinkle = prox * 0.4 * (1.0 + uMouseSpeed * 0.3) * scrollInfluence;
+          vTwinkle += max(centerTwinkle, mouseTwinkle);
           vTwinkle = clamp(vTwinkle, 0.0, 1.5);
           
           // EFFET 2 : Distance radiale pour effets de couleur
@@ -2308,8 +2338,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           // - Fluid domino trail: natural decay with gentle shimmer
           // ---------------------------------------------------------
           // Use 3D distance for resonance (more accurate radial effect from center)
-          float distFromCenter3D = length(pos);
-          float normalizedDist3D = clamp(distFromCenter3D / r, 0.0, 2.5);
+          // distFromCenter3D et normalizedDist3D sont déjà calculés plus haut
           
           // Wave travels from center (0) outward, repeating every cycle
           // NO particle phase offset - all particles react instantly when wave arrives
@@ -2482,6 +2511,14 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           float depthIntensity = smoothstep(8.0, 1.2, vDepth);
           baseIntensity += depthIntensity * 0.38;
           
+          // ============================================================
+          // EFFET DE LUMIÈRE PAR DÉFAUT (Centre du modèle)
+          // Utilise maintenant vMouseProximity qui inclut déjà le centre !
+          // Plus besoin de calculer centerProximity séparément
+          // ============================================================
+          // vMouseProximity contient maintenant max(centerProx, prox)
+          // Donc tous les effets basés sur vMouseProximity fonctionnent automatiquement au centre
+          
           // Harmoniser les effets de souris avec le scroll (transition douce)
           float mouseInfluence = 1.0 - scrollInfluence * 0.35; // Réduction plus subtile
           float accretionBoost = vMouseProximity * (1.0 + uMouseSpeed * 0.85) * mouseInfluence;
@@ -2529,7 +2566,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec3 saturated = mix(vec3(luminance), finalColor, saturationBoost);
           finalColor = mix(finalColor, saturated, 0.75);
           
-          // EFFET 4 : Highlight blanc près de la souris - BOOSTÉ
+          // EFFET 4 : Highlight blanc près de la souris + CENTRE PAR DÉFAUT - BOOSTÉ
+          // vMouseProximity inclut déjà le centre, donc ça fonctionne automatiquement !
           float colorShift = vMouseProximity * 0.28;
           vec3 highlightColor = vec3(1.0, 1.0, 1.0);
           finalColor = mix(finalColor, highlightColor, colorShift);
@@ -2539,8 +2577,10 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec3 richTint = vec3(1.12, 1.08, 1.04);
           finalColor = mix(finalColor, finalColor * richTint, depthColorShift);
           
-          // EFFET 6 : Chromatic aberration près de la souris - BOOSTÉ
+          // EFFET 6 : Chromatic aberration près de la souris + CENTRE PAR DÉFAUT - MÊME INTENSITÉ
+          // vMouseProximity inclut déjà le centre, donc ça fonctionne automatiquement !
           float chromaAmount = vMouseProximity * 0.065;
+          
           vec3 chromaR = vec3(1.0 + chromaAmount * 1.4, 1.0, 1.0 - chromaAmount);
           vec3 chromaB = vec3(1.0 - chromaAmount, 1.0, 1.0 + chromaAmount * 1.4);
           finalColor.r *= chromaR.r;
@@ -2553,8 +2593,9 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec3 radialTint = mix(centerColor, outerColor, radialGradient);
           finalColor = mix(finalColor, finalColor * radialTint, 0.15);
           
-          // EFFET 8 : Bloom/Halo externe (harmonisé avec le scroll) - BOOSTÉ
+          // EFFET 8 : Bloom/Halo externe (harmonisé avec le scroll) + CENTRE PAR DÉFAUT - MÊME INTENSITÉ
           float bloomRadius = smoothstep(0.48, 0.10, d);
+          // vMouseProximity inclut déjà le centre, vMotion aussi !
           float bloomIntensity = (vMouseProximity * 0.75 + vMotion * 0.48 + vSpark * 0.35 + vTwinkle * 0.42) * mouseInfluence;
           // Boost de bloom subtil et élégant au scroll - BOOSTÉ
           bloomIntensity += scrollInfluence * 0.52;
@@ -2570,8 +2611,9 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           innerGlowIntensity += scrollInfluence * 0.42;
           finalColor += finalColor * innerGlow * innerGlowIntensity;
           
-          // EFFET 10 : Corona effect (harmonisé avec le scroll) - BOOSTÉ
+          // EFFET 10 : Corona effect (harmonisé avec le scroll) + CENTRE PAR DÉFAUT - MÊME INTENSITÉ
           float corona = smoothstep(0.25, 0.1, d) * smoothstep(0.0, 0.15, d);
+          // vMouseProximity inclut déjà le centre !
           float coronaIntensity = (vTwinkle * 0.45 + vMouseProximity * 0.32) * mouseInfluence;
           // Boost de corona subtil au scroll - BOOSTÉ
           coronaIntensity += scrollInfluence * 0.32;
