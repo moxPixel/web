@@ -30,17 +30,41 @@ export class CookieConsentComponent implements OnInit, OnDestroy {
   constructor(private notifications: NotificationService) {}
 
   ngOnInit(): void {
+    if (!this.isBrowser()) return;
+    
     const consent = this.getStoredValue(CONSENT_KEY);
     if (!consent) {
-      // Keep it subtle: show shortly after first paint.
-      if (this.isBrowser()) {
-        this.showTimerId = window.setTimeout(() => {
-          this.isVisible = true;
-        }, 700);
-      }
+      // Wait for loader to be hidden before showing cookie consent
+      this.waitForLoaderThenShow();
     } else {
       this.showWelcomeNotificationOnce();
     }
+  }
+
+  private waitForLoaderThenShow(): void {
+    if (!this.isBrowser()) return;
+
+    const checkLoader = () => {
+      const loader = document.getElementById('page-loader');
+      if (!loader) {
+        // Loader already gone, show after a short delay
+        this.showTimerId = window.setTimeout(() => {
+          this.isVisible = true;
+        }, 700);
+        return;
+      }
+
+      // Wait for loader-hidden event
+      const onLoaderHidden = () => {
+        window.removeEventListener('app-loader-hidden', onLoaderHidden as any);
+        this.showTimerId = window.setTimeout(() => {
+          this.isVisible = true;
+        }, 700);
+      };
+      window.addEventListener('app-loader-hidden', onLoaderHidden as any, { once: true } as any);
+    };
+
+    checkLoader();
   }
 
   ngOnDestroy(): void {

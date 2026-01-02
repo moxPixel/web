@@ -20,6 +20,26 @@ export class NotificationService {
   private readonly items$ = new BehaviorSubject<AppNotification[]>([]);
   readonly notifications$ = this.items$.asObservable();
   private dismissTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  private isLoaderHidden = false;
+  private pendingNotifications: Array<Omit<AppNotification, 'id' | 'createdAt' | 'state'>> = [];
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      // Check if loader already gone
+      if (!document.getElementById('page-loader')) {
+        this.isLoaderHidden = true;
+      } else {
+        // Wait for loader-hidden event
+        const onLoaderHidden = () => {
+          this.isLoaderHidden = true;
+          // Process any pending notifications
+          this.pendingNotifications.forEach((notif) => this.push(notif));
+          this.pendingNotifications = [];
+        };
+        window.addEventListener('app-loader-hidden', onLoaderHidden as any, { once: true } as any);
+      }
+    }
+  }
 
   info(title: string, message: string, durationMs = 4200): void {
     this.push({ type: 'info', title, message, durationMs });
@@ -57,6 +77,12 @@ export class NotificationService {
   }
 
   private push(input: Omit<AppNotification, 'id' | 'createdAt' | 'state'>): void {
+    // If loader is still visible, queue the notification
+    if (!this.isLoaderHidden) {
+      this.pendingNotifications.push(input);
+      return;
+    }
+
     const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     const createdAt = Date.now();
     const durationMs = Math.max(1200, Math.min(20_000, Number(input.durationMs) || 4200));
