@@ -3,22 +3,31 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { ThreePreloadService } from './app/shared/services/three-preload/three-preload.service';
 
-const LOADER_MIN_VISIBLE_MS = 800; // Minimum display time (allongé pour un effet plus premium)
+const LOADER_MIN_VISIBLE_MS = 800; // Minimum display time (premium)
 const LOADER_BOOT_MARK = (typeof performance !== 'undefined' ? performance.now() : Date.now());
 
-function waitForEventOnce(eventName: string, timeoutMs: number): Promise<void> {
+function waitForEvent(eventName: string): Promise<void> {
   return new Promise((resolve) => {
     if (typeof window === 'undefined') return resolve();
+    const onEvent = () => resolve();
+    window.addEventListener(eventName, onEvent as any, { once: true } as any);
+  });
+}
+
+function waitForAnyEvent(eventNames: string[]): Promise<void> {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined') return resolve();
+    const names = (eventNames || []).filter(Boolean);
+    if (!names.length) return resolve();
     let done = false;
     const finish = () => {
       if (done) return;
       done = true;
-      window.removeEventListener(eventName, onEvent as any);
+      for (const n of names) window.removeEventListener(n, onAny as any);
       resolve();
     };
-    const onEvent = () => finish();
-    window.addEventListener(eventName, onEvent as any, { once: true } as any);
-    window.setTimeout(finish, Math.max(0, timeoutMs || 0));
+    const onAny = () => finish();
+    for (const n of names) window.addEventListener(n, onAny as any, { once: true } as any);
   });
 }
 
@@ -68,13 +77,15 @@ bootstrapApplication(App, appConfig)
     // Keep loader for a minimum time (UX) AND wait for the hero particles to be ready
     // (now "ready" means the fast vertex-based point cloud is mounted, so it's visually clean).
     // Never block forever.
+    // Best-sites behavior: reveal app only when hero particles are actually ready.
+    // No timeout: this is event-driven.
+    // Safety: the particles component will emit `three-particles-failed` if the GLB cannot load.
     await Promise.all([
       new Promise((r) => window.setTimeout(r, minWait)),
-      waitForEventOnce('three-particles-ready', 3500),
+      waitForAnyEvent(['three-particles-ready', 'three-particles-failed']),
+      // Warm critical assets in background (never blocks reveal)
+      Promise.race([preloadCriticalPromise, new Promise((r) => window.setTimeout(r, 4500))]).catch(() => {}),
     ]);
-
-    // Preload continues in background to improve smoothness (no hard gating).
-    Promise.race([preloadCriticalPromise, new Promise((r) => window.setTimeout(r, 4500))]).catch(() => {});
 
     hidePageLoader();
   })

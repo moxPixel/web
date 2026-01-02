@@ -765,6 +765,15 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         if (typeof window !== 'undefined') {
           console.error('[ThreeParticlesSimple] GLB load failed', err, 'URL:', url);
         }
+        // Unblock app reveal without using timeouts: signal failure if we couldn't get a hero cloud.
+        if (!this.readyDispatched && typeof window !== 'undefined') {
+          this.readyDispatched = true;
+          try {
+            window.dispatchEvent(new Event('three-particles-failed'));
+          } catch {
+            // ignore
+          }
+        }
       });
   }
 
@@ -1202,7 +1211,11 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         // so the morphed model materializes exactly where you want.
         this.updateMorphRotation();
         if (this.autoRotate) this.points.rotateY(0.002);
-        this.updateMorphPlacement();
+        // Heavy part (DOM rect + raycast). Skip while user scrolls very fast to avoid "site saccade".
+        // Placement will catch up once scrolling slows down, while morph shape stays responsive.
+        if (this.scrollSpeed01 < 0.7) {
+          this.updateMorphPlacement();
+        }
       }
       this.renderer.render(this.scene, this.camera);
     };
