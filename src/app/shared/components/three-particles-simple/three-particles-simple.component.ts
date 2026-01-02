@@ -12,6 +12,11 @@ type Vec3 = { x: number; y: number; z: number };
 
 type MorphKey = ScrollMorphKey & {
   /**
+   * Optional baked pointcloud id (used to load `.bin` clouds instead of GLB at runtime).
+   * When present (and `usePointcloudBins` is true), morphing no longer depends on GLB parsing/sampling.
+   */
+  pointcloudId?: string;
+  /**
    * World Z plane used for screen->world placement.
    * If omitted, we use a camera-facing plane through the origin (more robust).
    */
@@ -84,6 +89,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   @ViewChild('host', { static: true }) host!: ElementRef<HTMLDivElement>;
 
   @Input() modelPath: string = '/assets/models/unlock-model.glb';
+  @Input() usePointcloudBins = true;
+  @Input() heroPointcloudId = 'hero';
   @Input() backgroundColor: string = 'transparent';
   @Input() cameraPosition: Vec3 = { x: 0, y: 0, z: 5 };
   @Input() fov = 50;
@@ -135,9 +142,16 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   private heroRefineStarted = false;
   private morphPrefetchIO?: IntersectionObserver;
   private morphPrefetchArmed = false;
+  private pointcloudCount = 90000;
+  private shaderSrc: { vertex: string; fragment: string } | null = null;
 
   // Cross-instance (page-level) HTTP warm cache for large binary assets.
   private static readonly arrayBufferCache = new Map<string, Promise<ArrayBuffer>>();
+  // Persisted point-cloud cache (generate once per device) — avoids re-sampling across visits.
+  private static readonly CLOUD_CACHE_DB = 'unlock_three_particles_cache_v1';
+  private static readonly CLOUD_CACHE_STORE = 'clouds';
+  private static readonly CLOUD_CACHE_VERSION = 1;
+  private idb?: Promise<IDBDatabase | null>;
   // Initialize startTime earlier so uTime starts with a non-zero value
   // This ensures the resonance pulse wave is already in motion at initialization
   private startTime = ((typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000) - 2.5;
@@ -192,6 +206,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     // Use a selector list so it works even if you later swap the component/tag.
     {
       id: 'about',
+      pointcloudId: 'about',
       modelPath: '/assets/models/unlock-model-about.glb',
       anchorSelector: 'app-about-section,[data-ui-section="about"]',
       // Place the morphed model where the About left visual lives.
@@ -211,6 +226,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: 'business',
+      pointcloudId: 'business',
       modelPath: '/assets/models/unlock-model-buisness-.glb',
       anchorSelector: 'app-business-solutions-section,[data-ui-section="business-solutions"]',
       // Place the morphed model where the Business visual lives.
@@ -229,6 +245,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: 'reviews',
+      pointcloudId: 'reviews',
       modelPath: '/assets/models/unlock-model-review-.glb',
       anchorSelector: 'app-reviews-section,[data-ui-section="reviews"]',
       targetSelector: '[data-ui-morph-target="reviews-photo"]',
@@ -243,6 +260,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: 'quality',
+      pointcloudId: 'quality',
       modelPath: '/assets/models/unlock-model-quality.glb',
       anchorSelector: 'app-quality-section,[data-ui-section="quality"]',
       rotateY: 0,
@@ -259,6 +277,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: 'locky-games',
+      pointcloudId: 'locky-games',
       modelPath: '/assets/models/unlock-model-games.glb',
       anchorSelector: 'app-locky-games-section,[data-ui-section="locky-games"]',
       rotateY: 0,
@@ -275,6 +294,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: 'events',
+      // NOTE: events can be dynamic (date text). When in model mode, use the baked/model cloud.
+      pointcloudId: 'events',
       modelPath: '/assets/models/unlock-model-event.glb',
       anchorSelector: 'app-events-section,[data-ui-section="events"]',
       // Place the morphed model where the Events left visual lives.
@@ -352,7 +373,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (typeof window === 'undefined') return;
     this.init();
-    this.load(this.modelPath);
+    this.pointcloudCount = this.choosePointcloudCount();
+    this.loadHeroSmart();
     this.installVisibilityHandlers();
     this.start();
   }
@@ -724,8 +746,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         const count = this.basePointCount || 0;
         if (!count) return;
 
-        this.extractCenteredPositionsAsync(scene, count)
-          .then(({ positions, radius }) => {
+        const applyRefined = (positions: Float32Array, radius: number) => {
             if (this.destroyed) return;
             if (!this.points) return;
             const geom = this.points.geometry as THREE.BufferGeometry;
@@ -756,6 +777,23 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
 
             // Update framing now that the hero bounds are accurate
             this.updateCameraForModel();
+        };
+
+        const heroCacheKey = this.getCloudCacheKey('hero', url, count);
+        this.idbGetBuffer(heroCacheKey)
+          .then((buf) => {
+            if (buf) {
+              const positions = new Float32Array(buf);
+              const radius = this.computeRadiusFromCenteredPositions(positions);
+              applyRefined(positions, radius);
+              return;
+            }
+            return this.extractCenteredPositionsAsync(scene, count)
+              .then(({ positions, radius }) => {
+                applyRefined(positions, radius);
+                // Persist for next visits (generate only once per device)
+                void this.idbPutBuffer(heroCacheKey, positions.buffer.slice(0) as ArrayBuffer);
+              });
           })
           .catch(() => {
             // ignore (keep vertex proxy)
@@ -796,6 +834,287 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     return p;
   }
 
+  // ------------------------------------------------------------
+  // Baked pointclouds (.bin) — no GLB needed at runtime
+  // ------------------------------------------------------------
+  private choosePointcloudCount(): number {
+    // Must match what we bake/export. Two tiers are enough for robustness.
+    // - mobile/low-end: 45k
+    // - desktop: 90k
+    const lo = 45000;
+    const hi = 90000;
+    const preferred = this.isLowEndDevice() || this.isMobileLayout() ? lo : hi;
+
+    // IMPORTANT: the component may be configured with a lower `maxPoints` (e.g. hero uses 65k).
+    // If we would pick 90k while maxPoints < 90k, we'd end up with a base cloud count that
+    // doesn't match the baked morph `.bin` tiers, and morphs won't switch reliably.
+    if (this.maxPoints < preferred) {
+      // If we can fit the low tier, use it (it exists on disk).
+      if (this.maxPoints >= lo) return lo;
+      // Otherwise we don't have a baked tier for this size: keep preferred and let runtime fallback to GLB.
+      return preferred;
+    }
+    return preferred;
+  }
+
+  private pointcloudUrl(id: string, count: number): string {
+    const safeId = String(id || '').trim();
+    return `/assets/pointclouds/${count}/${safeId}.bin`;
+  }
+
+  private async fetchPointcloudPositions(id: string, count: number): Promise<Float32Array | null> {
+    if (typeof fetch === 'undefined') return null;
+    const url = this.pointcloudUrl(id, count);
+    try {
+      const r = await fetch(url, { cache: 'force-cache' });
+      if (!r.ok) return null;
+      const buf = await r.arrayBuffer();
+      // Interpret as float32 positions (x,y,z) already centered.
+      const arr = new Float32Array(buf);
+      if (!arr.length || arr.length % 3 !== 0) return null;
+      return arr;
+    } catch {
+      return null;
+    }
+  }
+
+  private getShaderSrc(): { vertex: string; fragment: string } {
+    if (this.shaderSrc) return this.shaderSrc;
+
+    // Build a tiny dummy cloud once to capture the exact shader source used by this component.
+    // This avoids duplicating shader strings and allows baked `.bin` clouds to render identically.
+    //
+    // IMPORTANT: `buildPointCloud()` has side-effects (it sets `basePointCount`, `basePositions`,
+    // `morphAttrFrom/To`, etc). If we don't restore them, morph `.bin` loads will later mismatch
+    // (e.g. expected 2048) and fall back to GLB every time.
+    const prevBasePointCount = this.basePointCount;
+    const prevBaseRadius = this.baseRadius;
+    const prevBasePositions = this.basePositions;
+    const prevMorphAttrFrom = this.morphAttrFrom;
+    const prevMorphAttrTo = this.morphAttrTo;
+
+    const dummyMesh = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1, 0),
+      new THREE.MeshBasicMaterial({ color: 0xffffff }),
+    );
+    try {
+      const built = this.buildPointCloud(dummyMesh, 'vertex', 2048);
+      const mat = built.points.material as THREE.ShaderMaterial;
+      this.shaderSrc = { vertex: mat.vertexShader, fragment: mat.fragmentShader };
+      // Clean up the dummy cloud immediately
+      this.disposePoints(built.points);
+      return this.shaderSrc;
+    } finally {
+      // Restore state mutated by the dummy build (keeps morphing consistent).
+      this.basePointCount = prevBasePointCount;
+      this.baseRadius = prevBaseRadius;
+      this.basePositions = prevBasePositions;
+      this.morphAttrFrom = prevMorphAttrFrom;
+      this.morphAttrTo = prevMorphAttrTo;
+    }
+  }
+
+  private buildPointCloudFromCenteredPositions(positions: Float32Array): { points: THREE.Points; bounds: THREE.Box3 } {
+    const count = Math.max(1, Math.floor(positions.length / 3));
+    const bounds = this.computeBoundsFromCenteredPositions(positions);
+    const modelRadius = this.computeRadiusFromCenteredPositions(positions);
+
+    const seeds = new Float32Array(count);
+    const rands = new Float32Array(count * 3);
+    const rand01 = (n: number): number => {
+      const x = (Math.imul(n ^ 0x9e3779b9, 1664525) + 1013904223) >>> 0;
+      return (x & 0x00ffffff) / 0x01000000;
+    };
+    for (let i = 0; i < count; i++) {
+      const k = i * 3;
+      seeds[i] = rand01(i + 1);
+      rands[k] = rand01(i + 11) * 2 - 1;
+      rands[k + 1] = rand01(i + 101) * 2 - 1;
+      rands[k + 2] = rand01(i + 1009) * 2 - 1;
+    }
+
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geom.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
+    geom.setAttribute('aRand', new THREE.BufferAttribute(rands, 3));
+    geom.computeBoundingSphere();
+    geom.computeBoundingBox();
+
+    this.basePointCount = count;
+    this.baseRadius = modelRadius;
+    this.basePositions = new Float32Array(positions.length);
+    this.basePositions.set(positions);
+
+    const morphFrom = new Float32Array(positions.length);
+    const morphTo = new Float32Array(positions.length);
+    morphFrom.set(positions);
+    morphTo.set(positions);
+    geom.setAttribute('aMorphFrom', new THREE.BufferAttribute(morphFrom, 3));
+    geom.setAttribute('aMorphTo', new THREE.BufferAttribute(morphTo, 3));
+    this.morphAttrFrom = geom.getAttribute('aMorphFrom') as THREE.BufferAttribute;
+    this.morphAttrTo = geom.getAttribute('aMorphTo') as THREE.BufferAttribute;
+
+    // Reuse same shader/material as normal pointcloud build (keeps identical look).
+    const uniforms = {
+      uColor: { value: new THREE.Color(0xcfeeff) },
+      uColor2: { value: new THREE.Color(0x3b82f6) },
+      uColor3: { value: new THREE.Color(0x8b5cf6) },
+      uOpacity: { value: this.opacity },
+      uSize: { value: this.pointSize * this.GLOBAL_POINT_SIZE_MULT },
+      uTightness: { value: this.GLOBAL_SHAPE_TIGHTNESS },
+      uTime: { value: 2.5 },
+      uLoadProgress: { value: 0.0 },
+      uEntryProgress: { value: this.entryAnimation ? 0.0 : 1.0 },
+      uEntryRadius: { value: modelRadius * 3.5 },
+      uOrganic: { value: 1.0 },
+      uOrganicStrength: { value: this.organicStrength },
+      uOrganicSpeed: { value: this.organicSpeed },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uMouseStrength: { value: this.mouseStrength },
+      uMouseVel: { value: new THREE.Vector2(0, 0) },
+      uMouseSpeed: { value: 0.0 },
+      uRadius: { value: modelRadius },
+      uScrollY: { value: 0.0 },
+      uMorph: { value: 0.0 },
+      uMorphTargetMix: { value: 1.0 },
+      uBreakStrength: { value: 0.0 },
+      uResonanceStrength: { value: 0.45 },
+      uResonanceSpeed: { value: 0.28 },
+      uResonanceWidth: { value: 0.085 },
+      uResonanceDecay: { value: 4.5 },
+    };
+
+    const src = this.getShaderSrc();
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: src.vertex,
+      fragmentShader: src.fragment,
+      transparent: true,
+      depthTest: true,
+      depthWrite: false,
+      blending: this.additive ? THREE.AdditiveBlending : THREE.NormalBlending,
+    });
+
+    const pts = new THREE.Points(geom, mat);
+    return { points: pts, bounds };
+  }
+
+  private loadHeroSmart(): void {
+    if (!this.usePointcloudBins) {
+      this.load(this.modelPath);
+      return;
+    }
+    // Try baked hero first; fallback to GLB pipeline if not present.
+    this.fetchPointcloudPositions(this.heroPointcloudId, this.pointcloudCount)
+      .then((arr) => {
+        if (!arr) throw new Error('No baked hero pointcloud');
+        const built = this.buildPointCloudFromCenteredPositions(arr);
+        this.setPoints(built.points, built.bounds);
+      })
+      .catch(() => this.load(this.modelPath));
+  }
+
+  // ------------------------------------------------------------
+  // IndexedDB cache (generate from models once per device)
+  // ------------------------------------------------------------
+  private getCloudCacheKey(kind: 'hero' | 'morph', key: string, count: number): string {
+    return `${ThreeParticlesSimpleComponent.CLOUD_CACHE_VERSION}:${kind}:${key}:n=${count}`;
+  }
+
+  private async openIdb(): Promise<IDBDatabase | null> {
+    if (typeof indexedDB === 'undefined') return null;
+    if (this.idb) return this.idb;
+    this.idb = new Promise((resolve) => {
+      try {
+        const req = indexedDB.open(
+          ThreeParticlesSimpleComponent.CLOUD_CACHE_DB,
+          ThreeParticlesSimpleComponent.CLOUD_CACHE_VERSION,
+        );
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(ThreeParticlesSimpleComponent.CLOUD_CACHE_STORE)) {
+            db.createObjectStore(ThreeParticlesSimpleComponent.CLOUD_CACHE_STORE);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+      } catch {
+        resolve(null);
+      }
+    });
+    return this.idb;
+  }
+
+  private async idbGetBuffer(key: string): Promise<ArrayBuffer | null> {
+    const db = await this.openIdb();
+    if (!db) return null;
+    return new Promise((resolve) => {
+      try {
+        const tx = db.transaction(ThreeParticlesSimpleComponent.CLOUD_CACHE_STORE, 'readonly');
+        const store = tx.objectStore(ThreeParticlesSimpleComponent.CLOUD_CACHE_STORE);
+        const req = store.get(key);
+        req.onsuccess = () => resolve((req.result as ArrayBuffer) || null);
+        req.onerror = () => resolve(null);
+      } catch {
+        resolve(null);
+      }
+    });
+  }
+
+  private async idbPutBuffer(key: string, buf: ArrayBuffer): Promise<void> {
+    const db = await this.openIdb();
+    if (!db) return;
+    return new Promise((resolve) => {
+      try {
+        const tx = db.transaction(ThreeParticlesSimpleComponent.CLOUD_CACHE_STORE, 'readwrite');
+        const store = tx.objectStore(ThreeParticlesSimpleComponent.CLOUD_CACHE_STORE);
+        store.put(buf, key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      } catch {
+        resolve();
+      }
+    });
+  }
+
+  private computeAutoPointCount(): number {
+    const dpr = window.devicePixelRatio || 1;
+    const cores = (navigator as any).hardwareConcurrency || 4;
+    const isSmall = window.innerWidth < 768;
+    const isLowEnd = this.isLowEndDevice();
+    const autoCap =
+      isLowEnd
+        ? 70000
+        : isSmall || dpr > 1.5
+          ? 80000
+          : cores <= 4
+            ? 120000
+            : 150000;
+    return Math.max(20000, Math.min(this.maxPoints, autoCap));
+  }
+
+  private computeRadiusFromCenteredPositions(positions: Float32Array): number {
+    let maxR2 = 0;
+    for (let i = 0; i < positions.length; i += 3) {
+      const x = positions[i];
+      const y = positions[i + 1];
+      const z = positions[i + 2];
+      const r2 = x * x + y * y + z * z;
+      if (r2 > maxR2) maxR2 = r2;
+    }
+    return Math.max(0.0001, Math.sqrt(maxR2) || 1.0);
+  }
+
+  private computeBoundsFromCenteredPositions(positions: Float32Array): THREE.Box3 {
+    const b = new THREE.Box3();
+    const tmp = new THREE.Vector3();
+    for (let i = 0; i < positions.length; i += 3) {
+      tmp.set(positions[i], positions[i + 1], positions[i + 2]);
+      b.expandByPoint(tmp);
+    }
+    return b;
+  }
+
   private async loadGltfScene(url: string): Promise<THREE.Object3D> {
     if (!this.loader) throw new Error('GLTFLoader not initialized');
     const data = await this.fetchArrayBuffer(url);
@@ -809,20 +1128,39 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   private prefetchMorphModelsOnce(): void {
     if (this.didPrefetchMorphModels) return;
     this.didPrefetchMorphModels = true;
-    const paths = Array.from(
-      new Set([this.modelPath, ...(this.morphKeys || []).map((k) => k.modelPath)].filter(Boolean) as string[]),
-    );
-    // Fire-and-forget warmup (keeps scroll morph snappy when user reaches sections).
-    (async () => {
-      for (const p of paths) {
+    // With baked pointclouds enabled, warm `.bin` files instead of GLBs.
+    // This keeps morphing instant without paying Draco/GLTF parsing costs.
+    const urls = this.usePointcloudBins
+      ? Array.from(
+          new Set(
+            [this.heroPointcloudId, ...(this.morphKeys || []).map((k) => k.pointcloudId)]
+              .filter(Boolean)
+              .map((id) => this.pointcloudUrl(id as string, this.pointcloudCount)),
+          ),
+        )
+      : Array.from(
+          new Set([this.modelPath, ...(this.morphKeys || []).map((k) => k.modelPath)].filter(Boolean) as string[]),
+        );
+
+    const run = async () => {
+      for (const u of urls) {
         try {
-          await this.fetchArrayBuffer(p);
+          await this.fetchArrayBuffer(u);
         } catch {
           // ignore
         }
-        await new Promise((r) => setTimeout(r, 140));
+        await new Promise((r) => setTimeout(r, 120));
       }
-    })();
+    };
+
+    // Don't compete with first paint: run in idle when possible.
+    try {
+      const w = window as any;
+      if (w?.requestIdleCallback) w.requestIdleCallback(() => void run(), { timeout: 2500 });
+      else setTimeout(() => void run(), 900);
+    } catch {
+      void run();
+    }
   }
 
   /**
@@ -835,7 +1173,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     if (typeof window === 'undefined') return;
     if (typeof IntersectionObserver === 'undefined') return;
 
-    const keys = (this.morphKeys || []).filter((k) => !!k?.modelPath);
+    const keys = (this.morphKeys || []).filter((k) => this.usePointcloudBins ? !!k?.pointcloudId : !!k?.modelPath);
     if (!keys.length) return;
 
     const prefetch = (url: string) => {
@@ -846,8 +1184,12 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       }
     };
 
-    // Always warm the hero model path (usually already preloaded via index.html)
-    if (this.modelPath) prefetch(this.modelPath);
+    // Always warm the hero asset (usually already preloaded via index.html)
+    if (this.usePointcloudBins) {
+      prefetch(this.pointcloudUrl(this.heroPointcloudId, this.pointcloudCount));
+    } else if (this.modelPath) {
+      prefetch(this.modelPath);
+    }
 
     this.morphPrefetchIO = new IntersectionObserver(
       (entries) => {
@@ -856,8 +1198,13 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           const key = (e.target as any)?.getAttribute?.('data-morph-id') as string | null;
           if (!key) continue;
           const k = keys.find((x) => x.id === key);
-          if (!k?.modelPath) continue;
-          prefetch(k.modelPath);
+          if (this.usePointcloudBins) {
+            if (!k?.pointcloudId) continue;
+            prefetch(this.pointcloudUrl(k.pointcloudId, this.pointcloudCount));
+          } else {
+            if (!k?.modelPath) continue;
+            prefetch(k.modelPath);
+          }
           // Once prefetched, we don't need to observe this target anymore.
           try { this.morphPrefetchIO?.unobserve(e.target); } catch {}
         }
@@ -1447,6 +1794,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   private buildPointCloud(
     root: THREE.Object3D,
     mode: 'surface' | 'vertex' = 'surface',
+    targetCountOverride?: number,
   ): { points: THREE.Points; bounds: THREE.Box3 } {
     root.updateWorldMatrix(true, true);
 
@@ -1463,7 +1811,10 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
             ? 120000
             : 150000;
     // Increased minimum for better silhouette definition during morph
-    const targetCount = Math.max(20000, Math.min(this.maxPoints, autoCap));
+    const targetCount =
+      typeof targetCountOverride === 'number' && Number.isFinite(targetCountOverride) && targetCountOverride > 0
+        ? Math.max(256, Math.floor(targetCountOverride))
+        : Math.max(20000, Math.min(this.maxPoints, autoCap));
 
     // Fast path for instant display: sample vertices (no MeshSurfaceSampler build)
     // Then we refine to surface sampling asynchronously in `load()`.
@@ -2268,11 +2619,12 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     return { points: pts, bounds };
   }
 
-  private ensureMorphTargetApplied(id: string): Promise<void> {
+  private async ensureMorphTargetApplied(id: string): Promise<void> {
     if (!this.morphAttrFrom || !this.morphAttrTo || !this.basePositions) return Promise.resolve();
     const key = (this.morphKeys || []).find((k) => k.id === id);
     if (!key) return Promise.resolve();
     const cacheKey = this.getMorphCacheKey(id, key);
+    const idbKey = this.getCloudCacheKey('morph', `${cacheKey}@p=${key.modelPath || ''}`, this.basePointCount);
 
     const cached = this.morphPositionsById.get(cacheKey);
     if (cached) {
@@ -2285,9 +2637,21 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       return inflight.then((arr) => this.applyMorphTargetSwap(arr, cacheKey));
     }
 
+    // Try persisted cache first (avoid re-sampling across visits)
+    const persisted = await this.idbGetBuffer(idbKey);
+    if (persisted) {
+      const arr = new Float32Array(persisted);
+      if (arr.length === this.morphAttrTo.array.length) {
+        this.morphPositionsById.set(cacheKey, arr);
+        this.applyMorphTargetSwap(arr, cacheKey);
+        return;
+      }
+    }
+
     const p = this.loadMorphPositionsForKey(key, this.basePointCount, this.baseRadius)
       .then((arr) => {
         this.morphPositionsById.set(cacheKey, arr);
+        void this.idbPutBuffer(idbKey, arr.buffer.slice(0) as ArrayBuffer);
         return arr;
       })
       .finally(() => {
@@ -2305,13 +2669,15 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     // Avoid re-applying the same target (keeps blend stable)
     if (this.morphTargetKey === targetKey) return;
 
-    // FROM = current "to" (current target), or base if unavailable
+    // PERF: avoid copying ~270k floats on each morph switch (can cause jank on some devices).
+    // Instead, swap BufferAttribute arrays by reference and let Three upload them to GPU.
     const currentTo = this.morphAttrTo.array as Float32Array;
-    (this.morphAttrFrom.array as Float32Array).set(currentTo.length ? currentTo : this.basePositions);
+    const nextFrom = (currentTo && currentTo.length) ? currentTo : this.basePositions;
+
+    (this.morphAttrFrom as any).array = nextFrom;
     this.morphAttrFrom.needsUpdate = true;
 
-    // TO = new target
-    (this.morphAttrTo.array as Float32Array).set(targetPositions);
+    (this.morphAttrTo as any).array = targetPositions;
     this.morphAttrTo.needsUpdate = true;
 
     // Restart target blend (prevents pops when switching models mid-scroll)
@@ -2329,7 +2695,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
     return base;
   }
 
-  private loadMorphPositionsForKey(key: MorphKey, count: number, targetRadius: number): Promise<Float32Array> {
+  private async loadMorphPositionsForKey(key: MorphKey, count: number, targetRadius: number): Promise<Float32Array> {
     // Special case: Events = show next event date as particles when available
     if (key.id === 'events' && this.eventsHasUpcoming && this.eventsNextDateText) {
       return this.loadMorphTextPositions(
@@ -2341,6 +2707,29 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         key.rotateZ ?? 0,
       );
     }
+    // Prefer baked pointclouds when available (no GLB/Draco parse, no sampling).
+    // Fallback to GLB if .bin file doesn't exist.
+    if (this.usePointcloudBins && key.pointcloudId) {
+      try {
+        return await this.loadMorphPointcloudPositions(
+          key.pointcloudId,
+          count,
+          targetRadius,
+          key.rotateY ?? 0,
+          key.rotateX ?? 0,
+          key.rotateZ ?? 0,
+        );
+      } catch (err) {
+        // .bin file missing or invalid, fallback to GLB
+        console.warn(`[ThreeParticles] Pointcloud ${key.pointcloudId}.bin not found, falling back to GLB:`, err);
+        if (!key.modelPath) {
+          throw new Error(`No pointcloud or modelPath for morph key: ${key.id}`);
+        }
+      }
+    }
+    if (!key.modelPath) {
+      throw new Error(`No modelPath for morph key: ${key.id}`);
+    }
     return this.loadMorphModelPositions(
       key.modelPath,
       count,
@@ -2349,6 +2738,65 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       key.rotateX ?? 0,
       key.rotateZ ?? 0,
     );
+  }
+
+  private async loadMorphPointcloudPositions(
+    pointcloudId: string,
+    count: number,
+    targetRadius: number,
+    rotateY: number = 0,
+    rotateX: number = 0,
+    rotateZ: number = 0,
+  ): Promise<Float32Array> {
+    const arr = await this.fetchPointcloudPositions(pointcloudId, this.pointcloudCount);
+    if (!arr) throw new Error(`Missing baked pointcloud: ${pointcloudId}`);
+    if (arr.length !== count * 3) {
+      throw new Error(`Pointcloud count mismatch for ${pointcloudId} (got ${arr.length / 3}, expected ${count})`);
+    }
+    const positions = new Float32Array(arr.length);
+    positions.set(arr);
+
+    // Apply rotations (same behavior as GLB sampling)
+    const eps = 0.00001;
+    const cy = Math.cos(rotateY);
+    const sy = Math.sin(rotateY);
+    const cx = Math.cos(rotateX);
+    const sx = Math.sin(rotateX);
+    const cz = Math.cos(rotateZ);
+    const sz = Math.sin(rotateZ);
+    if (Math.abs(rotateY) > eps || Math.abs(rotateX) > eps || Math.abs(rotateZ) > eps) {
+      for (let i = 0; i < positions.length; i += 3) {
+        let x = positions[i];
+        let y = positions[i + 1];
+        let z = positions[i + 2];
+        if (Math.abs(rotateY) > eps) {
+          const nx = x * cy - z * sy;
+          const nz = x * sy + z * cy;
+          x = nx;
+          z = nz;
+        }
+        if (Math.abs(rotateX) > eps) {
+          const ny = y * cx - z * sx;
+          const nz = y * sx + z * cx;
+          y = ny;
+          z = nz;
+        }
+        if (Math.abs(rotateZ) > eps) {
+          const nx = x * cz - y * sz;
+          const ny = x * sz + y * cz;
+          x = nx;
+          y = ny;
+        }
+        positions[i] = x;
+        positions[i + 1] = y;
+        positions[i + 2] = z;
+      }
+    }
+
+    const radius = this.computeRadiusFromCenteredPositions(positions);
+    const scale = targetRadius / Math.max(0.0001, radius);
+    for (let i = 0; i < positions.length; i++) positions[i] *= scale;
+    return positions;
   }
 
   private async loadMorphModelPositions(

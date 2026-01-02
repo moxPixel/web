@@ -25,12 +25,16 @@ export class ScrollMorphService {
   // Cache DOMRects to avoid forced layout on every RAF.
   private rectCache = new Map<string, DOMRect | null>();
   private lastRectsMs = 0;
+  private lastScrollY = 0;
+  private scrollVel = 0;
+  private scrollSpeed01 = 0;
+  private lastSpeedMs = 0;
 
   // Throttle DOM querying. Morph still updates every RAF (rects), but lookups are cheap.
   private readonly REFRESH_MS = 400;
-  // Throttle rect reads (getBoundingClientRect) to reduce layout thrash.
-  // ~30fps rect updates is more than enough for smooth morph.
-  private readonly RECTS_MS = 33;
+  // Base throttle for rect reads. We dynamically increase this while user scrolls fast
+  // to avoid layout thrash (smoother across browsers).
+  private readonly RECTS_MS_BASE = 33;
 
   compute(keys: ScrollMorphKey[]): ScrollMorphState {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -42,13 +46,27 @@ export class ScrollMorphService {
       this.refresh(keys);
       this.lastRefreshMs = now;
     }
-    if (now - this.lastRectsMs > this.RECTS_MS) {
+    // Estimate scroll speed (px/s) and adapt rect read frequency.
+    const scrollY = window.scrollY || 0;
+    const dt = Math.max(0.001, (now - (this.lastSpeedMs || now)) / 1000);
+    this.lastSpeedMs = now;
+    const v = Math.abs(scrollY - this.lastScrollY) / dt;
+    this.lastScrollY = scrollY;
+    this.scrollVel += (v - this.scrollVel) * 0.22;
+    const speed01 = Math.max(0, Math.min(1, this.scrollVel / 1800));
+    this.scrollSpeed01 += (speed01 - this.scrollSpeed01) * 0.18;
+
+    const rectsMs =
+      this.scrollSpeed01 > 0.65 ? 90 :
+      this.scrollSpeed01 > 0.35 ? 60 :
+      this.RECTS_MS_BASE;
+
+    if (now - this.lastRectsMs > rectsMs) {
       this.refreshRects(keys);
       this.lastRectsMs = now;
     }
 
     const vh = Math.max(1, window.innerHeight);
-    const scrollY = window.scrollY || 0;
 
     let bestId: string | null = null;
     let bestT = 0;

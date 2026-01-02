@@ -32,8 +32,21 @@ import { BackofficeCertificationsPage } from './pages/backoffice/backoffice-cert
 import { BackofficeCertificationFormPage } from './pages/backoffice/backoffice-certification-form.page';
 import { BackofficeEventsPage } from './pages/backoffice/backoffice-events.page';
 import { BackofficeEventFormPage } from './pages/backoffice/backoffice-event-form.page';
+import { PointcloudBakerPage } from './pages/dev/pointcloud-baker.page';
 
 export const routes: Routes = [
+  {
+    path: '_dev/pointclouds',
+    component: PointcloudBakerPage,
+    data: {
+      robots: 'noindex,nofollow',
+      seo: {
+        title: 'Dev — Pointcloud baker',
+        description: 'Outil interne pour générer des pointclouds .bin à partir des modèles GLB.',
+        canonicalPath: '/_dev/pointclouds',
+      },
+    },
+  },
   {
     path: '',
     pathMatch: 'full',

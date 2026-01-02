@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "seed": 1337,
+  "counts": [
+    45000,
+    90000
+  ],
+  "items": [
+    {
+      "id": "hero",
+      "modelPath": "public/assets/models/unlock-model.glb"
+    },
+    {
+      "id": "about",
+      "modelPath": "public/assets/models/unlock-model-about.glb"
+    },
+    {
+      "id": "business",
+      "modelPath": "public/assets/models/unlock-model-buisness-.glb"
+    },
+    {
+      "id": "reviews",
+      "modelPath": "public/assets/models/unlock-model-review-.glb"
+    },
+    {
+      "id": "quality",
+      "modelPath": "public/assets/models/unlock-model-quality.glb"
+    },
+    {
+      "id": "locky-games",
+      "modelPath": "public/assets/models/unlock-model-games.glb"
+    },
+    {
+      "id": "events",
+      "modelPath": "public/assets/models/unlock-model-event.glb"
+    }
+  ],
+  "output": "public/assets/pointclouds/<count>/<id>.bin"
+}

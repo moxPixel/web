@@ -24,14 +24,30 @@ export class ThreePreloadService {
   }
 
   async preloadCritical(): Promise<void> {
-    // Draco decoder files (same-origin)
+    // Critical path for "instant hero": warm the baked pointcloud(s).
+    // We keep TWO tiers because runtime picks based on device (mobile/low-end uses 45k).
     await Promise.all([
-      this.fetchWarm('/assets/draco/draco_wasm_wrapper.js'),
-      this.fetchWarm('/assets/draco/draco_decoder.wasm'),
-      this.fetchWarm('/assets/draco/draco_decoder.js'),
-      // Hero model (critical)
-      this.fetchWarm('/assets/models/unlock-model.glb'),
+      this.fetchWarm('/assets/pointclouds/45000/hero.bin'),
+      this.fetchWarm('/assets/pointclouds/90000/hero.bin'),
     ]);
+
+    // Non-critical fallbacks: only useful if `.bin` is missing (or for dev).
+    // Schedule them after first paint so they don't compete with hero.bin/network.
+    const warmFallbacks = async () => {
+      await Promise.all([
+        this.fetchWarm('/assets/draco/draco_wasm_wrapper.js'),
+        this.fetchWarm('/assets/draco/draco_decoder.wasm'),
+        this.fetchWarm('/assets/draco/draco_decoder.js'),
+        this.fetchWarm('/assets/models/unlock-model.glb'),
+      ]);
+    };
+    try {
+      const w = (typeof window !== 'undefined' ? window : undefined) as any;
+      if (w?.requestIdleCallback) w.requestIdleCallback(() => void warmFallbacks(), { timeout: 3000 });
+      else setTimeout(() => void warmFallbacks(), 800);
+    } catch {
+      // ignore
+    }
 
     // Signal main.ts loader gate (best-effort).
     try {

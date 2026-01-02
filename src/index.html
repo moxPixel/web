@@ -10,10 +10,10 @@
   <meta name="robots" content="index,follow" />
   <meta name="theme-color" content="#050506" />
 
-  <!-- Preload critical Three.js assets (reduces first-load stutter) -->
-  <link rel="preload" href="/assets/models/unlock-model.glb" as="fetch" crossorigin />
-  <link rel="preload" href="/assets/draco/draco_decoder.wasm" as="fetch" crossorigin />
-  <link rel="preload" href="/assets/draco/draco_wasm_wrapper.js" as="script" crossorigin />
+  <!-- Preload critical baked pointcloud (instant hero particles on first reveal) -->
+  <!-- Runtime chooses between 45k (mobile/low-end) and 90k (desktop). -->
+  <link rel="preload" href="/assets/pointclouds/45000/hero.bin" as="fetch" crossorigin />
+  <link rel="preload" href="/assets/pointclouds/90000/hero.bin" as="fetch" crossorigin />
 
   <!-- Open Graph (fallback; Angular will update dynamically) -->
   <meta property="og:site_name" content="Unlock Formation" />
