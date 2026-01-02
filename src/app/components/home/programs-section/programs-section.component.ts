@@ -6,13 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 
 import { TablerIconComponent } from '../../../shared/icons/tabler-icon/tabler-icon.component';
 
-type Slide = {
-  title: string;
-  alt: string;
-  img: string;
-  link: string;
-};
-
 @Component({
   selector: 'app-programs-section',
   standalone: true,
@@ -40,48 +33,7 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
   private readonly EXIT_OFFSET = -50; // px when leaving viewport (elegant)
   private readonly LERP_SPEED = 0.07; // Ultra-smooth and fluid
 
-  readonly slides: Slide[] = [
-    {
-      title: 'Intelligence Artificielle',
-      alt: 'Formation Intelligence Artificielle',
-      img: '/assets/images/img/p1.jpg',
-      link: '/trainings'
-    },
-    {
-      title: 'Cybersécurité',
-      alt: 'Formation Cybersécurité',
-      img: '/assets/images/img/p2.jpg',
-      link: '/trainings'
-    },
-    {
-      title: 'Data Science',
-      alt: 'Formation Data Science',
-      img: '/assets/images/img/p7.jpg',
-      link: '/trainings'
-    },
-    {
-      title: 'Cloud & DevOps',
-      alt: 'Formation Cloud & DevOps',
-      img: '/assets/images/img/p10.jpg',
-      link: '/trainings'
-    },
-    {
-      title: 'Blockchain & Web3',
-      alt: 'Formation Blockchain & Web3',
-      img: '/assets/images/img/p18.jpg',
-      link: '/trainings'
-    },
-    {
-      title: 'Architecture Logicielle',
-      alt: 'Formation Architecture Logicielle',
-      img: '/assets/images/img/p6.jpg',
-      link: '/trainings'
-    }
-  ];
-
-  trackByIndex(index: number): number {
-    return index;
-  }
+  // Carousel removed (requested)
 
   ngAfterViewInit(): void {
     const el = this.parallaxEl?.nativeElement;

@@ -21,6 +21,7 @@ export class TrainingSuggestionsComponent implements OnInit, OnDestroy {
   @Input() excludeSlug?: string;
 
   suggestions: Training[] = [];
+  private readonly MAX_SUGGESTIONS = 3;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -56,10 +57,10 @@ export class TrainingSuggestionsComponent implements OnInit, OnDestroy {
             const otherCategory = filtered.filter((t) => t.category !== this.currentTraining!.category);
             
             // Take 3 from same category, then fill with others
-            this.suggestions = [...sameCategory.slice(0, 3), ...otherCategory].slice(0, 4);
+            this.suggestions = [...sameCategory.slice(0, this.MAX_SUGGESTIONS), ...otherCategory].slice(0, this.MAX_SUGGESTIONS);
           } else {
-            // Just take first 4
-            this.suggestions = filtered.slice(0, 4);
+            // Just take first 3
+            this.suggestions = filtered.slice(0, this.MAX_SUGGESTIONS);
           }
         },
         error: () => {

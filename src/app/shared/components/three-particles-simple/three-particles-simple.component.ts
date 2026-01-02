@@ -346,12 +346,12 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   // Responsive tuning (used only for default camera + hero rest placement)
   private readonly MOBILE_BREAKPOINT = 640;
   // Mobile: make the hero model smaller + slightly higher
-  private readonly MOBILE_CAMERA_Z_MULT = 3.4; // bigger => smaller model
+  private readonly MOBILE_CAMERA_Z_MULT = 2.6; // bigger => smaller model (reduced to make hero larger on mobile)
   private readonly MOBILE_CAMERA_Y = -0.28; // negative => model appears higher on screen (we look at origin)
   // Mobile: make morphed models (non-hero) BIGGER by reducing camera distance
   private readonly MOBILE_MORPHED_CAMERA_Z_MULT = 1.8; // bigger => smaller model (éloigner la caméra pour réduire) - beaucoup réduit
   // Desktop: make the hero model bigger (rapprocher la caméra)
-  private readonly DESKTOP_CAMERA_Z_MULT = 0.85; // smaller => bigger model (rapprocher la caméra)
+  private readonly DESKTOP_CAMERA_Z_MULT = 1.0; // bigger => smaller model (slightly smaller on desktop)
   // Morph placement (screen -> world)
   private morphPlaceSmoothed = new THREE.Vector3(0, 0, 0);
   private morphPlaceTarget = new THREE.Vector3(0, 0, 0);

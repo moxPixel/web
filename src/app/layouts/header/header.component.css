@@ -238,29 +238,35 @@
 
 /* Mega menu: identical animation logic as example (opacity + translate + scale + blur) */
 .ui-mega-menu {
-  position: absolute;
+  /* Fixed overlay: blur behaves like notifications (not trapped inside header pill) */
+  position: fixed;
   left: 50%;
-  transform: translateX(-50%) translateY(8px) scale(0.98);
+  top: calc(1.25rem + 3.5rem + 0.75rem);
+  /* Match notifications (.ui-toast): use translate3d for consistent blur paint */
+  transform: translate3d(-50%, 8px, 0) scale(0.98);
   transform-origin: top center;
-  top: calc(100% + 0.5rem);
   width: min(920px, 85vw);
-  border-radius: 24px;
-  background: var(--ui-surface-2);
-  border: var(--ui-hairline) solid var(--ui-surface-border);
-  box-shadow: var(--ui-shadow-2);
-  backdrop-filter: blur(var(--ui-backdrop-blur)) saturate(var(--ui-backdrop-sat, 120%));
-  -webkit-backdrop-filter: blur(var(--ui-backdrop-blur)) saturate(var(--ui-backdrop-sat, 120%));
+  /* Copy exact notification glass style */
+  border-radius: var(--ui-radius-xl);
+  border: var(--ui-hairline) solid var(--ui-glass-border-strong);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 92%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.22s ease;
-  will-change: transform, opacity;
-  overflow: clip;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Ensure blur is painted during animation (prevents "blur appears after") */
+  will-change: transform, opacity, backdrop-filter;
   z-index: 80;
 }
 
 .ui-mega-menu.open {
   opacity: 1;
-  transform: translateX(-50%) translateY(0) scale(1);
+  transform: translate3d(-50%, 0, 0) scale(1);
   pointer-events: auto;
 }
 
@@ -641,13 +647,16 @@
   color: var(--ui-fg);
 }
 
-.ui-mobile-action--strong {
+.ui-mobile-action.ui-mobile-action--strong {
   width: 100%;
-  justify-content: center;
+  /* Keep same alignment as other mobile actions (text left, icon right) */
+  justify-content: space-between;
+  align-items: center;
   padding: 0.625rem 1rem;
   height: 2.5rem;
   border-radius: 999px;
   background: var(--ui-btn-strong-bg);
+  /* Ensure this wins over `.ui-mobile-action { color: var(--ui-fg) }` (same specificity otherwise). */
   color: var(--ui-btn-strong-fg);
   border: 0;
   font-size: var(--ui-text-sm);

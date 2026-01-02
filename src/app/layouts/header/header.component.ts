@@ -25,6 +25,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   private megaMenuTimer?: ReturnType<typeof setTimeout>;
   @ViewChild('trainingsNavItem', { static: false }) private trainingsNavItem?: ElementRef<HTMLElement>;
   @ViewChild('headerContainer', { static: false }) private headerContainer?: ElementRef<HTMLElement>;
+  @ViewChild('megaMenuEl', { static: false }) private megaMenuEl?: ElementRef<HTMLElement>;
+
+  // Fixed overlay positioning (so blur behaves like notifications)
+  megaMenuStyle: Record<string, string> = {};
+  private megaPosRaf: number | null = null;
   
   private scrollRaf: number | null = null;
   private lastScroll = 0;
@@ -84,6 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       this.megaMenuTimer = undefined;
     }
     this.showMegaMenu = true;
+    this.scheduleMegaMenuPosition();
     this.cdr.markForCheck();
   }
 
@@ -119,6 +125,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   onDocumentPointerMove(ev: PointerEvent) {
     if (!this.showMegaMenu) return;
     const nav = this.trainingsNavItem?.nativeElement;
+    const menu = this.megaMenuEl?.nativeElement;
     if (!nav) return;
 
     // Robust "is pointer inside" check across browsers:
@@ -126,7 +133,10 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     // - fallback to DOM containment using `ev.target`
     const path = (typeof ev.composedPath === 'function' ? ev.composedPath() : []) as EventTarget[];
     const target = (ev.target || null) as unknown as Node | null;
-    const isInside = path.includes(nav) || (!!target && nav.contains(target));
+    const isInside =
+      path.includes(nav) ||
+      (menu ? path.includes(menu) : false) ||
+      (!!target && (nav.contains(target) || (menu ? menu.contains(target) : false)));
 
     if (!isInside) {
       this.scheduleCloseMegaMenu(0);
@@ -150,6 +160,39 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       // matches our CSS desktop breakpoint
       this.closeMobileMenu();
     }
+    if (this.showMegaMenu) this.scheduleMegaMenuPosition();
+  }
+
+  private scheduleMegaMenuPosition(): void {
+    if (typeof window === 'undefined') return;
+    if (this.megaPosRaf !== null) return;
+    this.megaPosRaf = window.requestAnimationFrame(() => {
+      this.megaPosRaf = null;
+      this.updateMegaMenuPosition();
+    });
+  }
+
+  private updateMegaMenuPosition(): void {
+    if (typeof window === 'undefined') return;
+    const nav = this.trainingsNavItem?.nativeElement;
+    if (!nav) return;
+    const rect = nav.getBoundingClientRect();
+
+    // Match CSS: width: min(920px, 85vw)
+    const maxW = 920;
+    const w = Math.min(maxW, Math.round(window.innerWidth * 0.85));
+    const margin = 12;
+
+    let cx = rect.left + rect.width / 2;
+    const half = w / 2;
+    cx = Math.max(margin + half, Math.min(window.innerWidth - margin - half, cx));
+
+    const top = Math.round(rect.bottom + 8); // match previous translateY
+    this.megaMenuStyle = {
+      left: `${Math.round(cx)}px`,
+      top: `${top}px`,
+      width: `${w}px`,
+    };
   }
 
   ngAfterViewInit(): void {
@@ -338,6 +381,10 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.animRaf !== null) {
       cancelAnimationFrame(this.animRaf);
+    }
+    if (this.megaPosRaf !== null) {
+      cancelAnimationFrame(this.megaPosRaf);
+      this.megaPosRaf = null;
     }
     this.document.body.classList.remove('overflow-hidden');
   }

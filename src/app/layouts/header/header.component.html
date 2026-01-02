@@ -27,37 +27,6 @@
           <span class="ui-nav-link__label">Formations</span>
           <app-tabler-icon class="ui-nav-link__chevron" name="chevron-down" [size]="16"></app-tabler-icon>
         </a>
-
-        <div
-          class="ui-mega-menu"
-          [class.open]="showMegaMenu"
-          *ngIf="trainingsGrouped.length"
-          (pointerenter)="openMegaMenu()"
-          (pointerleave)="scheduleCloseMegaMenu()"
-        >
-          <div class="ui-mega-menu__inner">
-            <div class="ui-mega-grid">
-              <div class="ui-mega-group" *ngFor="let group of trainingsGrouped">
-                <p class="ui-mega-title">{{ group.category }}</p>
-                <ul class="ui-mega-list">
-                  <li *ngFor="let item of group.items">
-                    <a [routerLink]="['/trainings', item.slug]" class="ui-mega-link">
-                      <span class="ui-mega-link__text">{{ item.shortTitle || item.title }}</span>
-                      <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="ui-mega-cta">
-              <a routerLink="/trainings" class="ui-cta ui-cta--small">
-                <span>Voir toutes les formations</span>
-                <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
       <a class="ui-nav-link ui-nav-link--with-icon" href="https://odyssee.life/" target="_blank" rel="noopener">
         <app-tabler-icon class="ui-nav-link__icon" name="briefcase" [size]="18"></app-tabler-icon>
@@ -153,5 +122,39 @@
     </nav>
     </div>
   </aside>
+
+  <!-- Desktop mega menu overlay (fixed, outside transformed header pill) -->
+  <div
+    #megaMenuEl
+    class="ui-mega-menu"
+    [class.open]="showMegaMenu"
+    *ngIf="trainingsGrouped.length"
+    [ngStyle]="megaMenuStyle"
+    (pointerenter)="openMegaMenu()"
+    (pointerleave)="scheduleCloseMegaMenu()"
+  >
+    <div class="ui-mega-menu__inner">
+      <div class="ui-mega-grid">
+        <div class="ui-mega-group" *ngFor="let group of trainingsGrouped">
+          <p class="ui-mega-title">{{ group.category }}</p>
+          <ul class="ui-mega-list">
+            <li *ngFor="let item of group.items">
+              <a [routerLink]="['/trainings', item.slug]" class="ui-mega-link">
+                <span class="ui-mega-link__text">{{ item.shortTitle || item.title }}</span>
+                <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ui-mega-cta">
+        <a routerLink="/trainings" class="ui-cta ui-cta--small">
+          <span>Voir toutes les formations</span>
+          <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
 

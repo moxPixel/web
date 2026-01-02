@@ -82,39 +82,7 @@
     </div>
   </div>
 
-  <!-- Carousel full-width (outside container) -->
-  <div class="ui-programs__carousel" aria-label="Catalogue de formations">
-    <div class="ui-programs__track">
-      <ng-container *ngFor="let s of slides; let i = index; trackBy: trackByIndex">
-        <a class="ui-programs__slide ui-programs__slide--orb" [routerLink]="s.link" [attr.aria-label]="s.title">
-          <span class="ui-programs__orb" aria-hidden="true">
-            <span class="ui-programs__orb-core">
-              <img class="ui-programs__orb-img" [src]="s.img" [alt]="s.alt" loading="lazy" decoding="async" />
-              <span class="ui-programs__orb-shade"></span>
-              <span class="ui-programs__orb-shine"></span>
-            </span>
-            <span class="ui-programs__orb-rim"></span>
-          </span>
-          <span class="ui-programs__orb-label">{{ s.title }}</span>
-        </a>
-      </ng-container>
-
-      <!-- Duplicate for seamless loop -->
-      <ng-container *ngFor="let s of slides; let i = index; trackBy: trackByIndex">
-        <a class="ui-programs__slide ui-programs__slide--orb" [routerLink]="s.link" [attr.aria-label]="s.title">
-          <span class="ui-programs__orb" aria-hidden="true">
-            <span class="ui-programs__orb-core">
-              <img class="ui-programs__orb-img" [src]="s.img" [alt]="s.alt" loading="lazy" decoding="async" />
-              <span class="ui-programs__orb-shade"></span>
-              <span class="ui-programs__orb-shine"></span>
-            </span>
-            <span class="ui-programs__orb-rim"></span>
-          </span>
-          <span class="ui-programs__orb-label">{{ s.title }}</span>
-        </a>
-      </ng-container>
-    </div>
-  </div>
+  <!-- Carousel removed (requested) -->
 
   <div class="ui-programs__container ui-home-container">
     <!-- Split bloc avec meilleur équilibre -->
