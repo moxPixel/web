@@ -53,17 +53,28 @@ export const routes: Routes = [
     component: HomePage,
     data: {
       seo: {
-        title: 'École IA & Tech — Bootcamp, alternance, certifications',
+        title: 'École IA & Tech — Bootcamp & Alternance',
         description:
           'Unlock forme aux métiers Tech & IA avec une approche terrain: projets réels, mentorat, alternance, et accompagnement carrière.',
         canonicalPath: '/',
         ogType: 'website',
         jsonLd: {
           '@context': 'https://schema.org',
-          '@type': 'Organization',
+          '@type': 'EducationalOrganization',
           name: 'Unlock Formation',
           url: 'https://www.unlock-formation.fr',
           logo: 'https://www.unlock-formation.fr/assets/images/logo/logo-dark.png',
+          description: 'École supérieure des technologies avancées - Formations Tech & IA (bootcamp, alternance, certifiantes)',
+          // TODO: Ajouter address, telephone, email si disponibles sur le site
+          // address: { '@type': 'PostalAddress', ... },
+          // telephone: '+33...',
+          // email: 'contact@unlock-formation.fr',
+          sameAs: [
+            // TODO: Ajouter les URLs réelles des réseaux sociaux
+            // 'https://www.linkedin.com/company/unlock-formation',
+            // 'https://twitter.com/unlockformation',
+            // 'https://www.youtube.com/@unlockformation',
+          ],
         },
       },
     },

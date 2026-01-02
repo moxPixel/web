@@ -5,7 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "bake:pointclouds": "node scripts/bake-pointclouds.js",
-    "build": "ng build",
+    "build": "ng build && npm run generate:sitemap",
+    "build:prod": "ng build --configuration production && npm run generate:sitemap",
+    "generate:sitemap": "node scripts/generate-sitemap.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

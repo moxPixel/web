@@ -68,10 +68,36 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    // SEO: S'assurer qu'un seul H1 est visible pour les bots (aria-hidden sur celui caché par CSS)
+    this.setH1AriaHidden();
+    
     // CRITICAL: Cacher TOUS les éléments IMMÉDIATEMENT avant toute animation
     this.hideAllElementsImmediately();
     // Ensuite attendre le loader
     this.waitForLoaderThenStart();
+  }
+
+  /**
+   * SEO: Définit aria-hidden sur le H1 qui est caché par CSS pour éviter les H1 dupliqués
+   */
+  private setH1AriaHidden(): void {
+    if (typeof window === 'undefined') return;
+    
+    const updateAriaHidden = () => {
+      if (!this.h1Mobile?.nativeElement || !this.h1Desktop?.nativeElement) return;
+      
+      // Sur mobile (< 768px), le H1 desktop est caché -> aria-hidden="true"
+      // Sur desktop (>= 768px), le H1 mobile est caché -> aria-hidden="true"
+      const isMobile = window.innerWidth < 768;
+      this.h1Mobile.nativeElement.setAttribute('aria-hidden', isMobile ? 'false' : 'true');
+      this.h1Desktop.nativeElement.setAttribute('aria-hidden', isMobile ? 'true' : 'false');
+    };
+    
+    updateAriaHidden();
+    window.addEventListener('resize', updateAriaHidden, { passive: true });
+    
+    // Cleanup dans ngOnDestroy
+    (this as any)._updateAriaHidden = updateAriaHidden;
   }
 
   /**
@@ -110,6 +136,12 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Cleanup aria-hidden listener
+    const updateAriaHidden = (this as any)._updateAriaHidden;
+    if (updateAriaHidden && typeof window !== 'undefined') {
+      window.removeEventListener('resize', updateAriaHidden);
+    }
+    
     this.cleanup();
   }
 

@@ -16,6 +16,7 @@ import { EventHighlightModalComponent } from './components/event-highlight-modal
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { routeFadeIn } from './shared/animations/route-fade.animation';
 import { SeoService } from './shared/services/seo/seo.service';
+import { AnalyticsService } from './shared/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +46,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private readonly trainings = inject(TrainingsService);
   private readonly router = inject(Router);
   private readonly seo = inject(SeoService);
+  private readonly analytics = inject(AnalyticsService);
   private routeSub?: Subscription;
 
   isBackofficeRoute = false;
@@ -86,6 +88,9 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         window.scrollTo({ top: 0, behavior: 'auto' });
         this.updateBackofficeRoute(this.router.url);
         this.updatePaletteMode(this.router.url);
+        
+        // Track page view pour analytics (seulement si consentement donné)
+        this.analytics.trackPageView(this.router.url);
       });
   }
 
