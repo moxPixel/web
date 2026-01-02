@@ -189,11 +189,11 @@
       - DynamicPaletteService will set --ui-nebula-* to one of these palettes.
     */
 
-    /* Base (Hero) — AI white-blue accent (slightly more blue + bright) */
-    --ui-palette-base-accent: #cfeeff;
-    --ui-palette-base-secondary: #3b82f6;
+    /* Base (Hero) — AI white-blue accent (vibrant & bright) */
+    --ui-palette-base-accent: #e0f4ff;
+    --ui-palette-base-secondary: #60a5fa;
     --ui-palette-base-tertiary: #070b14;
-    --ui-palette-base-teal: #8b5cf6;
+    --ui-palette-base-teal: #a78bfa;
 
     /* About — Violet / Magenta */
     --ui-palette-about-accent: #a855f7;

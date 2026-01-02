@@ -2477,30 +2477,30 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           // vDepth is positive; smaller = closer to camera.
           float depthFade = smoothstep(16.0, 1.8, vDepth);
           
-          // Brighter baseline (less "dull"), still controlled by scroll + motion.
-          float baseIntensity = 1.08 + 0.62 * vSpark;
+          // Brighter baseline (vibrant & energetic), still controlled by scroll + motion.
+          float baseIntensity = 1.25 + 0.85 * vSpark;
           float depthIntensity = smoothstep(8.0, 1.2, vDepth);
-          baseIntensity += depthIntensity * 0.24;
+          baseIntensity += depthIntensity * 0.38;
           
           // Harmoniser les effets de souris avec le scroll (transition douce)
-          float mouseInfluence = 1.0 - scrollInfluence * 0.4; // Réduction plus subtile
-          float accretionBoost = vMouseProximity * (1.0 + uMouseSpeed * 0.75) * mouseInfluence;
-          baseIntensity += accretionBoost * 0.8;
-          float motionGlow = vMotion * 0.42 * mouseInfluence;
+          float mouseInfluence = 1.0 - scrollInfluence * 0.35; // Réduction plus subtile
+          float accretionBoost = vMouseProximity * (1.0 + uMouseSpeed * 0.85) * mouseInfluence;
+          baseIntensity += accretionBoost * 1.1;
+          float motionGlow = vMotion * 0.58 * mouseInfluence;
           baseIntensity += motionGlow;
           
-          // EFFET 1 : Scintillement/Twinkle (harmonisé avec le scroll)
-          baseIntensity += vTwinkle * 0.45 * (1.0 - scrollInfluence * 0.4);
+          // EFFET 1 : Scintillement/Twinkle (harmonisé avec le scroll) - BOOSTÉ
+          baseIntensity += vTwinkle * 0.68 * (1.0 - scrollInfluence * 0.35);
           
-          // EFFET 2 : Pulsation rythmique (harmonisée avec le scroll)
-          baseIntensity += vPulse * 0.32 * (1.0 - scrollInfluence * 0.4);
+          // EFFET 2 : Pulsation rythmique (harmonisée avec le scroll) - BOOSTÉ
+          baseIntensity += vPulse * 0.48 * (1.0 - scrollInfluence * 0.35);
           
-          // EFFET SCROLL : Boost de brillance subtil et élégant au scroll
-          float scrollGlow = scrollInfluence * 0.45;
+          // EFFET SCROLL : Boost de brillance subtil et élégant au scroll - BOOSTÉ
+          float scrollGlow = scrollInfluence * 0.65;
           baseIntensity += scrollGlow;
           
           // Allow more headroom before clamping (keeps "pop" without blowing out)
-          alpha *= clamp(baseIntensity, 0.0, 2.85);
+          alpha *= clamp(baseIntensity, 0.0, 3.4);
           // Appliquer le fade out du scroll
           alpha *= vScrollFade;
           // Keep far particles just a bit softer (do NOT kill visibility).
@@ -2519,30 +2519,30 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec3 baseCol = mix(colA, colB, blendAB);
           baseCol = mix(baseCol, colC, 0.10 + 0.18 * wobble);
 
-          // More color towards edges + spark/twinkle (adds modern vivacity without becoming rainbow)
-          float vib = clamp(0.22 + 0.28 * vSpark + 0.14 * vTwinkle + vRadialDist * 0.18, 0.0, 0.7);
+          // More color towards edges + spark/twinkle (adds modern vivacity without becoming rainbow) - BOOSTÉ
+          float vib = clamp(0.32 + 0.42 * vSpark + 0.24 * vTwinkle + vRadialDist * 0.28, 0.0, 0.85);
           vec3 finalColor = mix(colA, baseCol, vib);
           
-          // EFFET 3 : Saturation dynamique basée sur la profondeur
+          // EFFET 3 : Saturation dynamique basée sur la profondeur - BOOSTÉ
           float luminance = dot(finalColor, vec3(0.299, 0.587, 0.114));
-          float saturationBoost = 1.15 + depthIntensity * 0.15;
+          float saturationBoost = 1.28 + depthIntensity * 0.24;
           vec3 saturated = mix(vec3(luminance), finalColor, saturationBoost);
-          finalColor = mix(finalColor, saturated, 0.6);
+          finalColor = mix(finalColor, saturated, 0.75);
           
-          // EFFET 4 : Highlight blanc près de la souris
-          float colorShift = vMouseProximity * 0.18;
+          // EFFET 4 : Highlight blanc près de la souris - BOOSTÉ
+          float colorShift = vMouseProximity * 0.28;
           vec3 highlightColor = vec3(1.0, 1.0, 1.0);
           finalColor = mix(finalColor, highlightColor, colorShift);
           
-          // EFFET 5 : Tint chaud basé sur la profondeur
-          float depthColorShift = smoothstep(8.0, 1.5, vDepth) * 0.12;
-          vec3 richTint = vec3(1.08, 1.05, 1.02);
+          // EFFET 5 : Tint chaud basé sur la profondeur - BOOSTÉ
+          float depthColorShift = smoothstep(8.0, 1.5, vDepth) * 0.18;
+          vec3 richTint = vec3(1.12, 1.08, 1.04);
           finalColor = mix(finalColor, finalColor * richTint, depthColorShift);
           
-          // EFFET 6 : Chromatic aberration près de la souris
-          float chromaAmount = vMouseProximity * 0.045;
-          vec3 chromaR = vec3(1.0 + chromaAmount * 1.2, 1.0, 1.0 - chromaAmount);
-          vec3 chromaB = vec3(1.0 - chromaAmount, 1.0, 1.0 + chromaAmount * 1.2);
+          // EFFET 6 : Chromatic aberration près de la souris - BOOSTÉ
+          float chromaAmount = vMouseProximity * 0.065;
+          vec3 chromaR = vec3(1.0 + chromaAmount * 1.4, 1.0, 1.0 - chromaAmount);
+          vec3 chromaB = vec3(1.0 - chromaAmount, 1.0, 1.0 + chromaAmount * 1.4);
           finalColor.r *= chromaR.r;
           finalColor.b *= chromaB.b;
           
@@ -2553,30 +2553,30 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec3 radialTint = mix(centerColor, outerColor, radialGradient);
           finalColor = mix(finalColor, finalColor * radialTint, 0.15);
           
-          // EFFET 8 : Bloom/Halo externe (harmonisé avec le scroll)
+          // EFFET 8 : Bloom/Halo externe (harmonisé avec le scroll) - BOOSTÉ
           float bloomRadius = smoothstep(0.48, 0.10, d);
-          float bloomIntensity = (vMouseProximity * 0.55 + vMotion * 0.35 + vSpark * 0.22 + vTwinkle * 0.28) * mouseInfluence;
-          // Boost de bloom subtil et élégant au scroll
-          bloomIntensity += scrollInfluence * 0.35;
+          float bloomIntensity = (vMouseProximity * 0.75 + vMotion * 0.48 + vSpark * 0.35 + vTwinkle * 0.42) * mouseInfluence;
+          // Boost de bloom subtil et élégant au scroll - BOOSTÉ
+          bloomIntensity += scrollInfluence * 0.52;
           // Reduce bloom on far points a little to keep the silhouette crisp
-          bloomIntensity *= mix(0.9, 1.0, depthFade);
+          bloomIntensity *= mix(0.92, 1.0, depthFade);
           vec3 bloomColor = finalColor * bloomIntensity * bloomRadius;
-          finalColor += bloomColor * 1.05;
+          finalColor += bloomColor * 1.35;
           
-          // EFFET 9 : Inner glow (harmonisé avec le scroll)
+          // EFFET 9 : Inner glow (harmonisé avec le scroll) - BOOSTÉ
           float innerGlow = smoothstep(0.35, 0.0, d);
-          float innerGlowIntensity = (0.4 + vTwinkle * 0.26 + vPulse * 0.18) * (1.0 - scrollInfluence * 0.25);
-          // Boost d'inner glow subtil au scroll
-          innerGlowIntensity += scrollInfluence * 0.28;
+          float innerGlowIntensity = (0.55 + vTwinkle * 0.38 + vPulse * 0.28) * (1.0 - scrollInfluence * 0.22);
+          // Boost d'inner glow subtil au scroll - BOOSTÉ
+          innerGlowIntensity += scrollInfluence * 0.42;
           finalColor += finalColor * innerGlow * innerGlowIntensity;
           
-          // EFFET 10 : Corona effect (harmonisé avec le scroll)
+          // EFFET 10 : Corona effect (harmonisé avec le scroll) - BOOSTÉ
           float corona = smoothstep(0.25, 0.1, d) * smoothstep(0.0, 0.15, d);
-          float coronaIntensity = (vTwinkle * 0.3 + vMouseProximity * 0.2) * mouseInfluence;
-          // Boost de corona subtil au scroll
-          coronaIntensity += scrollInfluence * 0.2;
+          float coronaIntensity = (vTwinkle * 0.45 + vMouseProximity * 0.32) * mouseInfluence;
+          // Boost de corona subtil au scroll - BOOSTÉ
+          coronaIntensity += scrollInfluence * 0.32;
           vec3 coronaColor = vec3(1.0, 1.0, 1.0) * coronaIntensity;
-          finalColor += coronaColor * corona * 0.4;
+          finalColor += coronaColor * corona * 0.58;
           
           // EFFET 11 : Traînée de mouvement (harmonisée avec le scroll)
           float trail = smoothstep(0.4, 0.2, d) * vMotion * mouseInfluence;
@@ -2594,8 +2594,8 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
           vec3 scrollTint = mix(vec3(1.0), vec3(0.92, 0.96, 1.0), scrollColorShift);
           finalColor *= scrollTint;
           
-          // Tone mapping final (keep it bright, premium)
-          finalColor = pow(finalColor, vec3(0.84));
+          // Tone mapping final (keep it bright, premium, vibrant)
+          finalColor = pow(finalColor, vec3(0.88));
           
           // Fade au chargement
           float loadFade = smoothstep(0.0, 1.0, uLoadProgress);

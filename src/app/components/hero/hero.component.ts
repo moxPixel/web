@@ -132,11 +132,6 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
       buttons.forEach((el: Element) => {
         (el as HTMLElement).style.cssText = 'opacity: 0 !important; filter: blur(20px) !important; transform: scale(0.96) translateZ(0) !important; visibility: hidden !important; transition: none !important;';
       });
-
-      const scrollIndicator = this.heroContent.nativeElement.querySelector('.ui-hero-scroll-indicator') as HTMLElement | null;
-      if (scrollIndicator) {
-        scrollIndicator.style.cssText = 'opacity: 0 !important; filter: blur(20px) !important; transform: scale(0.96) translateZ(0) !important; visibility: hidden !important; transition: none !important;';
-      }
     }
   }
 
@@ -479,18 +474,6 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Descriptions: apparaissent progressivement avec stagger (comme l'exemple web)
     if (this.heroContent?.nativeElement) {
-      // Scroll indicator: apparaît tôt, avec la même animation (deblur + fade)
-      const scrollIndicatorEl = this.heroContent.nativeElement.querySelector('.ui-hero-scroll-indicator') as HTMLElement | null;
-      if (scrollIndicatorEl && !this.animatedElements.has(scrollIndicatorEl)) {
-        this.animatedElements.add(scrollIndicatorEl);
-        this.animateElement(scrollIndicatorEl, {
-          delay: 0.1,
-          blur: 20,
-          scale: 0.96,
-          duration: 1.05
-        });
-      }
-
       const paragraphs = Array.from(
         this.heroContent.nativeElement.querySelectorAll('.ui-hero-description')
       ) as HTMLElement[];
@@ -522,10 +505,8 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Boutons: apparaissent progressivement avec stagger (comme l'exemple web)
       const actionsEl = this.heroContent.nativeElement.querySelector('.ui-hero-actions') as HTMLElement | null;
-      let buttonsCount = 0;
       if (actionsEl) {
         const buttons = Array.from(actionsEl.querySelectorAll('a')) as HTMLElement[];
-        buttonsCount = buttons.length;
         buttons.forEach((btn: HTMLElement, index: number) => {
           if (!this.animatedElements.has(btn)) {
             this.animatedElements.add(btn);
@@ -711,7 +692,7 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
       element.style.transition = `opacity ${duration}s cubic-bezier(0.33, 1, 0.68, 1), filter ${duration}s cubic-bezier(0.33, 1, 0.68, 1), transform ${duration}s cubic-bezier(0.33, 1, 0.68, 1)`;
       
       requestAnimationFrame(() => {
-        if (element && element.parentNode) {
+        if (element) {
           element.style.opacity = '1';
           element.style.filter = 'blur(0px)';
           element.style.transform = 'scale(1) translateZ(0)';
