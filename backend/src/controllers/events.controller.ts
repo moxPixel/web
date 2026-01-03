@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import eventsService from '../services/events.service';
 import { CreateEventDto, UpdateEventDto, EventQueryParams } from '../types/event.types';
 import { ApiResponse, PaginatedResponse } from '../types';
+import { buildIcsEvent } from '../utils/ics.util';
 
 export class EventsController {
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -43,6 +44,42 @@ export class EventsController {
       const event = await eventsService.findBySlug(slug);
       const response: ApiResponse = { success: true, data: event };
       res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Public calendar export (published only) as iCalendar (.ics)
+   * Scannable via QR code for "Add to calendar" flows on mobile.
+   */
+  async downloadIcsBySlug(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { slug } = req.params;
+      const event = await eventsService.findBySlug(slug);
+
+      const start = new Date(event.startDate);
+      const end = event.endDate ? new Date(event.endDate) : new Date(start.getTime() + 60 * 60 * 1000); // default 1h
+
+      const uid = `${event.id}@unlock`;
+      const location = event.isOnline ? 'En ligne' : (event.location || '');
+      const url = event.registrationUrl || '';
+
+      const ics = buildIcsEvent({
+        uid,
+        dtstamp: new Date(),
+        start,
+        end,
+        summary: event.title,
+        description: event.description || event.excerpt || '',
+        location,
+        url,
+      });
+
+      const safeSlug = String(event.slug || 'event').replace(/[^a-z0-9-_]+/gi, '-');
+      res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="unlock-${safeSlug}.ics"`);
+      res.status(200).send(ics);
     } catch (error) {
       next(error);
     }

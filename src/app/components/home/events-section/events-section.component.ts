@@ -7,6 +7,7 @@ import { EventApi } from '../../../interfaces/event-api.interface';
 import { EventsApiService } from '../../../services/api/events-api.service';
 import { UploadApiService } from '../../../services/api/upload-api.service';
 import { TablerIconComponent } from '../../../shared/icons/tabler-icon/tabler-icon.component';
+import { getApiBaseUrl } from '../../../shared/config/api-url';
 
 @Component({
   selector: 'app-events-section',
@@ -21,7 +22,8 @@ export class EventsSectionComponent implements OnInit {
   private readonly upload = inject(UploadApiService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  events: EventApi[] = [];
+  nextEvent: EventApi | null = null;
+  otherEvents: EventApi[] = [];
   hasLoaded = false;
 
   ngOnInit(): void {
@@ -32,18 +34,22 @@ export class EventsSectionComponent implements OnInit {
         next: (res) => {
           const items = (res.data || []).slice();
           items.sort((a, b) => {
-            const ha = a.highlight ? 1 : 0;
-            const hb = b.highlight ? 1 : 0;
-            if (ha !== hb) return hb - ha;
-            return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+            const ta = new Date(a.startDate).getTime();
+            const tb = new Date(b.startDate).getTime();
+            const sa = Number.isNaN(ta) ? Number.POSITIVE_INFINITY : ta;
+            const sb = Number.isNaN(tb) ? Number.POSITIVE_INFINITY : tb;
+            return sa - sb;
           });
-          this.events = items.slice(0, 3);
+
+          this.nextEvent = items.length ? items[0] : null;
+          this.otherEvents = items.length ? items.slice(1, 4) : [];
           this.hasLoaded = true;
           this.cdr.markForCheck();
         },
         error: (err) => {
           console.error('[EventsSection] Failed to load events:', err);
-          this.events = [];
+          this.nextEvent = null;
+          this.otherEvents = [];
           this.hasLoaded = true;
           this.cdr.markForCheck();
         },
@@ -76,6 +82,26 @@ export class EventsSectionComponent implements OnInit {
     if (t === 'atelier') return 'Atelier';
     if (t === 'webinar') return 'Webinar';
     return 'Événement';
+  }
+
+  calendarIcsPath(e: EventApi): string {
+    const base = getApiBaseUrl();
+    return `${base}/events/slug/${encodeURIComponent(e.slug)}/calendar.ics`;
+  }
+
+  calendarIcsUrlAbs(e: EventApi): string {
+    const p = this.calendarIcsPath(e);
+    if (p.startsWith('http://') || p.startsWith('https://')) return p;
+    if (typeof window === 'undefined') return p;
+    // In prod, api base is typically "/api" behind same origin.
+    return `${window.location.origin}${p.startsWith('/') ? p : `/${p}`}`;
+  }
+
+  qrImageUrl(e: EventApi): string {
+    // Encodes a URL (not raw ICS) for maximum compatibility with phone cameras.
+    const data = encodeURIComponent(this.calendarIcsUrlAbs(e));
+    // External QR generator (reliable). If you want 100% offline, we can vendor a local QR generator later.
+    return `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${data}&margin=8`;
   }
 }
 

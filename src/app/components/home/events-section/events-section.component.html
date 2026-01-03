@@ -1,11 +1,73 @@
 <section class="ui-events ui-home-section" data-ui-section="events">
   <div class="ui-events__container ui-home-container">
     <div class="ui-events__layout">
-      <!-- Left: sticky model/date (Three.js morph target) -->
-      <div class="ui-events__visual" aria-hidden="true">
-        <div class="ui-events__image-wrapper">
-          <div class="ui-events__image-main" data-ui-morph-target="events-photo"></div>
-        </div>
+      <!-- Left: Next event with program-like stacked images -->
+      <div class="ui-events__visual">
+        <ng-container *ngIf="nextEvent as e; else visualEmpty">
+          <div class="ui-events__next">
+            <div class="ui-events__next-kicker">
+              <div class="ui-events__next-kicker-title">Prochain événement</div>
+              <div class="ui-events__next-kicker-text">Scanne le QR pour l’ajouter directement à ton agenda.</div>
+            </div>
+
+            <div class="ui-events__next-card" [routerLink]="['/contact']" role="link" tabindex="0">
+              <div class="ui-events__next-media" [style.backgroundImage]="'url(' + coverUrl(e) + ')'">
+                <div class="ui-events__next-overlay"></div>
+              </div>
+
+              <div class="ui-events__next-body">
+                <div class="ui-events__next-info">
+                  <div class="ui-events__next-type">
+                    <app-tabler-icon name="calendar-event" [size]="14"></app-tabler-icon>
+                    <span>{{ typeLabel(e) }}</span>
+                  </div>
+                  <h3 class="ui-events__next-title">{{ e.title }}</h3>
+                  <div class="ui-events__next-meta">
+                    <span class="ui-events__meta-item">
+                      <app-tabler-icon name="clock" [size]="14"></app-tabler-icon>
+                      <span>{{ dateLabel(e) }}</span>
+                    </span>
+                    <span class="ui-events__meta-item">
+                      <app-tabler-icon name="map-pin" [size]="14"></app-tabler-icon>
+                      <span>{{ placeLabel(e) }}</span>
+                    </span>
+                  </div>
+                  <p class="ui-events__next-excerpt" *ngIf="e.excerpt">{{ e.excerpt }}</p>
+                  <div class="ui-events__cta">
+                    <span>Demander une place</span>
+                    <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+                  </div>
+                </div>
+
+                <a
+                  class="ui-events__next-qr"
+                  [href]="calendarIcsPath(e)"
+                  target="_blank"
+                  rel="noopener"
+                  (click)="$event.stopPropagation()"
+                  aria-label="Scanner le QR code pour ajouter l'événement à l'agenda"
+                >
+                  <img
+                    [src]="qrImageUrl(e)"
+                    [alt]="'QR code agenda - ' + e.title"
+                    width="200"
+                    height="200"
+                    loading="lazy"
+                    decoding="async"
+                    referrerpolicy="no-referrer"
+                  />
+                  <div class="ui-events__next-qr-hint">Ajouter à l’agenda</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #visualEmpty>
+          <div class="ui-events__image-wrapper" aria-hidden="true">
+            <div class="ui-events__image-main" data-ui-morph-target="events-photo"></div>
+          </div>
+        </ng-template>
       </div>
 
       <!-- Right: sticky content -->
@@ -20,41 +82,58 @@
           </p>
         </header>
 
-        <div class="ui-events__grid" *ngIf="events.length; else empty">
-          <a class="ui-events__card" *ngFor="let e of events" [routerLink]="['/contact']">
-            <div class="ui-events__media">
-              <span class="ui-events__ring">
-                <img [src]="coverUrl(e)" [alt]="e.title" loading="lazy" decoding="async" />
-              </span>
-              <div class="ui-events__badge" [class.is-highlight]="e.highlight">
-                <app-tabler-icon name="calendar-event" [size]="14"></app-tabler-icon>
-                <span>{{ typeLabel(e) }}</span>
+        <div class="ui-events__panel-grid" *ngIf="otherEvents.length; else empty">
+          <div class="ui-events__list">
+            <div class="ui-events__list-title">Autres dates</div>
+            <div class="ui-events__grid">
+              <div class="ui-events__card" *ngFor="let ev of otherEvents" [routerLink]="['/contact']" role="link" tabindex="0">
+                <div class="ui-events__media">
+                  <img [src]="coverUrl(ev)" [alt]="ev.title" loading="lazy" decoding="async" />
+                  <div class="ui-events__badge" [class.is-highlight]="ev.highlight">
+                    <app-tabler-icon name="calendar-event" [size]="12"></app-tabler-icon>
+                    <span>{{ typeLabel(ev) }}</span>
+                  </div>
+                  <a
+                    class="ui-events__qr-overlay"
+                    [href]="calendarIcsPath(ev)"
+                    target="_blank"
+                    rel="noopener"
+                    (click)="$event.stopPropagation()"
+                    aria-label="Scanner le QR code pour ajouter l'événement à l'agenda"
+                  >
+                    <img
+                      [src]="qrImageUrl(ev)"
+                      [alt]="'QR code agenda - ' + ev.title"
+                      width="72"
+                      height="72"
+                      loading="lazy"
+                      decoding="async"
+                      referrerpolicy="no-referrer"
+                    />
+                  </a>
+                </div>
+
+                <div class="ui-events__content">
+                  <h3 class="ui-events__card-title">{{ ev.title }}</h3>
+                  <div class="ui-events__meta">
+                    <span class="ui-events__meta-item">
+                      <app-tabler-icon name="clock" [size]="13"></app-tabler-icon>
+                      <span>{{ dateLabel(ev) }}</span>
+                    </span>
+                    <span class="ui-events__meta-item">
+                      <app-tabler-icon name="map-pin" [size]="13"></app-tabler-icon>
+                      <span>{{ placeLabel(ev) }}</span>
+                    </span>
+                  </div>
+                  <p class="ui-events__excerpt" *ngIf="ev.excerpt">{{ ev.excerpt }}</p>
+                  <div class="ui-events__cta">
+                    <span>Demander une place</span>
+                    <app-tabler-icon name="arrow-right" [size]="16"></app-tabler-icon>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="ui-events__content">
-              <div class="ui-events__title-row">
-                <div class="ui-events__card-title">{{ e.title }}</div>
-              </div>
-              <div class="ui-events__meta">
-                <span class="ui-events__meta-item">
-                  <app-tabler-icon name="clock" [size]="14"></app-tabler-icon>
-                  <span>{{ dateLabel(e) }}</span>
-                </span>
-                <span class="ui-events__meta-item">
-                  <app-tabler-icon name="map-pin" [size]="14"></app-tabler-icon>
-                  <span>{{ placeLabel(e) }}</span>
-                </span>
-              </div>
-
-              <div class="ui-events__excerpt" *ngIf="e.excerpt">{{ e.excerpt }}</div>
-
-              <div class="ui-events__cta">
-                <span>Demander une place</span>
-                <app-tabler-icon name="arrow-right" [size]="18"></app-tabler-icon>
-              </div>
-            </div>
-          </a>
+          </div>
         </div>
       </div>
     </div>

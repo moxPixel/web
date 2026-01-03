@@ -42,7 +42,7 @@
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
   /* More transparent + softer border */
   border: var(--ui-hairline) solid var(--ui-glass-border-subtle);
   background: color-mix(in srgb, var(--ui-glass-bg-strong) 72%, transparent);
@@ -71,7 +71,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 2;
+  z-index: 0;
   overflow: visible;
   /* Sync with card reveal (avoid spheres showing before the glass appears) */
   opacity: 0;
@@ -160,8 +160,9 @@
   /* Three overlay: must stay visible for scroll morph across ALL sections */
   position: fixed;
   inset: 0;
-  /* Put Three ABOVE the hero card background */
-  z-index: 3;
+  /* Global rule: keep Three UNDER other section cards (z=2),
+     but still ABOVE the hero card background (z=0). */
+  z-index: 1;
   pointer-events: none;
   display: flex;
   justify-content: center;

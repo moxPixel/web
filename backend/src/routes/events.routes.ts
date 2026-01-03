@@ -66,6 +66,9 @@ router.get(
 // Public slug: published only (service enforces)
 router.get('/slug/:slug', slugParamValidation, eventsController.findBySlug.bind(eventsController));
 
+// Public calendar export (published only)
+router.get('/slug/:slug/calendar.ics', slugParamValidation, eventsController.downloadIcsBySlug.bind(eventsController));
+
 // Admin CRUD
 router.post('/', authenticate, requireAdmin, createLimiter, createEventValidation, eventsController.create.bind(eventsController));
 router.get('/:id', idParamValidation, eventsController.findById.bind(eventsController));

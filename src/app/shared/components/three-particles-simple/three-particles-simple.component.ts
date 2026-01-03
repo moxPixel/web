@@ -69,7 +69,8 @@ type MorphKey = ScrollMorphKey & {
         will-change: transform;
         transform: translateZ(0);
         position: relative;
-        z-index: 10;
+        /* Default: keep Three behind UI content. Hero (and only hero) controls layering via its fixed stage. */
+        z-index: 0;
       }
       .tp-host canvas {
         width: 100% !important;
@@ -79,7 +80,7 @@ type MorphKey = ScrollMorphKey & {
         will-change: contents;
         transform: translateZ(0);
         position: relative;
-        z-index: 10;
+        z-index: 0;
         overflow: visible;
       }
     `,
@@ -2077,7 +2078,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
             // Sensibilité unique par particule (variation naturelle et subtile)
             float particleSensitivity = 0.25 + fract(aSeed * 7.3) * 0.4;
             float particlePhase = fract(aSeed * 11.7);
-
+            
             // ==========================================================
             // INVERSE ENTRY ON SCROLL (Hero only)
             // Same math as the entry animation, but inverted with scroll:
