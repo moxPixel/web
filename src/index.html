@@ -195,27 +195,49 @@
       will-change: transform, opacity, filter;
     }
 
+    /* Container for Logo + Circle Spinner */
+    #page-loader .loader-spinner-wrapper {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     #page-loader .loader-logo {
       height: 28px;
       width: auto;
       object-fit: contain;
+      position: relative;
+      z-index: 2;
     }
 
-    #page-loader .loader-line {
-      width: 120px;
-      height: 2px;
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--ui-nebula-accent) 28%, rgba(241,241,242,0.14));
-      overflow: hidden;
-      position: relative;
-    }
-    #page-loader .loader-line::after {
-      content: "";
+    /* Premium Circle Spinner - Clean (No BG) */
+    #page-loader .loader-spinner {
       position: absolute;
       inset: 0;
-      transform: translateX(-60%);
-      background: color-mix(in srgb, var(--ui-nebula-accent) 78%, rgba(241,241,242,0.25));
-      animation: loader-sweep 1100ms cubic-bezier(0.16,1,0.3,1) infinite;
+      border-radius: 50%;
+      /* Transparent track */
+      border: 1.5px solid transparent;
+      /* Active arc */
+      border-top-color: var(--ui-nebula-accent);
+      /* Glow only on the line */
+      filter: drop-shadow(0 0 2px var(--ui-nebula-accent));
+      animation: loader-spin 1.2s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+    }
+    
+    /* Second ring (Counter-rotating) */
+    #page-loader .loader-spinner::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid transparent;
+      border-bottom-color: var(--ui-nebula-secondary);
+      opacity: 0.8;
+      filter: drop-shadow(0 0 2px var(--ui-nebula-secondary));
+      animation: loader-spin 1.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite reverse;
     }
 
     #page-loader .loader-text {
@@ -224,16 +246,15 @@
       letter-spacing: -0.01em;
       text-align: center;
       margin: 0;
+      margin-top: 12px;
     }
 
     @keyframes loader-in {
       to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
     }
-    @keyframes loader-sweep {
-      0% { transform: translateX(-70%); opacity: 0.0; }
-      15% { opacity: 1; }
-      55% { transform: translateX(0%); opacity: 1; }
-      100% { transform: translateX(70%); opacity: 0.0; }
+    @keyframes loader-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     @keyframes loader-float-1 {
       0%,100% { transform: translate(0,0) scale(1); }
@@ -289,8 +310,10 @@
       </div>
     </div>
     <div class="loader-content">
-      <img class="loader-logo" src="/assets/images/logo/logo-dark.png" alt="Unlock" />
-      <div class="loader-line"></div>
+      <div class="loader-spinner-wrapper">
+        <div class="loader-spinner"></div>
+        <img class="loader-logo" src="/assets/images/logo/logo-dark.png" alt="Unlock" />
+      </div>
       <p class="loader-text">Patienter<br/>Nous améliorons votre expérience utilisateur</p>
     </div>
   </div>
