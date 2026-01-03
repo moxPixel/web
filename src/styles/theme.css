@@ -189,11 +189,11 @@
       - DynamicPaletteService will set --ui-nebula-* to one of these palettes.
     */
 
-    /* Base (Hero) — Bleu AI */
-    --ui-palette-base-accent: #eaf9ff;    /* ice white-blue */
-    --ui-palette-base-secondary: #38bdf8; /* AI blue */
+    /* Base (Hero) — Bleu électrique (max bleu) */
+    --ui-palette-base-accent: #cfe2ff;    /* icy blue-white */
+    --ui-palette-base-secondary: #1e40af; /* royal deep blue */
     --ui-palette-base-tertiary: #070b14;
-    --ui-palette-base-teal: #a78bfa;
+    --ui-palette-base-teal: #3b82f6;     /* pure blue support */
 
     /* About — Violet / Magenta */
     --ui-palette-about-accent: #a855f7;
@@ -344,18 +344,32 @@
     pointer-events: none;
     z-index: 1;
     /* More modern / subdued (NVIDIA-ish): visible texture without "snow" */
-    opacity: 0.38;
+    opacity: 0.34;
     mix-blend-mode: soft-light;
+    /* Slight right emphasis (where the nebula is brighter) */
+    -webkit-mask-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0.38) 0%,
+      rgba(0, 0, 0, 0.72) 52%,
+      rgba(0, 0, 0, 1.00) 100%);
+    mask-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0.38) 0%,
+      rgba(0, 0, 0, 0.72) 52%,
+      rgba(0, 0, 0, 1.00) 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
   }
 
   .ui-bg-pattern-svg {
     width: 100%;
     height: 100%;
     display: block;
-    color: var(--ui-nebula-accent);
+    /* Never pure "white": keep dots in the AI blue family */
+    color: color-mix(in srgb, var(--ui-nebula-secondary) 72%, transparent);
     /* Smooth transition for color changes */
     transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: saturate(110%);
+    filter: saturate(120%) contrast(120%);
   }
 
   .ui-bg-pattern pattern circle {
@@ -392,8 +406,8 @@
         color-mix(in srgb, var(--ui-nebula-accent) 40%, transparent) 0%,
         color-mix(in srgb, var(--ui-nebula-accent) 16%, transparent) 38%,
         transparent 72%);
-    opacity: 0.52;
-    filter: blur(98px) saturate(115%);
+    opacity: 0.60;
+    filter: blur(98px) saturate(125%) brightness(1.10);
     animation: ui-bg-float-1 60s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -412,8 +426,8 @@
         color-mix(in srgb, var(--ui-nebula-accent) 22%, transparent) 0%,
         color-mix(in srgb, var(--ui-nebula-accent) 8%, transparent) 46%,
         transparent 78%);
-    opacity: 0.42;
-    filter: blur(120px) saturate(110%);
+    opacity: 0.50;
+    filter: blur(120px) saturate(120%) brightness(1.08);
     animation: ui-bg-float-2 74s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -431,8 +445,8 @@
         color-mix(in srgb, var(--ui-nebula-accent) 18%, transparent) 0%,
         color-mix(in srgb, var(--ui-nebula-accent) 6%, transparent) 48%,
         transparent 78%);
-    opacity: 0.34;
-    filter: blur(92px) saturate(110%);
+    opacity: 0.42;
+    filter: blur(92px) saturate(120%) brightness(1.06);
     animation: ui-bg-float-3 68s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -450,8 +464,8 @@
       radial-gradient(ellipse at 62% 62%,
         color-mix(in srgb, var(--ui-nebula-accent) 10%, transparent) 0%,
         transparent 70%);
-    opacity: 0.22;
-    filter: blur(84px) saturate(105%);
+    opacity: 0.30;
+    filter: blur(84px) saturate(115%) brightness(1.05);
     animation: ui-bg-float-4 86s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -459,11 +473,11 @@
     0%,
     100% {
       transform: translate(0, 0) scale(1) rotate(0deg);
-      opacity: 0.52;
-      filter: blur(98px) saturate(115%);
+      opacity: 0.60;
+      filter: blur(98px) saturate(125%) brightness(1.10);
     }
-    35% { transform: translate(26px, -22px) scale(1.06) rotate(1.2deg); opacity: 0.58; }
-    70% { transform: translate(-20px, 16px) scale(0.98) rotate(-0.8deg); opacity: 0.46; }
+    35% { transform: translate(26px, -22px) scale(1.06) rotate(1.2deg); opacity: 0.66; }
+    70% { transform: translate(-20px, 16px) scale(0.98) rotate(-0.8deg); opacity: 0.52; }
   }
   
 
@@ -471,32 +485,32 @@
     0%,
     100% {
       transform: translate(calc(0px + var(--mouse-x, 0px)), calc(0px + var(--mouse-y, 0px))) scale(1) rotate(0deg);
-      opacity: 0.42;
-      filter: blur(120px) saturate(110%);
+      opacity: 0.50;
+      filter: blur(120px) saturate(120%) brightness(1.08);
     }
-    33% { transform: translate(calc(-34px + var(--mouse-x, 0px)), calc(22px + var(--mouse-y, 0px))) scale(1.04) rotate(2.2deg); opacity: 0.46; }
-    66% { transform: translate(calc(28px + var(--mouse-x, 0px)), calc(-20px + var(--mouse-y, 0px))) scale(0.98) rotate(-2deg); opacity: 0.38; }
+    33% { transform: translate(calc(-34px + var(--mouse-x, 0px)), calc(22px + var(--mouse-y, 0px))) scale(1.04) rotate(2.2deg); opacity: 0.54; }
+    66% { transform: translate(calc(28px + var(--mouse-x, 0px)), calc(-20px + var(--mouse-y, 0px))) scale(0.98) rotate(-2deg); opacity: 0.44; }
   }
 
   @keyframes ui-bg-float-3 {
     0%,
     100% {
       transform: translate(calc(0px + var(--mouse-x, 0px)), calc(0px + var(--mouse-y, 0px))) scale(1) rotate(0deg);
-      opacity: 0.34;
-      filter: blur(92px) saturate(110%);
+      opacity: 0.42;
+      filter: blur(92px) saturate(120%) brightness(1.06);
     }
-    40% { transform: translate(calc(22px + var(--mouse-x, 0px)), calc(28px + var(--mouse-y, 0px))) scale(1.05) rotate(1.4deg); opacity: 0.38; }
-    80% { transform: translate(calc(-18px + var(--mouse-x, 0px)), calc(-12px + var(--mouse-y, 0px))) scale(0.99) rotate(-1deg); opacity: 0.3; }
+    40% { transform: translate(calc(22px + var(--mouse-x, 0px)), calc(28px + var(--mouse-y, 0px))) scale(1.05) rotate(1.4deg); opacity: 0.46; }
+    80% { transform: translate(calc(-18px + var(--mouse-x, 0px)), calc(-12px + var(--mouse-y, 0px))) scale(0.99) rotate(-1deg); opacity: 0.36; }
   }
 
   @keyframes ui-bg-float-4 {
     0%,
     100% {
       transform: translate(calc(0px + var(--mouse-x, 0px)), calc(0px + var(--mouse-y, 0px))) scale(1) rotate(0deg);
-      opacity: 0.22;
-      filter: blur(84px) saturate(105%);
+      opacity: 0.30;
+      filter: blur(84px) saturate(115%) brightness(1.05);
     }
-    50% { transform: translate(calc(-14px + var(--mouse-x, 0px)), calc(12px + var(--mouse-y, 0px))) scale(1.03) rotate(2.6deg); opacity: 0.26; }
+    50% { transform: translate(calc(-14px + var(--mouse-x, 0px)), calc(12px + var(--mouse-y, 0px))) scale(1.03) rotate(2.6deg); opacity: 0.34; }
   }
 
   *,

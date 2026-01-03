@@ -1,33 +1,40 @@
 <section id="hero" class="ui-hero">
   <div class="ui-hero__container">
     <!-- 3D Stage (kept OUTSIDE the hero card so glass blur never traps fixed canvas) -->
-    <div class="ui-hero-stage" aria-hidden="true">
-      <div class="ui-hero-stage-inner">
-        <app-three-particles-simple
-          [modelPath]="'/assets/models/unlock-model.glb'"
-          backgroundColor="transparent"
-          [fov]="60"
-          [baseRotation]="{ x: 0, y: 0, z: 0 }"
-          [pointSize]="0.011"
-          [opacity]="0.95"
-          [maxPoints]="65000"
+      <div class="ui-hero-stage" aria-hidden="true">
+        <div class="ui-hero-stage-inner">
+          <app-three-particles-simple
+            [modelPath]="'/assets/models/unlock-model.glb'"
+            backgroundColor="transparent"
+            [fov]="60"
+            [baseRotation]="{ x: 0, y: 0, z: 0 }"
+            [pointSize]="0.011"
+            [opacity]="0.95"
+            [maxPoints]="65000"
           [additive]="true"
-          [pauseWhenHidden]="true"
+            [pauseWhenHidden]="true"
           [autoRotate]="true"
-          [organic]="true"
-          [organicStrength]="0.022"
-          [organicSpeed]="1.0"
-          [mouseInteractive]="true"
-          [mouseStrength]="0.08"
-          [entryAnimation]="true"
-          [entryDuration]="2.3"
-          [entryDelay]="0.1"
-          class="w-full h-full">
-        </app-three-particles-simple>
+            [organic]="true"
+            [organicStrength]="0.022"
+            [organicSpeed]="1.0"
+            [mouseInteractive]="true"
+            [mouseStrength]="0.08"
+            [entryAnimation]="true"
+            [entryDuration]="2.3"
+            [entryDelay]="0.1"
+            class="w-full h-full">
+          </app-three-particles-simple>
+        </div>
       </div>
-    </div>
 
     <div #heroParallax class="ui-hero-card">
+      <!-- Card spheres (same idea as trainings hero) -->
+      <div class="ui-hero-card-spheres" aria-hidden="true">
+        <div class="ui-hero-card-sphere hero-card-sphere-1"></div>
+        <div class="ui-hero-card-sphere hero-card-sphere-2"></div>
+        <div class="ui-hero-card-sphere hero-card-sphere-3"></div>
+      </div>
+
       <div class="ui-hero-content">
         <div #heroContent class="ui-hero-content-stack">
           <!-- H1 Mobile (court) - SEO: aria-hidden géré dynamiquement selon viewport -->
