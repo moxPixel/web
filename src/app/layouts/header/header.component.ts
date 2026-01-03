@@ -246,8 +246,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         const isMobile = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 640px)')?.matches;
         // On mobile, don't "lift" the pill upward when compact; keep a minimum top margin.
         const ty = isMobile ? 0 : lerp(0, -8, p);
-        const h = lerp(3.5, 3.0, p); // rem
-        const py = lerp(0.35, 0.22, p); // rem
+        // Slightly taller + more vertical padding (as requested)
+        const h = lerp(3.75, 3.2, p); // rem
+        const py = lerp(0.42, 0.30, p); // rem
         const px = lerp(0.5, 0.35, p); // rem
 
         headerEl.style.setProperty('--ui-h-scale', String(scale));
@@ -255,6 +256,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         headerEl.style.setProperty('--ui-h-h', `${h.toFixed(3)}rem`);
         headerEl.style.setProperty('--ui-h-py', `${py.toFixed(3)}rem`);
         headerEl.style.setProperty('--ui-h-px', `${px.toFixed(3)}rem`);
+        // Drives the smooth reveal of background + blur in CSS (0 at top, 1 when scrolled down).
+        headerEl.style.setProperty('--ui-h-bg', String(clamp01(p)));
 
         // Icons-only mode when sufficiently compact
         const wantCompact = p >= 0.72;

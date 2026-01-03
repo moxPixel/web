@@ -189,9 +189,9 @@
       - DynamicPaletteService will set --ui-nebula-* to one of these palettes.
     */
 
-    /* Base (Hero) — Neon NVIDIA Green (fluo) */
-    --ui-palette-base-accent: #a6ff00;    /* neon lime */
-    --ui-palette-base-secondary: #76ff00; /* deeper neon */
+    /* Base (Hero) — Bleu AI */
+    --ui-palette-base-accent: #eaf9ff;    /* ice white-blue */
+    --ui-palette-base-secondary: #38bdf8; /* AI blue */
     --ui-palette-base-tertiary: #070b14;
     --ui-palette-base-teal: #a78bfa;
 

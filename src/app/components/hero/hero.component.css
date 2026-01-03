@@ -1,33 +1,74 @@
 .ui-hero {
   position: relative;
   margin-top: 0.75rem;
-  padding: 0;
+  padding: 0 clamp(1rem, 2vw, 3rem); /* px-4 sm:px-6 md:px-8 lg:px-12 */
   overflow: visible;
   /* CRITICAL: Never move this section */
   transform: none !important;
 }
 
 .ui-hero__container {
-  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
   position: relative;
   overflow: visible;
   /* CRITICAL: Never move this container */
   transform: none !important;
 }
 
-/* Hero card - removed card styling */
+/* Hero card - Glass card wrapper (model 3D stays independent with fixed position) */
 .ui-hero-card {
   position: relative;
-  z-index: 2;
-  margin-bottom: 1rem;
-  overflow: visible;
+  /* IMPORTANT: no z-index here → do not create a stacking context.
+     This lets us layer: card background < Three model < hero content. */
+  width: 100%;
+  /* Make the card less wide on large screens (clean + centered) */
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: clamp(4rem, 6.25vw, 6.25rem); /* mb-16 md:mb-[100px] */
+  border-radius: 28px;
+  background: transparent;
+  overflow: hidden;
   /* CRITICAL: Never move this container */
   transform: none !important;
 }
 
-@media (min-width: 768px) {
+/* Card background (simple glass, no tricks) */
+.ui-hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  /* More transparent + softer border */
+  border: var(--ui-hairline) solid var(--ui-glass-border-subtle);
+  background: color-mix(in srgb, var(--ui-glass-bg-strong) 72%, transparent);
+  backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur)) saturate(var(--ui-glass-sat));
+  box-shadow: 0 16px 52px rgba(0, 0, 0, 0.34);
+  /* Reveal after Three entry animation */
+  opacity: 0;
+  transform: translate3d(0, 10px, 0) scale(0.992);
+  transition:
+    opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.ui-hero-card.is-card-revealed::before {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (max-width: 768px) {
   .ui-hero-card {
-    margin-bottom: 1.5rem;
+    border-radius: 24px;
+    background: transparent;
+  }
+  .ui-hero-card::before {
+    border-radius: 24px;
   }
 }
 
@@ -36,7 +77,8 @@
   /* Three overlay: must stay visible for scroll morph across ALL sections */
   position: fixed;
   inset: 0;
-  z-index: 1;
+  /* Put Three ABOVE the hero card background */
+  z-index: 3;
   pointer-events: none;
   display: flex;
   justify-content: center;
@@ -98,15 +140,20 @@
   }
 }
 
-/* Hero content - MUST stay in foreground */
+/* Hero content - MUST stay in foreground (same dimensions as reference) */
 .ui-hero-content {
   position: relative;
-  z-index: 10;
-  max-width: var(--ui-container-max);
+  /* Keep text ABOVE the Three */
+  z-index: 5;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding: 220px var(--ui-gutter-x) 3rem;
-  min-height: 860px;
+  /* Remonte le contenu (le Three reste fixed et indépendant) */
+  padding-top: 300px;
+  padding-bottom: 28px;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 720px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -117,27 +164,27 @@
 
 @media (min-width: 640px) {
   .ui-hero-content {
-    min-height: 920px;
-    padding-top: 360px;
-    padding-left: var(--ui-gutter-x);
-    padding-right: var(--ui-gutter-x);
+    min-height: 780px;
+    padding-top: 330px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
 @media (min-width: 768px) {
   .ui-hero-content {
-    padding-left: var(--ui-gutter-x);
-    padding-right: var(--ui-gutter-x);
+    padding-left: 32px;
+    padding-right: 32px;
   }
 }
 
 @media (min-width: 1024px) {
   .ui-hero-content {
-    padding-top: 320px;
-    padding-bottom: 4.375rem;
-    min-height: 900px;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-top: 380px;
+    padding-bottom: 44px;
+    min-height: 760px;
+    padding-left: 48px;
+    padding-right: 48px;
   }
 }
 
@@ -149,6 +196,8 @@
   margin-right: auto;
   text-align: center;
   text-shadow: none;
+  /* Descend légèrement le contenu sans changer la taille de la card (pas d'impact layout) */
+  transform: translateY(22px);
 }
 
 @media (min-width: 1024px) {
@@ -204,7 +253,7 @@
 
 /* Next session (simple inline text) */
 .ui-hero-nextline {
-  margin: -2.75rem auto 2.25rem;
+  margin: -2.25rem auto 1.5rem;
   font-size: 0.95rem;
   line-height: 1.4;
   color: color-mix(in srgb, var(--ui-fg) 72%, transparent);
@@ -222,7 +271,7 @@
 
 .ui-hero-description {
   max-width: 800px;
-  margin: 0 auto 3.5rem;
+  margin: 0 auto 2.25rem;
   font-size: 1rem;
   line-height: 1.75;
   color: color-mix(in srgb, var(--ui-fg) 85%, transparent);
@@ -244,7 +293,7 @@
 @media (min-width: 768px) {
   .ui-hero-description {
     font-size: 1.125rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.5rem;
   }
   
   .ui-hero-description--mobile {
@@ -266,7 +315,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
+  /* Descend légèrement les boutons sans agrandir la card */
+  transform: translateY(16px);
 }
 
 .ui-hero-actions a {

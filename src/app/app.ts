@@ -50,12 +50,18 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private routeSub?: Subscription;
 
   isBackofficeRoute = false;
+  isHomeRoute = false;
   // Incremented on each navigation to trigger the fade-in animation.
   routeTransitionId = 0;
 
   @HostBinding('class.is-backoffice')
   get isBackofficeHostClass(): boolean {
     return this.isBackofficeRoute;
+  }
+
+  @HostBinding('class.is-home')
+  get isHomeHostClass(): boolean {
+    return this.isHomeRoute;
   }
   
   private mouseX = 0;
@@ -78,6 +84,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     this.updateBackofficeRoute(this.router.url);
     // Enable palette scroll only on home (keeps other pages stable/consistent)
     this.updatePaletteMode(this.router.url);
+    this.updateHomeRoute(this.router.url);
 
     // Simple scroll to top on route change
     this.routeSub = this.router.events
@@ -88,6 +95,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         window.scrollTo({ top: 0, behavior: 'auto' });
         this.updateBackofficeRoute(this.router.url);
         this.updatePaletteMode(this.router.url);
+        this.updateHomeRoute(this.router.url);
         
         // Track page view pour analytics (seulement si consentement donné)
         this.analytics.trackPageView(this.router.url);
@@ -138,6 +146,11 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.scrollPalette.disable();
     }
+  }
+
+  private updateHomeRoute(url: string): void {
+    const path = (url || '').split('?')[0].split('#')[0];
+    this.isHomeRoute = path === '/' && !this.isBackofficeRoute;
   }
 
   private updateBackofficeRoute(url: string): void {

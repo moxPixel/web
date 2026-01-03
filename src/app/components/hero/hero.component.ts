@@ -30,6 +30,7 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
   private io?: IntersectionObserver;
   private ro?: ResizeObserver;
   private scrollListenerActive = false;
+  private cardRevealTimer: number | null = null;
 
   // Hero metrics (recomputed on resize/layout shift)
   private heroTop = 0;
@@ -142,6 +143,10 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
       window.removeEventListener('resize', updateAriaHidden);
     }
     
+    if (this.cardRevealTimer !== null) {
+      window.clearTimeout(this.cardRevealTimer);
+      this.cardRevealTimer = null;
+    }
     this.cleanup();
   }
 
@@ -712,6 +717,7 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
     const start = () => {
       // Start animations immediately (no delay)
       this.startHeroAnimations();
+      this.scheduleHeroCardRevealAfterModelEntry();
       // Parallax removed: it caused hero text to not reliably return to its original position
       // when scrolling back up (stale transforms). Keep the hero layout stable.
     };
@@ -731,6 +737,34 @@ export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
       window.removeEventListener('app-loader-hidden', onHidden as any);
       start();
     }, 1200);
+  }
+
+  /**
+   * Reveal the hero card glass AFTER the Three.js entry animation finishes.
+   * This keeps the model as the first "wow" and then the UI panel appears cleanly.
+   */
+  private scheduleHeroCardRevealAfterModelEntry(): void {
+    const cardEl = this.heroParallax?.nativeElement as HTMLElement | undefined;
+    if (!cardEl || typeof window === 'undefined') return;
+
+    // Reset (in case of route reuse)
+    cardEl.classList.remove('is-card-revealed');
+    if (this.cardRevealTimer !== null) {
+      window.clearTimeout(this.cardRevealTimer);
+      this.cardRevealTimer = null;
+    }
+
+    // Read actual inputs from the Three component instance (set in template).
+    const entryDelay = Number((this.threeComponent as any)?.entryDelay ?? 0) || 0;
+    const entryDuration = Number((this.threeComponent as any)?.entryDuration ?? 0) || 0;
+    // Start during the last part of the entry (so it appears "with" the model, not after).
+    const durMs = Math.max(0, entryDuration * 1000);
+    const startFrac = 0.45; // start earlier (45% into the entry animation)
+    const startAtMs = Math.max(0, entryDelay * 1000 + durMs * startFrac);
+    this.cardRevealTimer = window.setTimeout(() => {
+      cardEl.classList.add('is-card-revealed');
+      this.cardRevealTimer = null;
+    }, startAtMs);
   }
 
 }
