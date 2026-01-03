@@ -46,10 +46,10 @@
 
       /* Nebula */
       /* Base palette (matches theme.css SSOT base to avoid color "flash") */
-      --ui-nebula-accent: #6366f1;
-      --ui-nebula-secondary: #4f46e5;
+      --ui-nebula-accent: #a6ff00;
+      --ui-nebula-secondary: #76ff00;
       --ui-nebula-tertiary: #070b14;
-      --ui-nebula-teal: #6366f1;
+      --ui-nebula-teal: #a78bfa;
     }
 
     * { box-sizing: border-box; }
@@ -276,9 +276,12 @@
               </radialGradient>
               <rect width="100%" height="100%" fill="url(#loader-fade-gradient)"/>
             </mask>
-            <pattern id="loader-dots-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
-              <!-- Points ultra rapprochés, nombreux et très petits - densité maximale -->
-              <circle cx="2.5" cy="2.5" r="0.3" fill="currentColor" opacity="0.3"/>
+            <pattern id="loader-dots-pattern" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+              <!-- Dots: even denser + MORE visible -->
+              <circle cx="1" cy="1" r="0.46" fill="currentColor" opacity="0.44"/>
+              <circle cx="3" cy="3" r="0.46" fill="currentColor" opacity="0.44"/>
+              <circle cx="1" cy="3" r="0.34" fill="currentColor" opacity="0.28"/>
+              <circle cx="3" cy="1" r="0.34" fill="currentColor" opacity="0.28"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#loader-dots-pattern)" mask="url(#loader-dots-mask)"/>

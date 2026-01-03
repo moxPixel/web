@@ -189,9 +189,9 @@
       - DynamicPaletteService will set --ui-nebula-* to one of these palettes.
     */
 
-    /* Base (Hero) — AI white-blue accent (vibrant & bright) */
-    --ui-palette-base-accent: #6366f1;
-    --ui-palette-base-secondary: #4f46e5;
+    /* Base (Hero) — Neon NVIDIA Green (fluo) */
+    --ui-palette-base-accent: #a6ff00;    /* neon lime */
+    --ui-palette-base-secondary: #76ff00; /* deeper neon */
     --ui-palette-base-tertiary: #070b14;
     --ui-palette-base-teal: #a78bfa;
 
@@ -239,7 +239,7 @@
 
     /* Programs stepper — per-step accents (SSOT) */
     --ui-step-1-accent: #ec4899; /* magenta */
-    --ui-step-2-accent: #6366f1; /* indigo électrique */
+    --ui-step-2-accent: #38bdf8; /* bleu AI électrique */
     --ui-step-3-accent: #a855f7; /* violet */
     --ui-step-4-accent: #f59e0b; /* amber */
 
