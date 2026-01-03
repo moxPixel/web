@@ -190,8 +190,8 @@
     */
 
     /* Base (Hero) — AI white-blue accent (vibrant & bright) */
-    --ui-palette-base-accent: #e0f4ff;
-    --ui-palette-base-secondary: #60a5fa;
+    --ui-palette-base-accent: #6366f1;
+    --ui-palette-base-secondary: #4f46e5;
     --ui-palette-base-tertiary: #070b14;
     --ui-palette-base-teal: #a78bfa;
 
@@ -202,8 +202,8 @@
     --ui-palette-about-teal: #f0d8ff;
 
     /* Business — Teal / Cyan */
-    --ui-palette-business-accent: #5eead4;
-    --ui-palette-business-secondary: #2dd4bf;
+    --ui-palette-business-accent: #6366f1;
+    --ui-palette-business-secondary: #4f46e5;
     --ui-palette-business-tertiary: #0f172a;
     --ui-palette-business-teal: #a7f3d0;
 
@@ -226,10 +226,10 @@
     --ui-palette-quality-teal: #fff3c4;
 
     /* Events — Sky / Electric (distinct, premium) */
-    --ui-palette-events-accent: #38bdf8;
-    --ui-palette-events-secondary: #0ea5e9;
+    --ui-palette-events-accent: #6366f1;
+    --ui-palette-events-secondary: #4f46e5;
     --ui-palette-events-tertiary: #06121f;
-    --ui-palette-events-teal: #bae6fd;
+    --ui-palette-events-teal: #6366f1;
 
     /* Locky Games — Red (rouge) */
     --ui-palette-locky-games-accent: #dc2626;
@@ -239,7 +239,7 @@
 
     /* Programs stepper — per-step accents (SSOT) */
     --ui-step-1-accent: #ec4899; /* magenta */
-    --ui-step-2-accent: #3b82f6; /* blue */
+    --ui-step-2-accent: #6366f1; /* indigo électrique */
     --ui-step-3-accent: #a855f7; /* violet */
     --ui-step-4-accent: #f59e0b; /* amber */
 

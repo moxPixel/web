@@ -328,6 +328,11 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
   private rotationTargetQuat = new THREE.Quaternion();
   private rotationSmoothedQuat = new THREE.Quaternion();
   private readonly tmpEuler = new THREE.Euler(0, 0, 0, 'YXZ');
+  // Sophisticated auto-rotation animation (replaces simple rotateY)
+  private autoRotateTime = 0;
+  private autoRotatePhase = 0;
+  private autoRotateSpeed = 0.0008; // Base rotation speed (slower than before)
+  private autoRotateOscillation = 0; // Subtle oscillation for organic feel
   // Keep last best morph id for rotation blending (independent from activeMorphKeyId toggling)
   private lastBestId: string | null = null;
   private lastBestT: number = 0;
@@ -1557,7 +1562,7 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
         // Placement: move the whole point cloud toward a DOM target (e.g. About left photo)
         // so the morphed model materializes exactly where you want.
         this.updateMorphRotation();
-        if (this.autoRotate) this.points.rotateY(0.002);
+        if (this.autoRotate) this.updateSophisticatedRotation(dt);
         // Heavy part (DOM rect + raycast). Skip while user scrolls very fast to avoid "site saccade".
         // Placement will catch up once scrolling slows down, while morph shape stays responsive.
         if (this.scrollSpeed01 < 0.7) {
@@ -1567,6 +1572,46 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
       this.renderer.render(this.scene, this.camera);
     };
     tick();
+  }
+
+  /**
+   * Sophisticated auto-rotation animation (replaces simple rotateY)
+   * - Non-linear rotation with easing for organic feel
+   * - Subtle oscillation/pulsation for more life
+   * - Scroll-aware: slows down during scroll for better UX
+   * - 3D rotation (subtle X/Z in addition to Y) for depth
+   */
+  private updateSophisticatedRotation(deltaTime: number): void {
+    if (!this.points) return;
+    
+    // Update time accumulator
+    this.autoRotateTime += deltaTime;
+    
+    // Scroll-aware speed reduction (slows down during scroll for better visual clarity)
+    const scrollInfluence = Math.max(0.3, 1.0 - this.scrollSpeed01 * 0.5);
+    const baseSpeed = this.autoRotateSpeed * scrollInfluence;
+    
+    // Non-linear rotation with easing (sine wave for smooth acceleration/deceleration)
+    const rotationPhase = this.autoRotateTime * baseSpeed;
+    const easedRotation = Math.sin(rotationPhase * 0.5) * 0.5 + rotationPhase * 0.5;
+    
+    // Subtle oscillation for organic feel (breathing effect)
+    this.autoRotateOscillation = Math.sin(this.autoRotateTime * 0.3) * 0.15 + Math.cos(this.autoRotateTime * 0.2) * 0.1;
+    const oscillationBoost = 1.0 + this.autoRotateOscillation * 0.3;
+    
+    // Main Y rotation (horizontal) with easing and oscillation
+    const yRotation = easedRotation * oscillationBoost * 0.0015;
+    
+    // Subtle X rotation (vertical tilt) for depth - very gentle
+    const xRotation = Math.sin(this.autoRotateTime * 0.15) * 0.0003;
+    
+    // Subtle Z rotation (roll) for organic feel - very gentle
+    const zRotation = Math.cos(this.autoRotateTime * 0.12) * 0.0002;
+    
+    // Apply rotations using Euler angles (more control than quaternion for this animation)
+    this.tmpEuler.set(xRotation, yRotation, zRotation);
+    const deltaQuat = new THREE.Quaternion().setFromEuler(this.tmpEuler);
+    this.points.quaternion.multiplyQuaternions(this.points.quaternion, deltaQuat);
   }
 
   /**
@@ -2032,118 +2077,89 @@ export class ThreeParticlesSimpleComponent implements AfterViewInit, OnDestroy {
             // Sensibilité unique par particule (variation naturelle et subtile)
             float particleSensitivity = 0.25 + fract(aSeed * 7.3) * 0.4;
             float particlePhase = fract(aSeed * 11.7);
-            
-            // Position du centre
-            vec3 centerPos = vec3(0.0, pos.y, 0.0);
-            
-            // Angle polaire pour rotation élégante
-            float angle = atan(pos.z, pos.x);
-            
-            // PHASE 1 : ROTATION SPIRALE ÉLÉGANTE (mouvement fluide et subtil)
-            float spiralTightness = 0.5 + normalizedDist * 0.3;
-            float rotationSpeed = scrollAmount * 1.0 * particleSensitivity;
-            float spiralRotation = rotationSpeed / (spiralTightness + 0.3);
-            float newAngle = angle + spiralRotation;
-            
-            // PHASE 2 : EXPANSION RADIALE HARMONIEUSE (mouvement fluide)
-            float expansionForce = scrollAmount * particleSensitivity * 0.7;
-            float expansionIntensity = smoothstep(0.0, 1.5, normalizedDist);
-            expansionIntensity = pow(expansionIntensity, 2.0); // Courbe douce
-            float expansionSpeed = expansionForce * expansionIntensity * r * 0.5;
-            
-            // Nouvelle position radiale avec expansion harmonieuse
-            float newDist = distFromCenter + expansionSpeed;
-            
-            // Application de la rotation spirale
-            pos.x = centerPos.x + cos(newAngle) * newDist;
-            pos.z = centerPos.z + sin(newAngle) * newDist;
-            
-            // PHASE 3 : DESCENTE GRAVITATIONNELLE FLUIDE (mouvement naturel)
-            float yDist = pos.y;
-            float downAttraction = smoothstep(-r * 0.7, r * 1.6, yDist);
-            float downPull = scrollAmount * downAttraction * particleSensitivity * 0.2;
-            float freeFall = smoothstep(r * 0.4, r * 1.4, yDist);
-            downPull += freeFall * scrollAmount * particleSensitivity * 0.1;
-            pos.y -= downPull * r * 0.3;
-            
-            // PHASE 4 : VAGUES ORGANIQUES (propagation douce et harmonieuse)
-            // Vague principale (fluide)
-            float waveSpeed1 = scrollAmount * 2.0;
-            float wavePhase1 = waveSpeed1 - normalizedDist * 2.0;
-            float wave1 = sin(wavePhase1) * 0.5 + 0.5;
-            wave1 = smoothstep(0.2, 0.8, wave1);
-            wave1 = pow(wave1, 1.4);
-            
-            // Vague secondaire (lente, décalée)
-            float waveSpeed2 = scrollAmount * 1.3;
-            float wavePhase2 = waveSpeed2 - normalizedDist * 1.2 + particlePhase;
-            float wave2 = sin(wavePhase2) * 0.5 + 0.5;
-            wave2 = smoothstep(0.25, 0.75, wave2);
-            wave2 = pow(wave2, 1.6);
-            
-            // Combinaison harmonieuse des vagues
-            float waveIntensity = (wave1 * 0.6 + wave2 * 0.4);
-            
-            // Mouvement radial harmonieux avec les vagues
-            vec3 radialDir = normalize(vec3(pos.x, 0.0, pos.z) + vec3(0.0001));
-            float waveBoost = waveIntensity * scrollAmount * particleSensitivity * 0.4;
-            pos += radialDir * waveBoost * r;
-            
-            // PHASE 5 : VORTEX ÉLÉGANT (rotation subtile)
-            float vortexStrength = scrollAmount * expansionIntensity * 0.3;
-            vec3 toCenterNew = pos - centerPos;
-            float cosVortex = cos(vortexStrength);
-            float sinVortex = sin(vortexStrength);
-            vec3 rotated = vec3(
-              toCenterNew.x * cosVortex - toCenterNew.z * sinVortex,
-              toCenterNew.y,
-              toCenterNew.x * sinVortex + toCenterNew.z * cosVortex
-            );
-            pos = centerPos + rotated;
 
-            // PHASE 6 : EFFET DE PROFONDEUR 3D SUBTIL (push/pull élégant)
-            float depthJitter = (fract(aSeed * 9.7) - 0.5);
-            vec3 nrmScroll = normalize(pos + vec3(0.0001));
-            float depthEffect = scrollT * r * 0.03 * depthJitter;
-            pos += nrmScroll * depthEffect;
+            // ==========================================================
+            // INVERSE ENTRY ON SCROLL (Hero only)
+            // Same math as the entry animation, but inverted with scroll:
+            // - scroll=0   -> fully formed (finalPos)
+            // - scroll>0   -> disperses toward startPos
+            // Keeps silhouettes stable by gating to hero (m≈0).
+            // ==========================================================
+            if (uEntryProgress >= 1.0) {
+              // Asymptotic curve: keeps moving forever but slows down (premium UX)
+              // IMPORTANT: uScrollY is small (scaled in TS), so we map using scrollAmount for visibility.
+              // Tuned so effect is clearly visible with a small scroll, without exploding.
+              float scrollTRaw = max(0.0, scrollAmount * 2.2);
+              float heroScrollT = 1.0 - exp(-scrollTRaw * 1.35);
+              heroScrollT = pow(clamp(heroScrollT, 0.0, 1.0), 1.08);
+
+              // Gate to hero (avoid breaking morphed silhouettes)
+              float heroGate = 1.0 - smoothstep(0.02, 0.12, m);
+              heroScrollT *= heroGate;
+
+              // Same math as entry, but using INVERSE progress (1 - heroScrollT)
+              vec3 finalPosScroll = pos;
+              vec3 dirToFinalScroll = normalize(finalPosScroll + vec3(0.0001));
+              float startRadiusScroll = uEntryRadius * (0.7 + 0.5 * aSeed);
+              vec3 dispersionDirScroll = normalize(dirToFinalScroll + aRand * 0.4);
+              vec3 startPosScroll = dispersionDirScroll * startRadiusScroll;
+
+              float delayScroll = aSeed * 0.4;
+              float invProgress = 1.0 - heroScrollT;
+              float delayedProgressScroll = clamp((invProgress - delayScroll) / (1.0 - delayScroll), 0.0, 1.0);
+              float easedScroll = 1.0 - pow(1.0 - delayedProgressScroll, 3.0);
+              pos = mix(startPosScroll, finalPosScroll, easedScroll);
+            }
             
-            // PHASE 7 : MOUVEMENT HORIZONTAL SUBTIL (effet de "vent" élégant)
-            float windPhase = scrollAmount * 0.5 + particlePhase * 6.28;
-            float windStrength = sin(windPhase) * 0.5 + 0.5;
-            windStrength = pow(windStrength, 2.2);
-            vec3 windDir = normalize(vec3(cos(angle + 1.57), 0.0, sin(angle + 1.57)));
-            pos += windDir * windStrength * scrollAmount * particleSensitivity * r * 0.12;
+            // ==========================================================
+            // CINEMATIC SCROLL: "Optical Zoom & Glass Lens Distortion"
+            // - No experimental noise or disintegration.
+            // - Solid, physics-based movement (Zoom + Lift).
+            // - Premium glass optical distortion at edges.
+            // ==========================================================
             
-            // CALCUL DU FADE OUT PREMIUM ET FLUIDE
-            // 1. Fade progressif basé sur le scroll (disparaît progressivement)
-            float scrollFadeAmount = smoothstep(0.0, 2.5, scrollAmount);
-            scrollFadeAmount = pow(scrollFadeAmount, 0.7); // Courbe douce
+            // 1. OPTICAL ZOOM (The model moves closer to camera)
+            // Simulates a cinematic dolly-in effect
+            float zoomStrength = scrollAmount * r * 0.45;
+            vec3 zoomDir = vec3(0.0, 0.0, 1.0); // Toward camera
+            pos += zoomDir * zoomStrength;
+
+            // 2. VERTICAL LIFT (Subtle floating upward)
+            // Adds a feeling of weightlessness / ascending
+            float liftStrength = scrollAmount * r * 0.15;
+            pos.y += liftStrength;
+
+            // 3. RADIAL LENS DISTORTION (Glass effect)
+            // Simulates a curved lens stretching the edges slightly
+            // Cleaner than noise/jitter, feels like high-end optics
+            float distNorm = length(pos.xy) / (r * 1.5);
+            float distortion = pow(distNorm, 2.0) * scrollAmount * 0.12;
+            pos.x *= (1.0 + distortion);
+            pos.y *= (1.0 + distortion);
+
+            // 4. DEPTH OF FIELD BLUR PROXY (Simulated via position jitter)
+            // Only affects very far/deep particles to keep foreground crisp
+            // We use subtle jitter to simulate "bokeh" scattering on moving parts
+            float dofMask = smoothstep(0.5, 1.0, distNorm); // Only edges
+            vec3 bokehJitter = vec3(
+              sin(pos.y * 20.0 + uTime),
+              cos(pos.x * 20.0 + uTime),
+              0.0
+            ) * 0.005 * r * scrollAmount * dofMask;
+            pos += bokehJitter;
+
+            // Recompute distances for fade logic
+            distFromCenter = length(pos.xz);
+            normalizedDist = distFromCenter / r;
+            float distFromCenter3D = length(pos);
+
+            // FADE OUT LOGIC (Clean & Cinematic)
+            // Simple distance-based fade to avoid popping
+            float fadeDist = smoothstep(r * 3.5, r * 1.2, distFromCenter3D);
+            float zoomFade = smoothstep(2.5, 0.0, scrollAmount); // Fade out if zoomed too close
             
-            // 2. Fade radial : disparaît en s'éloignant du centre (élégant)
-            float fadeStartDist = r * 0.6;
-            float fadeEndDist = r * 3.2;
-            float fadeDist = smoothstep(fadeEndDist, fadeStartDist, distFromCenter);
-            
-            // 3. Fade vertical : disparaît vers le bas (fluide)
-            float bottomThreshold = -r * 1.0;
-            float fadeStartY = bottomThreshold + r * 1.8;
-            float fadeY = smoothstep(bottomThreshold, fadeStartY, pos.y);
-            
-            // 4. Fade combiné : distance + position Y
-            scrollFade = min(fadeY, fadeDist);
-            
-            // 5. Appliquer le fade progressif du scroll
-            scrollFade *= (1.0 - scrollFadeAmount * 0.75); // Disparaît jusqu'à 75%
-            
-            // 6. Boost de fade avec les vagues (effet de dissolution progressive)
-            scrollFade *= (1.0 - waveIntensity * 0.25);
-            
-            // 7. Fade supplémentaire pour les particules très éloignées
-            float farFade = smoothstep(r * 2.5, r * 4.0, distFromCenter);
-            scrollFade *= (1.0 - farFade * 0.4);
-            
-            // 8. Courbe finale ultra-douce et fluide
-            scrollFade = pow(max(scrollFade, 0.0), 0.7); // Courbe douce
+            scrollFade = min(fadeDist, zoomFade);
+            scrollFade = pow(scrollFade, 1.2); // Smooth falloff
             scrollFade = clamp(scrollFade, 0.0, 1.0);
           }
           
