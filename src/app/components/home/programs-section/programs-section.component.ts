@@ -193,7 +193,9 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
             const ringOpacity = 0.2 + (stepProgress * 0.4);
             const ringScale = 0.8 + (stepProgress * 0.2);
             rotating.style.opacity = ringOpacity.toString();
-            rotating.style.transform = `scale(${ringScale})`;
+            // Don't set `transform` inline: it overrides the rotation animation and can look like it's "superposed".
+            // Use a CSS variable that the keyframes read (rotate + scale combined in CSS).
+            rotating.style.setProperty('--ring-scale', ringScale.toString());
           }
         });
         
@@ -232,7 +234,7 @@ export class ProgramsSectionComponent implements AfterViewInit, OnDestroy {
               }
               if (rotating) {
                 rotating.style.opacity = '0.2';
-                rotating.style.transform = 'scale(0.8)';
+                rotating.style.setProperty('--ring-scale', '0.8');
               }
             });
             lastProgress = -1;
