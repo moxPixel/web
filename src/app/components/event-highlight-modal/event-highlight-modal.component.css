@@ -141,6 +141,38 @@
   color: color-mix(in srgb, var(--ui-nebula-accent) 78%, var(--ui-fg));
 }
 
+/* QR code superposé (bottom-right de l'image) */
+.ui-ehm__qr-overlay {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 108px;
+  height: 108px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1.5px solid rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  transition: transform var(--ui-dur-2) var(--ui-ease-out);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ui-ehm__qr-overlay:hover {
+  transform: scale(1.05);
+}
+
+.ui-ehm__qr-overlay img {
+  width: 98px;
+  height: 98px;
+  display: block;
+  padding: 5px;
+}
+
 .ui-ehm__content {
   display: grid;
   gap: 0.6rem;

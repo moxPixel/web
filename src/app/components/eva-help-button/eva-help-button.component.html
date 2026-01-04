@@ -1,10 +1,90 @@
-<a
-  #button
-  routerLink="/contact"
-  class="ui-eva-help-button"
-  aria-label="Besoin d'aide ? Parler à EVA AI"
->
-  <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
-  <span>Besoin d'aide ?</span>
-</a>
+<div #shell class="ui-eva-shell" [class.is-open]="isOpen">
+  <button
+    #button
+    type="button"
+    class="ui-eva-help-button"
+    aria-label="Besoin d'aide ? Parler à EVA AI"
+    [attr.aria-expanded]="isOpen"
+    aria-controls="eva-chat-panel"
+    (click)="toggleOpen()"
+  >
+    <app-tabler-icon name="sparkles" [size]="18"></app-tabler-icon>
+    <span>Besoin d'aide ?</span>
+  </button>
+
+  <div
+    id="eva-chat-panel"
+    class="ui-eva-chat"
+    [class.is-open]="isOpen"
+    role="dialog"
+    aria-label="Chat EVA AI"
+    *ngIf="isOpen"
+  >
+    <div class="ui-eva-chat__header">
+      <div class="ui-eva-chat__title">
+        <div class="ui-eva-chat__brand">
+          <span class="ui-eva-chat__dot" aria-hidden="true"></span>
+          <span class="ui-eva-chat__name">EVA</span>
+          <span class="ui-eva-chat__tag">assistant</span>
+        </div>
+        <div class="ui-eva-chat__subtitle">Pose-moi une question</div>
+      </div>
+      <div class="ui-eva-chat__header-actions">
+        <button type="button" class="ui-eva-chat__reset" (click)="resetChat()" aria-label="Réinitialiser la conversation">
+          <app-tabler-icon name="trash" [size]="18"></app-tabler-icon>
+        </button>
+        <button type="button" class="ui-eva-chat__close" (click)="close()" aria-label="Fermer">
+          <app-tabler-icon name="x" [size]="18"></app-tabler-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="ui-eva-chat__messages" #messages>
+      <div class="ui-eva-chat__msg ui-eva-chat__msg--assistant ui-eva-chat__msg--welcome" *ngIf="messagesList.length === 0">
+        <div class="ui-eva-chat__bubble">
+          Salut, je suis EVA. Je peux te conseiller sur les formations, les prochaines sessions et les événements.
+        </div>
+        <div class="ui-eva-chat__chips" aria-label="Suggestions">
+          <button type="button" class="ui-eva-chat__chip" (click)="quickSend('Quelles sont vos formations disponibles ?')">Formations</button>
+          <button type="button" class="ui-eva-chat__chip" (click)="quickSend('Quelles sont les prochaines sessions ?')">Sessions</button>
+          <button type="button" class="ui-eva-chat__chip" (click)="quickSend('Y a-t-il des événements à venir ?')">Événements</button>
+          <button type="button" class="ui-eva-chat__chip" (click)="quickSend('Comment vous contacter ?')">Contact</button>
+        </div>
+      </div>
+
+      <ng-container *ngFor="let m of messagesList">
+        <div class="ui-eva-chat__msg" [class.ui-eva-chat__msg--user]="m.role === 'user'" [class.ui-eva-chat__msg--assistant]="m.role === 'assistant'">
+          <div class="ui-eva-chat__bubble" [innerHTML]="m.role === 'assistant' ? (m.content | markdown) : m.content"></div>
+        </div>
+      </ng-container>
+
+      <div class="ui-eva-chat__msg ui-eva-chat__msg--assistant" *ngIf="isSending">
+        <div class="ui-eva-chat__bubble ui-eva-chat__bubble--typing">
+          <span class="ui-eva-chat__typing-label">Je réfléchis</span>
+          <span class="ui-eva-chat__typing-dots" aria-hidden="true">
+            <span class="ui-eva-chat__typing-dot"></span>
+            <span class="ui-eva-chat__typing-dot"></span>
+            <span class="ui-eva-chat__typing-dot"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <form class="ui-eva-chat__composer" (submit)="send($event)">
+      <input
+        #input
+        class="ui-eva-chat__input"
+        type="text"
+        name="message"
+        autocomplete="off"
+        placeholder="Écris ton message…"
+        [(ngModel)]="draft"
+        [disabled]="isSending"
+      />
+      <button class="ui-eva-chat__send" type="submit" [disabled]="!draft.trim() || isSending" aria-label="Envoyer">
+        <app-tabler-icon name="send" [size]="18"></app-tabler-icon>
+      </button>
+    </form>
+  </div>
+</div>
 

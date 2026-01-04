@@ -22,6 +22,26 @@
           <app-tabler-icon name="calendar-event" [size]="14"></app-tabler-icon>
           <span>{{ typeLabel(e) }}</span>
         </div>
+        <!-- QR code superposé (bottom-right de l'image) -->
+        <a
+          *ngIf="calendarIcsPath(e)"
+          class="ui-ehm__qr-overlay"
+          [href]="calendarIcsPath(e)"
+          target="_blank"
+          rel="noopener"
+          (click)="$event.stopPropagation()"
+          aria-label="Scanner le QR code pour ajouter l'événement à l'agenda"
+        >
+          <img
+            [src]="qrImageUrl(e)"
+            [alt]="'QR code agenda - ' + e.title"
+            width="108"
+            height="108"
+            loading="lazy"
+            decoding="async"
+            referrerpolicy="no-referrer"
+          />
+        </a>
       </div>
 
       <div class="ui-ehm__content">

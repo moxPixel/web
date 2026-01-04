@@ -3,8 +3,19 @@ import { env } from '../../config/env';
 import { logger } from '../../logger/logger';
 
 export interface OpenAIMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: 'system' | 'user' | 'assistant' | 'tool';
   content: string;
+  // Tool response messages
+  tool_call_id?: string;
+}
+
+export interface OpenAITool {
+  type: 'function';
+  function: {
+    name: string;
+    description?: string;
+    parameters: Record<string, unknown>;
+  };
 }
 
 export interface OpenAICompletionOptions {
@@ -12,10 +23,17 @@ export interface OpenAICompletionOptions {
   temperature?: number;
   maxTokens?: number;
   responseFormat?: { type: 'json_object' };
+  tools?: OpenAITool[];
+  toolChoice?: 'auto' | 'none' | { type: 'function'; function: { name: string } };
 }
 
 export interface OpenAIResponse {
   content: string;
+  toolCalls?: Array<{
+    id: string;
+    type: 'function';
+    function: { name: string; arguments: string };
+  }>;
   usage?: {
     promptTokens: number;
     completionTokens: number;
@@ -66,6 +84,8 @@ export class OpenAIClient {
       temperature = 0.2,
       maxTokens = 4000,
       responseFormat,
+      tools,
+      toolChoice,
     } = options;
 
     try {
@@ -81,6 +101,11 @@ export class OpenAIClient {
         requestBody.response_format = responseFormat;
       }
 
+      if (tools && Array.isArray(tools) && tools.length) {
+        requestBody.tools = tools;
+        if (toolChoice) requestBody.tool_choice = toolChoice;
+      }
+
       const response = await this.client.post(
         '/chat/completions',
         requestBody,
@@ -89,13 +114,13 @@ export class OpenAIClient {
         }
       );
 
-      const content = response.data.choices[0]?.message?.content;
-      if (!content) {
-        throw new Error('No content in OpenAI response');
-      }
+      const msg = response.data.choices[0]?.message || {};
+      const content = msg.content || '';
+      const toolCalls = Array.isArray(msg.tool_calls) ? msg.tool_calls : undefined;
 
       return {
         content,
+        toolCalls,
         usage: response.data.usage,
       };
     } catch (error: any) {

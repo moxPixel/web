@@ -78,7 +78,8 @@ export class EventsController {
 
       const safeSlug = String(event.slug || 'event').replace(/[^a-z0-9-_]+/gi, '-');
       res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="unlock-${safeSlug}.ics"`);
+      // Use 'inline' instead of 'attachment' to allow mobile devices to open directly in calendar app
+      res.setHeader('Content-Disposition', `inline; filename="unlock-${safeSlug}.ics"`);
       res.status(200).send(ics);
     } catch (error) {
       next(error);

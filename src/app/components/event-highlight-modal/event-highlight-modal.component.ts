@@ -8,6 +8,7 @@ import { EventsApiService } from '../../services/api/events-api.service';
 import { UploadApiService } from '../../services/api/upload-api.service';
 import { TablerIconComponent } from '../../shared/icons/tabler-icon/tabler-icon.component';
 import { UiButtonDirective } from '../../ui/ui-button.directive';
+import { getApiBaseUrl } from '../../shared/config/api-url';
 
 const CONSENT_KEY = 'cookie-consent';
 const MODAL_SHOWN_KEY = 'event-highlight-modal-shown';
@@ -90,6 +91,28 @@ export class EventHighlightModalComponent implements OnInit, OnDestroy {
   coverUrl(e: EventApi | null): string {
     if (!e?.coverImage) return '/assets/images/img/p1.jpg';
     return this.upload.getImageUrlFromPath(e.coverImage);
+  }
+
+  calendarIcsPath(e: EventApi | null): string {
+    if (!e?.slug) return '';
+    const base = getApiBaseUrl();
+    return `${base}/events/slug/${encodeURIComponent(e.slug)}/calendar.ics`;
+  }
+
+  calendarIcsUrlAbs(e: EventApi | null): string {
+    const p = this.calendarIcsPath(e);
+    if (!p) return '';
+    if (p.startsWith('http://') || p.startsWith('https://')) return p;
+    if (!this.isBrowser()) return p;
+    return `${window.location.origin}${p.startsWith('/') ? p : `/${p}`}`;
+  }
+
+  qrImageUrl(e: EventApi | null): string {
+    const url = this.calendarIcsUrlAbs(e);
+    if (!url) return '';
+    // Same generator as Events section; produces a scan-friendly URL for phone cameras.
+    const data = encodeURIComponent(url);
+    return `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${data}&margin=8`;
   }
 
   dateLabel(e: EventApi | null): string {

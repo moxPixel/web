@@ -185,6 +185,17 @@
   font-size: var(--ui-text-sm);
 }
 
+.ui-footer__qualiopi-link {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--ui-dur-2) var(--ui-ease-out);
+}
+
+.ui-footer__qualiopi-link:hover {
+  transform: translateY(-1px);
+}
+
 .ui-footer__qualiopi-logo {
   height: 32px;
   width: auto;
@@ -194,9 +205,10 @@
   transition:
     opacity var(--ui-dur-2) var(--ui-ease-out),
     filter var(--ui-dur-2) var(--ui-ease-out);
+  display: block;
 }
 
-.ui-footer__qualiopi-logo:hover {
+.ui-footer__qualiopi-link:hover .ui-footer__qualiopi-logo {
   opacity: 1;
   filter: grayscale(0) brightness(1);
 }
